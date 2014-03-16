@@ -15,13 +15,6 @@ import sys
 import tokenize
 
 
-
-def isidentifier(value):
-    if value in keyword.kwlist:
-        return False
-    return re.match('^' + tokenize.Name + '$', value, re.I) is not None
-
-
 def iter_stdlibs():
     """
     Find quite a lot of stdlib.
@@ -66,11 +59,6 @@ class ImportVisitor(ast.NodeVisitor):
             self.imports.append(node)
             return
 
-            self.imports.append([
-                ((node.level, None), (nm.name, nm.asname, node))
-                for nm in node.names
-            ])
-
     def visit_ImportFrom(self, node):
         # we need to group the names imported from each module
         # into single from X import N,M,P,... groups so we store the names
@@ -81,11 +69,6 @@ class ImportVisitor(ast.NodeVisitor):
         else:
             self.imports.append(node)
             return
-
-            self.imports.append([
-                ((node.level, node.module), (nm.name, nm.asname, node))
-                for nm in node.names
-            ])
 
     def node_sort_key(self, node):
         """
@@ -133,13 +116,6 @@ class ImportVisitor(ast.NodeVisitor):
 
 def error(node, code, message):
     lineno, col_offset = node.lineno, node.col_offset
-
-    if isinstance(node, ast.ClassDef):
-        lineno += len(node.decorator_list)
-        col_offset += 6
-    elif isinstance(node, ast.FunctionDef):
-        lineno += len(node.decorator_list)
-        col_offset += 4
 
     return (lineno, col_offset, '{0} {1}'.format(code, message),
             ImportOrderChecker)
