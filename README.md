@@ -22,5 +22,4 @@ This package adds 2 new flake8 warnings
 Limitations
 -----------
 
-Currently these checks are limited to module scope imports only and there are
-some known issues around imports that use ``as`` to rename symbols.
+Currently these checks are limited to module scope imports only.
