@@ -1,6 +1,8 @@
 flake8-import-order
 ===================
 
+[![Build Status](https://travis-ci.org/public/flake8-import-order.png?branch=master)](https://travis-ci.org/public/flake8-import-order)
+
 A flake8 plugin that checks the ordering of your imports matches the Google
 Style Guidelines.
 
