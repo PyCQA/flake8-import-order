@@ -1,0 +1,18 @@
+language: c
+os:
+    - linux
+env:
+    matrix:
+        - TOX_ENV=py26
+        - TOX_ENV=py27
+        - TOX_ENV=py32
+        - TOX_ENV=py33
+        - TOX_ENV=pypy
+        - TOX_ENV=pep8
+        - TOX_ENV=py3pep8
+
+install:
+    - ./.travis/install.sh
+
+script:
+    - ./.travis/run.sh
