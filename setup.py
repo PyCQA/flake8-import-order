@@ -22,6 +22,14 @@ setup(
     packages=find_packages(),
     zip_safe=False,
 
+    install_requires=[
+        "flake8"
+    ],
+
+    tests_require=[
+        "pytest"
+    ],
+
     py_modules=['flake8_import_order'],
     entry_points={
         'flake8.extension': [
