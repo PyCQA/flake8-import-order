@@ -46,14 +46,14 @@ class ImportVisitor(ast.NodeVisitor):
         self.stdlibs = set(iter_stdlibs()) | set(sys.builtin_module_names)
         self.python_paths = [p for p in sys.path if p]
 
-    def visit_Import(self, node):
+    def visit_Import(self, node):  # noqa
         if node.col_offset != 0:
             return
         else:
             self.imports.append(node)
             return
 
-    def visit_ImportFrom(self, node):
+    def visit_ImportFrom(self, node):  # noqa
         if node.col_offset != 0:
             return
         else:
