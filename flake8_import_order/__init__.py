@@ -60,10 +60,6 @@ class ImportVisitor(ast.NodeVisitor):
             return
 
     def visit_ImportFrom(self, node):
-        # we need to group the names imported from each module
-        # into single from X import N,M,P,... groups so we store the names
-        # and regenerate the node when we find more
-        # we'll then insert this into the full imports chain when we're done
         if node.col_offset != 0:
             return
         else:
