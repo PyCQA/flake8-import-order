@@ -1,4 +1,3 @@
-
 try:
     import ast
 except ImportError:
@@ -14,6 +13,7 @@ import pkgutil
 import re
 import sys
 import tokenize
+
 
 
 def isidentifier(value):
@@ -160,6 +160,13 @@ class ImportOrderChecker(object):
             if node and prev_node:
                 node_key = self.visitor.node_sort_key(node)
                 prev_node_key = self.visitor.node_sort_key(prev_node)
+
                 if node_key < prev_node_key:
-                    yield error(node, "I100", "Import order is wrong")
+                    yield error(node, "I100",
+                                "Imports are in the wrong order")
+
+                elif node_key[-1] and sorted(node_key[-1]) != node_key[-1]:
+                    yield error(node, "I101",
+                                "Imported names are in the wrong order")
+
             prev_node = node
