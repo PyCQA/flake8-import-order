@@ -11,6 +11,8 @@ def load_test_cases():
     test_case_path = os.path.join(base_path, "test_cases")
     test_case_files = os.listdir(test_case_path)
 
+    test_cases = []
+
     for fname in test_case_files:
         if not fname.endswith(".py"):
             continue
@@ -27,7 +29,10 @@ def load_test_cases():
             if line.startswith("# ")
         ]
 
-        yield tree, fname, expected
+
+        test_cases.append((tree, fname, expected))
+
+    return test_cases
 
 
 @pytest.mark.parametrize(
