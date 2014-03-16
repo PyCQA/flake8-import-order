@@ -3,16 +3,10 @@ try:
 except ImportError:
     from flake8.util import ast
 
-from collections import defaultdict
 import distutils.sysconfig as sysconfig
 import imp
-import itertools
-import keyword
-import os
 import pkgutil
-import re
 import sys
-import tokenize
 
 
 def iter_stdlibs():

@@ -29,7 +29,6 @@ def load_test_cases():
             if line.startswith("# ")
         ]
 
-
         test_cases.append((tree, fname, expected))
 
     return test_cases
