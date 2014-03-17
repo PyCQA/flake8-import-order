@@ -9,6 +9,8 @@ Style Guidelines](http://google-styleguide.googlecode.com/svn/trunk/pyguide.html
 i.e. That stdlib comes first, then 3rd party, then local packages, and that
 each group is indivudually alphabetized.
 
+It will not check anything else about the imports. Merely that they are grouped and ordered correctly.
+
 Warnings
 --------
 
