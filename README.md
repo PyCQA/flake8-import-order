@@ -3,8 +3,8 @@ flake8-import-order
 
 [![Build Status](https://travis-ci.org/public/flake8-import-order.png?branch=master)](https://travis-ci.org/public/flake8-import-order)
 
-A flake8 plugin that checks the ordering of your imports matches the Google
-Style Guidelines.
+A flake8 plugin that checks the ordering of your imports matches the [Google
+Style Guidelines](http://google-styleguide.googlecode.com/svn/trunk/pyguide.html?showone=Imports_formatting#Imports_formatting).
 
 i.e. That stdlib comes first, then 3rd party, then local packages, and that
 each group is indivudually alphabetized.
