@@ -29,15 +29,13 @@ def iter_stdlibs():
 
 class ImportVisitor(ast.NodeVisitor):
     """
-    This class visits all the import nodes at the root of tree
-    and generates new import nodes that are sorted according to the Google
-    and PEP8 coding guidelines.
+    This class visits all the import nodes at the root of tree and generates
+    sort keys for each import node.
 
-    In practice this means that they are sorted according to this tuple.
+    In practice this means that they are sorted according to something like
+    this tuple.
 
         (stdlib, site_packages, names)
-
-    We also make sure only 1 name is imported per import statement.
     """
 
     def __init__(self):
