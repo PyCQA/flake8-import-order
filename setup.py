@@ -34,6 +34,9 @@ setup(
     entry_points={
         'flake8.extension': [
             'I10 = flake8_import_order.flake8_linter:Linter',
+        ],
+        'pylama.linter': [
+            'import_order = flake8_import_order.pylama_linter:Linter'
         ]
     },
 )
