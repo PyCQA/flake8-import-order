@@ -2,13 +2,10 @@ import ast
 
 from pylama.lint import Linter as BaseLinter
 
-from flake8_import_order import (
-    ImportOrderChecker,
-    ImportVisitor
-)
+from flake8_import_order import ImportOrderChecker
 
 
-class Linter(ImportOrderChecker):
+class Linter(ImportOrderChecker, BaseLinter):
     name = "import-order"
     version = "0.1"
 
