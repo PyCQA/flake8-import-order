@@ -114,6 +114,7 @@ class ImportOrderChecker(object):
     version = "0.1"
 
     def __init__(self, tree, filename):
+        self.filename = filename
         self.visitor = ImportVisitor()
         self.tree = tree
 
@@ -125,12 +126,16 @@ class ImportOrderChecker(object):
                 node_key = self.visitor.node_sort_key(node)
                 prev_node_key = self.visitor.node_sort_key(prev_node)
 
-                if node_key < prev_node_key:
-                    yield error(node, "I100",
-                                "Imports are in the wrong order")
+                if node_key[:2] < prev_node_key[:2]:
+                    yield error(node, "I102",
+                                "Import is in the wrong section")
 
                 elif node_key[-1] and sorted(node_key[-1]) != node_key[-1]:
                     yield error(node, "I101",
                                 "Imported names are in the wrong order")
+
+                elif node_key < prev_node_key:
+                    yield error(node, "I100",
+                                "Imports are in the wrong order")
 
             prev_node = node
