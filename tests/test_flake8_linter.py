@@ -3,7 +3,7 @@ import os
 
 import pytest
 
-import flake8_import_order
+from flake8_import_order import flake8_linter
 
 
 def load_test_cases():
@@ -39,7 +39,7 @@ def load_test_cases():
     load_test_cases()
 )
 def test_expected_error(tree, filename, expected):
-    checker = flake8_import_order.ImportOrderChecker(
+    checker = flake8_linter.Linter(
         tree, filename)
     errors = []
     for lineno, col_offset, msg, instance in checker.run():
