@@ -18,7 +18,9 @@ __all__ = [
 ]
 
 __title__ = "flake8-import-order"
-__summary__ = "Flake8 plugin that checks the ordering of import statements."
+__summary__ = (
+    "Flake8 and pylama plugin that checks the ordering of import statements."
+)
 __uri__ = "https://github.com/public/flake8-import-order"
 
 __version__ = "0.1"
