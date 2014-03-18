@@ -19,15 +19,16 @@ setup(
     author=about["__author__"],
     author_email=about["__email__"],
 
-    packages=find_packages(),
+    packages=find_packages(exclude=["tests", "tests.*"]),
     zip_safe=False,
 
     install_requires=[
-        "flake8"
     ],
 
     tests_require=[
-        "pytest"
+        "pytest",
+        "flake8",
+        "pylama"
     ],
 
     py_modules=['flake8_import_order'],
