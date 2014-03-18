@@ -40,4 +40,20 @@ setup(
             'import_order = flake8_import_order.pylama_linter:Linter'
         ]
     },
+
+    classifiers=[
+        "Intended Audience :: Developers",
+        "Development Status :: 4 - Beta",
+        "License :: OSI Approved :: MIT License",
+        "Programming Language :: Python",
+        "Programming Language :: Python :: 2",
+        "Programming Language :: Python :: 3",
+        (
+            "License :: OSI Approved :: "
+            "GNU Lesser General Public License v3 (LGPLv3)"
+        ),
+        "Topic :: Software Development :: Libraries :: Python Modules",
+        "Topic :: Software Development :: Quality Assurance",
+        "Operating System :: OS Independent"
+    ]
 )
