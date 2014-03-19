@@ -10,7 +10,7 @@ class Linter(ImportOrderChecker, BaseLinter):
     version = "0.1"
 
     def __init__(self):
-        super(Linter, self).__init__()
+        super(Linter, self).__init__(None, None)
 
     def allow(self, path):
         return path.endswith(".py")
@@ -26,6 +26,7 @@ class Linter(ImportOrderChecker, BaseLinter):
 
     def run(self, path, **meta):
         data = open(path).read()
+        self.filename = path
         self.tree = ast.parse(data, path)
 
         for error in self.check_order():

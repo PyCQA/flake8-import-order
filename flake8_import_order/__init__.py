@@ -4,6 +4,7 @@ except ImportError:
     from flake8.util import ast
 
 import imp
+import os
 import sys
 
 from flake8_import_order.stdlib_list import STDLIB_NAMES
@@ -20,13 +21,23 @@ class ImportVisitor(ast.NodeVisitor):
         (stdlib, site_packages, names)
     """
 
-    def __init__(self):
+    def __init__(self, filename):
+        self.filename = filename
         self.original_nodes = []
         self.imports = []
+
         self.third_party_paths = [
             p for p in sys.path
             if p.endswith(".egg") or "-packages" in p
         ]
+
+        self.local_paths = [""]
+        file_dir = os.path.dirname(self.filename).split(os.sep)
+        search_places = [file_dir[:n] for n in range(len(file_dir) + 1)]
+        self.local_paths.extend(
+            os.path.join(*path)
+            for path in search_places if path
+        )
 
     def visit_Import(self, node):  # noqa
         if node.col_offset != 0:
@@ -60,7 +71,7 @@ class ImportVisitor(ast.NodeVisitor):
         else:
             raise TypeError(node)
 
-        # stdlib, site package, name, is_fromimport, from_names
+        # stdlib, site package, name, from_names
         key = [True, True, name, from_names]
 
         if not name[0]:
@@ -71,28 +82,46 @@ class ImportVisitor(ast.NodeVisitor):
             for n in ast.walk(p):
                 if not isinstance(n, ast.Name):
                     continue
+
                 if n.id in STDLIB_NAMES:
                     key[0] = False
+
                 else:
                     try:
-                        key[1] = not imp.find_module(
+                        local_module = imp.find_module(
+                            n.id,
+                            self.local_paths
+                        )
+                    except ImportError:
+                        local_module = None
+
+                    try:
+                        external_module = imp.find_module(
                             n.id,
                             self.third_party_paths
                         )
                     except ImportError:
-                        continue
+                        external_module = None
+
+                    if external_module and not local_module:
+                        key[1] = False
+
         return key
 
 
 class ImportOrderChecker(object):
-    def __init__(self):
-        self.visitor = ImportVisitor()
-        self.tree = None
+    visitor_class = ImportVisitor
+
+    def __init__(self, filename, tree):
+        self.filename = filename
+        self.tree = tree
+        self.visitor = None
 
     def error(self, node, code, message):
         raise NotImplemented()
 
     def check_order(self):
+        self.visitor = self.visitor_class(self.filename)
         self.visitor.visit(self.tree)
 
         prev_node = None

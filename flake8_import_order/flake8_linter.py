@@ -6,10 +6,7 @@ class Linter(ImportOrderChecker):
     version = "0.1"
 
     def __init__(self, tree, filename):
-        super(Linter, self).__init__()
-
-        self.filename = filename
-        self.tree = tree
+        super(Linter, self).__init__(filename, tree)
 
     def error(self, node, code, message):
         lineno, col_offset = node.lineno, node.col_offset
