@@ -5,7 +5,7 @@ flake8-import-order
 Status](https://travis-ci.org/public/flake8-import-order.png?branch=master)](https://travis-ci.org/public/flake8-import-order)
 
 A [flake8](http://flake8.readthedocs.org/en/latest/) and
-(Pylama)[https://github.com/klen/pylama] plugin that checks the ordering of
+[Pylama](https://github.com/klen/pylama) plugin that checks the ordering of
 your imports matches the [Google Style
 Guidelines](http://google-styleguide.googlecode.com/svn/trunk/pyguide.html?showone=Imports_formatting#Imports_formatting).
 
