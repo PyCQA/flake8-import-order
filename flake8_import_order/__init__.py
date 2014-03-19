@@ -3,9 +3,7 @@ try:
 except ImportError:
     from flake8.util import ast
 
-import distutils.sysconfig as sysconfig
 import imp
-import pkgutil
 import sys
 
 from flake8_import_order.stdlib_list import STDLIB_NAMES
@@ -29,6 +27,7 @@ class ImportVisitor(ast.NodeVisitor):
             p for p in sys.path
             if p.endswith(".egg") or "-packages" in p
         ]
+
     def visit_Import(self, node):  # noqa
         if node.col_offset != 0:
             return
