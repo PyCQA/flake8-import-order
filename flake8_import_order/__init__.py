@@ -8,23 +8,7 @@ import imp
 import pkgutil
 import sys
 
-
-def iter_stdlibs():
-    """
-    Find quite a lot of stdlib.
-    Some things like os.path can't be found this way. You actually need to
-    *run* Python code to fully expand all valid import statements, so
-    instead we're just going to rely on getting most of them and then only
-    matching on the root of import statements the rest of the time.
-    """
-
-    stdlib_path = sysconfig.get_python_lib(standard_lib=True)
-    stdlib_paths = [
-        path
-        for path in sys.path
-        if path.startswith(stdlib_path) and '-packages' not in path
-    ]
-    return (nm for _, nm, _ in pkgutil.iter_modules(stdlib_paths))
+from flake8_import_order.stdlib_list import STDLIB_NAMES
 
 
 class ImportVisitor(ast.NodeVisitor):
@@ -41,7 +25,6 @@ class ImportVisitor(ast.NodeVisitor):
     def __init__(self):
         self.original_nodes = []
         self.imports = []
-        self.stdlibs = set(iter_stdlibs()) | set(sys.builtin_module_names)
         self.python_paths = [p for p in sys.path if p]
 
     def visit_Import(self, node):  # noqa
@@ -89,7 +72,7 @@ class ImportVisitor(ast.NodeVisitor):
                 if not isinstance(n, ast.Name):
                     continue
 
-                if n.id in self.stdlibs:
+                if n.id in STDLIB_NAMES:
                     key[0] = False
                 else:
                     try:
