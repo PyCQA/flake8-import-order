@@ -25,8 +25,10 @@ class ImportVisitor(ast.NodeVisitor):
     def __init__(self):
         self.original_nodes = []
         self.imports = []
-        self.python_paths = [p for p in sys.path if p]
-
+        self.third_party_paths = [
+            p for p in sys.path
+            if p.endswith(".egg") or "-packages" in p
+        ]
     def visit_Import(self, node):  # noqa
         if node.col_offset != 0:
             return
@@ -65,20 +67,18 @@ class ImportVisitor(ast.NodeVisitor):
         if not name[0]:
             key[2] = [node.level]
         else:
-            name = [v.lower() for v in name]
             key[2] = name
             p = ast.parse(name[0])
             for n in ast.walk(p):
                 if not isinstance(n, ast.Name):
                     continue
-
                 if n.id in STDLIB_NAMES:
                     key[0] = False
                 else:
                     try:
                         key[1] = not imp.find_module(
                             n.id,
-                            self.python_paths
+                            self.third_party_paths
                         )
                     except ImportError:
                         continue
