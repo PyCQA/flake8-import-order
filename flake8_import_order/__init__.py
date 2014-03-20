@@ -126,6 +126,7 @@ class ImportVisitor(ast.NodeVisitor):
 
         return tuple(flags)
 
+
 class ImportOrderChecker(object):
     visitor_class = ImportVisitor
     options = None

@@ -1,6 +1,6 @@
-import flake8_import_order
 from flake8_import_order import ImportOrderChecker
-import pep8
+import flake8_import_order
+
 
 class Linter(ImportOrderChecker):
     name = "import-order"
