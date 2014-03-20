@@ -1,12 +1,34 @@
+import flake8_import_order
 from flake8_import_order import ImportOrderChecker
-
+import pep8
 
 class Linter(ImportOrderChecker):
     name = "import-order"
-    version = "0.1"
+    version = flake8_import_order.__version__
 
     def __init__(self, tree, filename):
         super(Linter, self).__init__(filename, tree)
+
+    @classmethod
+    def add_options(cls, parser):
+        # List of application import names. They go last.
+        parser.add_option(
+            "--application-import-names",
+            default="",
+            action="store",
+            type="string",
+            help="Import names to consider as application specific"
+        )
+        parser.config_options.append("application-import-names")
+
+    @classmethod
+    def parse_options(cls, options):
+        optdict = {}
+
+        names = options.application_import_names.split(",")
+        optdict['application_import_names'] = [n.strip() for n in names]
+
+        cls.options = optdict
 
     def error(self, node, code, message):
         lineno, col_offset = node.lineno, node.col_offset

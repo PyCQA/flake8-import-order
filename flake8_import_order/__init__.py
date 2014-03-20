@@ -27,22 +27,13 @@ class ImportVisitor(ast.NodeVisitor):
         (stdlib, site_packages, names)
     """
 
-    def __init__(self, filename):
+    def __init__(self, filename, options):
         self.filename = filename
-        self.original_nodes = []
+        self.options = options or {}
         self.imports = []
 
-        self.third_party_paths = [
-            p for p in sys.path
-            if p.endswith(".egg") or "-packages" in p
-        ]
-
-        self.local_paths = [""]
-        file_dir = os.path.dirname(self.filename).split(os.sep)
-        search_places = [file_dir[:n] for n in range(len(file_dir) + 1)]
-        self.local_paths.extend(
-            os.path.join(*path)
-            for path in search_places if path
+        self.application_import_names = set(
+            self.options.get("application_import_names", [])
         )
 
     def visit_Import(self, node):  # noqa
@@ -64,70 +55,94 @@ class ImportVisitor(ast.NodeVisitor):
         Return a key that will sort the nodes in the correct
         order for the Google Code Style guidelines.
         """
+        flag_union = [True, True, True, 0]
+
         if isinstance(node, ast.Import):
-            if node.names[0].asname:
-                name = [node.names[0].name, node.names[0].asname]
-            else:
-                name = [node.names[0].name]
-            from_names = None
-
+            names = [nm.name for nm in node.names]
         elif isinstance(node, ast.ImportFrom):
-            name = [node.module]
-            from_names = [nm.name for nm in node.names]
+            names = [node.level, node.module]
         else:
-            raise TypeError(node)
+            raise TypeError(type(node))
 
-        # stdlib, site package, name, from_names
-        key = [True, True, name, from_names]
+        imported_names = [[nm.name, nm.asname] for nm in node.names]
 
-        if not name[0]:
-            key[2] = [node.level]
-        else:
-            key[2] = name
-            p = ast.parse(name[0])
-            for n in ast.walk(p):
-                if not isinstance(n, ast.Name):
-                    continue
+        # The key is a bit silly because we use False for "True" because we
+        # want a list of keys to sort() in the order the nodes should go in
+        # in the source.
 
-                if n.id in STDLIB_NAMES:
-                    key[0] = False
+        # [[is_future, is_stdlib, is_third_party, level],
+        #   homogenous, [name], [imported]]
+        key = [flag_union, False, names, imported_names]
 
-                else:
-                    try:
-                        local_module = imp.find_module(
-                            n.id,
-                            self.local_paths
-                        )
-                    except ImportError:
-                        local_module = None
+        # You can have multiple names in one import statement. We just find the
+        # union of all flags that the names share.
+        all_flags = set()
+        for name in names:
+            flags = self._name_flags(node, name)
+            if flags is not None:
+                all_flags.add(flags)
 
-                    try:
-                        external_module = imp.find_module(
-                            n.id,
-                            self.third_party_paths
-                        )
-                    except ImportError:
-                        external_module = None
+        # Detect if all names had the same flags
+        key[1] = len(all_flags) == 1
 
-                    if external_module and not local_module:
-                        key[1] = False
-
+        # Update flag_union
+        all_flags = zip(*all_flags)
+        for i, flags in enumerate(all_flags):
+            flag_set = set(flags)
+            if flag_set == set([False]):
+                flag_union[i] = False
+            else:
+                flag_union[i] = True
         return key
 
+    def _name_flags(self, node, name):
+        if isinstance(name, int):
+            return None
+
+        p = ast.parse(name)
+        for n in ast.walk(p):
+            if isinstance(n, ast.Name):
+                break
+        else:
+            return None
+
+        flags = [True, True, True]
+        if n.id == "__future__":
+            flags[0] = False
+
+        elif n.id in STDLIB_NAMES:
+            flags[1] = False
+
+        elif (
+            n.id in self.application_import_names or
+            (isinstance(node, ast.ImportFrom) and node.level > 0)
+        ):
+            flags[2] = True
+
+        else:
+            # Not future, stdlib or an application import.
+            # Must be 3rd party.
+            flags[2] = False
+
+        return tuple(flags)
 
 class ImportOrderChecker(object):
     visitor_class = ImportVisitor
+    options = None
 
     def __init__(self, filename, tree):
         self.filename = filename
-        self.tree = tree
+        try:
+            self.tree = ast.parse(open(filename).read())
+        except:
+            self.tree = tree
         self.visitor = None
 
     def error(self, node, code, message):
         raise NotImplemented()
 
     def check_order(self):
-        self.visitor = self.visitor_class(self.filename)
+        self.visitor = self.visitor_class(self.filename, self.options)
         self.visitor.visit(self.tree)
 
         prev_node = None
@@ -136,7 +151,7 @@ class ImportOrderChecker(object):
                 node_key = self.visitor.node_sort_key(node)
                 prev_node_key = self.visitor.node_sort_key(prev_node)
 
-                if node_key[:2] < prev_node_key[:2]:
+                if node_key[0] < prev_node_key[0]:
                     yield self.error(node, "I102",
                                      "Import is in the wrong section")
 
