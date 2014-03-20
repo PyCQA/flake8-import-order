@@ -3,11 +3,17 @@ try:
 except ImportError:
     from flake8.util import ast
 
-import imp
-import os
-import sys
-
+from flake8_import_order.__about__ import (
+    __author__, __copyright__, __email__, __license__, __summary__, __title__,
+    __uri__, __version__
+)
 from flake8_import_order.stdlib_list import STDLIB_NAMES
+
+
+__all__ = [
+    "__title__", "__summary__", "__uri__", "__version__", "__author__",
+    "__email__", "__license__", "__copyright__",
+]
 
 
 class ImportVisitor(ast.NodeVisitor):
