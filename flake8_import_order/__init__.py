@@ -13,6 +13,15 @@ __all__ = [
 ]
 
 
+def root_package_name(name):
+    p = ast.parse(name)
+    for n in ast.walk(p):
+        if isinstance(n, ast.Name):
+            return n.id
+    else:
+        return None
+
+
 class ImportVisitor(ast.NodeVisitor):
     """
     This class visits all the import nodes at the root of tree and generates
@@ -99,22 +108,17 @@ class ImportVisitor(ast.NodeVisitor):
         if isinstance(name, int):
             return None
 
-        p = ast.parse(name)
-        for n in ast.walk(p):
-            if isinstance(n, ast.Name):
-                break
-        else:
-            return None
+        pkg = root_package_name(name)
 
         flags = [True, True, True]
-        if n.id == "__future__":
+        if pkg == "__future__":
             flags[0] = False
 
-        elif n.id in STDLIB_NAMES:
+        elif pkg in STDLIB_NAMES:
             flags[1] = False
 
         elif (
-            n.id in self.application_import_names or
+            pkg in self.application_import_names or
             (isinstance(node, ast.ImportFrom) and node.level > 0)
         ):
             flags[2] = True
@@ -176,23 +180,8 @@ class ImportOrderChecker(object):
                         prev_node_key[0][1] == True)
                     ) and
                     # modules dont match
-                    node_key[2] != prev_node_key[2] and
-                    # are on consecutive lines
-                    node.lineno - prev_node.lineno == 1
-                ):
-                    yield self.error(
-                        node, "I103",
-                        "Missing newline between sections or imports"
-                    )
-                elif (
-                    # prev is __future__ or both stdlib
-                    (
-                        prev_node_key[0][0] == False or
-                        (node_key[0][1] == True and
-                        prev_node_key[0][1] == True)
-                    ) and
-                    # modules dont match
-                    node_key[2] != prev_node_key[2] and
+                    root_package_name(node_key[2][0]) !=
+                        root_package_name(prev_node_key[2][0]) and
                     # are on consecutive lines
                     node.lineno - prev_node.lineno == 1
                 ):
