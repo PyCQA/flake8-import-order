@@ -24,9 +24,17 @@ This package adds 3 new flake8 warnings
 * ``I101``: The names in your from import are in the wrong order.
 * ``I102``: The import statement is in the wrong group.
 
+Configuration
+-------------
+
+You will want to set the `application-import-names` option to a comma separated
+list of names that should be considered local to your application. These will
+be used to help categorise your import statements into the correct groups.
+
 Limitations
 -----------
 
-Currently these checks are limited to module scope imports only. The
-classification of an import as being non-stdlib of some kind depends on that
-package actually being installed.
+Currently these checks are limited to module scope imports only. Conditional 
+imports in module scope will also be ignored. The classification of an import
+as being non-stdlib of some kind depends on that package actually being
+installed.
