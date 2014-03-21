@@ -1,5 +1,3 @@
-import ast
-
 from pylama.lint import Linter as BaseLinter
 
 from flake8_import_order import ImportOrderChecker

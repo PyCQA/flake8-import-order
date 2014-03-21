@@ -175,9 +175,9 @@ class ImportOrderChecker(object):
                 if (
                     # prev is __future__ or both stdlib
                     (
-                        prev_node_key[0][0] == False or
-                        (node_key[0][1] == True and
-                        prev_node_key[0][1] == True)
+                        prev_node_key[0][0] is False or
+                        (node_key[0][1] is True and
+                         prev_node_key[0][1] is True)
                     ) and
                     # modules dont match
                     root_package_name(node_key[2][0]) !=

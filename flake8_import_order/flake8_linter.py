@@ -1,5 +1,5 @@
-from flake8_import_order import ImportOrderChecker
 import flake8_import_order
+from flake8_import_order import ImportOrderChecker
 
 
 class Linter(ImportOrderChecker):
