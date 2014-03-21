@@ -152,15 +152,53 @@ class ImportOrderChecker(object):
                 prev_node_key = self.visitor.node_sort_key(prev_node)
 
                 if node_key[0] < prev_node_key[0]:
-                    yield self.error(node, "I102",
-                                     "Import is in the wrong section")
+                    yield self.error(
+                        node, "I102",
+                        "Import is in the wrong section"
+                    )
 
                 elif node_key[-1] and sorted(node_key[-1]) != node_key[-1]:
-                    yield self.error(node, "I101",
-                                     "Imported names are in the wrong order")
-
+                    yield self.error(
+                        node, "I101",
+                        "Imported names are in the wrong order"
+                    )
                 elif node_key < prev_node_key:
-                    yield self.error(node, "I100",
-                                     "Imports are in the wrong order")
+                    yield self.error(
+                        node, "I100",
+                        "Imports are in the wrong order"
+                    )
+
+                if (
+                    # prev is __future__ or both stdlib
+                    (
+                        prev_node_key[0][0] == False or
+                        (node_key[0][1] == True and
+                        prev_node_key[0][1] == True)
+                    ) and
+                    # modules dont match
+                    node_key[2] != prev_node_key[2] and
+                    # are on consecutive lines
+                    node.lineno - prev_node.lineno == 1
+                ):
+                    yield self.error(
+                        node, "I103",
+                        "Missing newline between sections or imports"
+                    )
+                elif (
+                    # prev is __future__ or both stdlib
+                    (
+                        prev_node_key[0][0] == False or
+                        (node_key[0][1] == True and
+                        prev_node_key[0][1] == True)
+                    ) and
+                    # modules dont match
+                    node_key[2] != prev_node_key[2] and
+                    # are on consecutive lines
+                    node.lineno - prev_node.lineno == 1
+                ):
+                    yield self.error(
+                        node, "I103",
+                        "Missing newline between sections or imports"
+                    )
 
             prev_node = node

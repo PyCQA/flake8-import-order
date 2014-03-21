@@ -1,4 +1,4 @@
 from __future__ import foo
+
 import __a__
-# I102
-from __future__ import foo
+from __future__ import foo # I102 I103

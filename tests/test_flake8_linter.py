@@ -1,9 +1,12 @@
 import ast
+import re
 import os
 
 import pytest
 
 from flake8_import_order import flake8_linter
+
+from tests.utils import extract_expected_errors
 
 
 def load_test_cases():
@@ -20,14 +23,7 @@ def load_test_cases():
         fullpath = os.path.join(test_case_path, fname)
         data = open(fullpath).read()
         tree = ast.parse(data, fullpath)
-
-        lines = data.splitlines()
-
-        expected = [
-            line.split()[1]
-            for line in lines
-            if line.startswith("# ")
-        ]
+        expected = extract_expected_errors(data)
 
         test_cases.append((tree, fullpath, expected))
 
