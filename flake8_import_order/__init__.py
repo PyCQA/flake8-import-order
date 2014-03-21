@@ -60,7 +60,8 @@ class ImportVisitor(ast.NodeVisitor):
         if isinstance(node, ast.Import):
             names = [nm.name for nm in node.names]
         elif isinstance(node, ast.ImportFrom):
-            names = [node.level, node.module]
+            names = [node.module]
+            flag_union[3] = node.level
         else:
             raise TypeError(type(node))
 
@@ -152,7 +153,7 @@ class ImportOrderChecker(object):
                 node_key = self.visitor.node_sort_key(node)
                 prev_node_key = self.visitor.node_sort_key(prev_node)
 
-                if node_key[0] < prev_node_key[0]:
+                if node_key[0][:-1] < prev_node_key[0][:-1]:
                     yield self.error(node, "I102",
                                      "Import is in the wrong section")
 
