@@ -52,13 +52,12 @@ class ImportVisitor(ast.NodeVisitor):
         Return a key that will sort the nodes in the correct
         order for the Google Code Style guidelines.
         """
-        flag_union = [True, True, True, 0]
+        flag_union = [True, True, True]
 
         if isinstance(node, ast.Import):
             names = [nm.name for nm in node.names]
         elif isinstance(node, ast.ImportFrom):
             names = [node.module]
-            flag_union[3] = node.level
         else:
             raise TypeError(type(node))
 
@@ -68,9 +67,12 @@ class ImportVisitor(ast.NodeVisitor):
         # want a list of keys to sort() in the order the nodes should go in
         # in the source.
 
-        # [[is_future, is_stdlib, is_third_party, level],
-        #   homogenous, [name], [imported]]
-        key = [flag_union, False, names, imported_names]
+        # [[is_future, is_stdlib, is_third_party],
+        # homogenous, [name], [imported]]
+        key = [
+            flag_union,
+            True, names, getattr(node, "level", -1), imported_names
+        ]
 
         # You can have multiple names in one import statement. We just find the
         # union of all flags that the names share.
@@ -81,7 +83,7 @@ class ImportVisitor(ast.NodeVisitor):
                 all_flags.add(flags)
 
         # Detect if all names had the same flags
-        key[1] = len(all_flags) == 1
+        # key[1] = len(all_flags) == 1
 
         # Update flag_union
         all_flags = zip(*all_flags)
@@ -149,7 +151,7 @@ class ImportOrderChecker(object):
                 node_key = self.visitor.node_sort_key(node)
                 prev_node_key = self.visitor.node_sort_key(prev_node)
 
-                if node_key[0][:-1] < prev_node_key[0][:-1]:
+                if node_key[0] < prev_node_key[0]:
                     yield self.error(node, "I102",
                                      "Import is in the wrong section")
 
