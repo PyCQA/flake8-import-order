@@ -1,7 +1,4 @@
-try:
-    import ast
-except ImportError:
-    from flake8.util import ast
+import ast
 
 from flake8_import_order.__about__ import (
     __author__, __copyright__, __email__, __license__, __summary__, __title__,
@@ -134,16 +131,15 @@ class ImportOrderChecker(object):
 
     def __init__(self, filename, tree):
         self.filename = filename
-        try:
-            self.tree = ast.parse(open(filename).read())
-        except:
-            self.tree = tree
+        self.tree = tree
         self.visitor = None
 
     def error(self, node, code, message):
         raise NotImplemented()
 
     def check_order(self):
+        self.tree = ast.parse(open(self.filename).read())
+
         self.visitor = self.visitor_class(self.filename, self.options)
         self.visitor.visit(self.tree)
 
