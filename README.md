@@ -20,9 +20,10 @@ Warnings
 
 This package adds 3 new flake8 warnings
 
-* ``I100``: Your import statements are in the wrong order
+* ``I100``: Your import statements are in the wrong order.
 * ``I101``: The names in your from import are in the wrong order.
 * ``I102``: The import statement is in the wrong group.
+* ``I103``: Missing newline between sections or imports.
 
 Configuration
 -------------
@@ -38,3 +39,9 @@ Currently these checks are limited to module scope imports only. Conditional
 imports in module scope will also be ignored. The classification of an import
 as being non-stdlib of some kind depends on that package actually being
 installed.
+
+``I103`` only checks that groups of imports are not consecutive and only takes
+into account the first line of each import statement. This means that
+multi-line from imports, comments between imports and so on may cause this
+error not to be raised correctly in all situations. This restriction is due to
+the data provided by the stdlib ``ast`` module.
