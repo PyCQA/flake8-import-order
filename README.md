@@ -15,6 +15,11 @@ each group is indivudually alphabetized.
 It will not check anything else about the imports. Merely that they are grouped
 and ordered correctly.
 
+This plugin is under somewhat active development and is heavily influenced by
+the personal preferences of the developers of
+[cryptography](https://github.com/pyca/cryptography). Expect seemingly random
+changes and configuration changes as we figure out how it should work.
+
 Warnings
 --------
 
