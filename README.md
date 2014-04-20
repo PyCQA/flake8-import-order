@@ -27,8 +27,7 @@ This package adds 3 new flake8 warnings
 
 * ``I100``: Your import statements are in the wrong order.
 * ``I101``: The names in your from import are in the wrong order.
-* ``I102``: The import statement is in the wrong group.
-* ``I103``: Missing newline between sections or imports.
+* ``I201``: Missing newline between sections or imports.
 
 Configuration
 -------------
