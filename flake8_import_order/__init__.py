@@ -12,6 +12,12 @@ __all__ = [
     "__email__", "__license__", "__copyright__",
 ]
 
+IMPORT_FUTURE = 0
+IMPORT_STDLIB = 10
+IMPORT_3RD_PARTY = 20
+IMPORT_APP = 30
+IMPORT_MIXED = -1
+
 
 def root_package_name(name):
     p = ast.parse(name)
@@ -61,7 +67,6 @@ class ImportVisitor(ast.NodeVisitor):
         Return a key that will sort the nodes in the correct
         order for the Google Code Style guidelines.
         """
-        flag_union = [True, True, True]
 
         if isinstance(node, ast.Import):
             names = [nm.name for nm in node.names]
@@ -70,65 +75,62 @@ class ImportVisitor(ast.NodeVisitor):
         else:
             raise TypeError(type(node))
 
+        import_type = self._import_type(node, names[0])
+        for name in names[1:]:
+            name_type = self._import_type(node, name)
+            if import_type != name_type:
+                import_type = IMPORT_MIXED
+                break
+
         imported_names = [[nm.name, nm.asname] for nm in node.names]
+        is_star_import = not any(nm == "*" for nm, asnm in imported_names)
+        from_level = getattr(node, "level", -1)
 
-        # The key is a bit silly because we use False for "True" because we
-        # want a list of keys to sort() in the order the nodes should go in
-        # in the source.
+        n = (
+            import_type,
+            names,
+            from_level,
+            is_star_import,
+            imported_names,
+        )
 
-        # [[is_future, is_stdlib, is_third_party],
-        # homogenous, [name], [imported]]
-        key = [
-            flag_union,
-            True, names, getattr(node, "level", -1), imported_names
-        ]
+        if n[0] == IMPORT_FUTURE:
+            group = (n[0], None, None, None, n[4])
+        elif n[0] == IMPORT_STDLIB:
+            group = (n[0], n[2], n[1], n[3], n[4])
+        elif n[0] == IMPORT_STDLIB:
+            group = (n[0], n[2], n[1], n[3], n[4])
+        elif n[0] == IMPORT_3RD_PARTY:
+            group = (n[0], n[1], n[2], n[3], n[4])
+        else:
+            group = n
 
-        # You can have multiple names in one import statement. We just find the
-        # union of all flags that the names share.
-        all_flags = set()
-        for name in names:
-            flags = self._name_flags(node, name)
-            if flags is not None:
-                all_flags.add(flags)
+        return group
 
-        # Detect if all names had the same flags
-        # key[1] = len(all_flags) == 1
-
-        # Update flag_union
-        all_flags = zip(*all_flags)
-        for i, flags in enumerate(all_flags):
-            flag_set = set(flags)
-            if flag_set == set([False]):
-                flag_union[i] = False
-            else:
-                flag_union[i] = True
-        return key
-
-    def _name_flags(self, node, name):
+    def _import_type(self, node, name):
         if isinstance(name, int):
             return None
 
         pkg = root_package_name(name)
 
+        # Entirely not confusingly we use "False" for "True" in the flags.
+
         flags = [True, True, True]
         if pkg == "__future__":
-            flags[0] = False
+            return IMPORT_FUTURE
 
         elif pkg in STDLIB_NAMES:
-            flags[1] = False
+            return IMPORT_STDLIB
 
         elif (
             pkg in self.application_import_names or
             (isinstance(node, ast.ImportFrom) and node.level > 0)
         ):
-            flags[2] = True
-
+            return IMPORT_APP
         else:
             # Not future, stdlib or an application import.
             # Must be 3rd party.
-            flags[2] = False
-
-        return tuple(flags)
+            return IMPORT_3RD_PARTY
 
 
 class ImportOrderChecker(object):
@@ -151,43 +153,56 @@ class ImportOrderChecker(object):
 
         prev_node = None
         for node in self.visitor.imports:
-            if node and prev_node:
-                node_key = self.visitor.node_sort_key(node)
-                prev_node_key = self.visitor.node_sort_key(prev_node)
+            if prev_node is None:
+                prev_node = node
+                continue
 
-                if node_key[0] < prev_node_key[0]:
-                    yield self.error(
-                        node, "I102",
-                        "Import is in the wrong section"
-                    )
+            n = self.visitor.node_sort_key(node)
+            pn = self.visitor.node_sort_key(prev_node)
 
-                elif node_key[-1] and sorted(node_key[-1]) != node_key[-1]:
-                    yield self.error(
-                        node, "I101",
-                        "Imported names are in the wrong order"
-                    )
-                elif node_key < prev_node_key:
-                    yield self.error(
-                        node, "I100",
-                        "Imports are in the wrong order"
-                    )
+            # FUTURES
+            # STDLIBS, STDLIB_FROMS
+            # 3RDPARTY[n], 3RDPARTY_FROM[n]
+            # 3RDPARTY[n+1], 3RDPARTY_FROM[n+1]
+            # APPLICATION, APPLICATION_FROM
 
-                if (
-                    # prev is __future__ or both stdlib
+            # import_type, names, is_from, level, imported_names,
+
+            if n[0] == IMPORT_MIXED:
+                yield self.error(
+                    node, "I666",
+                    "Import statement crosses types"
+                )
+                prev_node = node
+                continue
+
+            if n < pn:
+                yield self.error(
+                    node, "I100",
+                    "Imports are in the wrong order"
+                )
+
+            if n[-1] and sorted(n[-1]) != n[-1]:
+                yield self.error(
+                    node, "I101",
+                    "Imported names are in the wrong order"
+                )
+
+            lines_apart = node.lineno - prev_node.lineno
+
+            if (
+                (
+                    n[0] != pn[0] or
                     (
-                        prev_node_key[0][0] is False or
-                        (node_key[0][1] is True and
-                         prev_node_key[0][1] is True)
-                    ) and
-                    # modules dont match
-                    root_package_name(node_key[2][0]) !=
-                        root_package_name(prev_node_key[2][0]) and
-                    # are on consecutive lines
-                    node.lineno - prev_node.lineno == 1
-                ):
-                    yield self.error(
-                        node, "I103",
-                        "Missing newline between sections or imports"
+                        n[0] == IMPORT_3RD_PARTY and
+                        n[1] != pn[1]
                     )
+                ) and
+                lines_apart == 1
+            ):
+                yield self.error(
+                    node, "I201",
+                    "Missing newline between sections or imports"
+                )
 
             prev_node = node

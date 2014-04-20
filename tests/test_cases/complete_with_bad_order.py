@@ -1,20 +1,20 @@
 from __future__ import absolute_import
 
 import ast
-import os
 import sys
-from functools import *
+import os # I100
 from os import path
+from functools import * # I100
 
-import X
 from X import *
+import X # I100
 from X import A
 from X import B, C, D
 
 import Y
 from Y import *
 from Y import A
-from Y import B, C, D
+from Y import B, D, C # I101
 
 import flake8_import_error
 from flake8_import_error import *
