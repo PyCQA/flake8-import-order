@@ -16,5 +16,9 @@ from Y import *
 from Y import A
 from Y import B, D, C # I101
 
+from Z import A
+from Z.A.B import A # I100
+from Z.A import A
+
 import flake8_import_error
 from flake8_import_error import *

@@ -194,7 +194,8 @@ class ImportOrderChecker(object):
                     n[0] != pn[0] or
                     (
                         n[0] == IMPORT_3RD_PARTY and
-                        n[1] != pn[1]
+                        root_package_name(n[1][0]) !=
+                        root_package_name(pn[1][0])
                     )
                 ) and
                 lines_apart == 1

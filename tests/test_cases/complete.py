@@ -16,5 +16,10 @@ from Y import *
 from Y import A
 from Y import B, C, D
 
+import Z
+from Z import A
+from Z.A import A
+from Z.A.B import A
+
 import flake8_import_error
 from flake8_import_error import *
