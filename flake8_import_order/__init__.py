@@ -111,6 +111,10 @@ class ImportVisitor(ast.NodeVisitor):
         if isinstance(name, int):
             return None
 
+        if name is None:
+            # relative import
+            return IMPORT_APP
+
         pkg = root_package_name(name)
 
         # Entirely not confusingly we use "False" for "True" in the flags.
