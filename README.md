@@ -6,8 +6,8 @@ Status](https://travis-ci.org/public/flake8-import-order.png?branch=master)](htt
 
 A [flake8](http://flake8.readthedocs.org/en/latest/) and
 [Pylama](https://github.com/klen/pylama) plugin that checks the ordering of
-your imports matches the [Google Style
-Guidelines](http://google-styleguide.googlecode.com/svn/trunk/pyguide.html?showone=Imports_formatting#Imports_formatting).
+your imports matches something similiar too but not quite the [Google Style
+Guidelines](http://google-styleguide.googlecode.com/svn/trunk/pyguide.html?showone=Imports_formatting#Imports_formatting). You can see an example of the style it checks for [here.](https://github.com/public/flake8-import-order/blob/master/tests/test_cases/complete.py)
 
 i.e. That stdlib comes first, then 3rd party, then local packages, and that
 each group is indivudually alphabetized.
