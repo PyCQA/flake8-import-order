@@ -38,7 +38,8 @@ def load_test_cases():
 def test_expected_error(tree, filename, expected):
     parser = pep8.get_parser('', '')
     Linter.add_options(parser)
-    options, args = parser.parse_args([])
+    options, args = parser.parse_args(
+        ['--import-order-style=google'] if 'google' in filename else [])
     Linter.parse_options(options)
 
     checker = Linter(tree, filename)
