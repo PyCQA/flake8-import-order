@@ -2,9 +2,10 @@ import ast
 import re
 import os
 
+import pep8
 import pytest
 
-from flake8_import_order import flake8_linter
+from flake8_import_order.flake8_linter import Linter
 
 from tests.utils import extract_expected_errors
 
@@ -35,8 +36,12 @@ def load_test_cases():
     load_test_cases()
 )
 def test_expected_error(tree, filename, expected):
-    checker = flake8_linter.Linter(
-        tree, filename)
+    parser = pep8.get_parser('', '')
+    Linter.add_options(parser)
+    options, args = parser.parse_args([])
+    Linter.parse_options(options)
+
+    checker = Linter(tree, filename)
     errors = []
     for lineno, col_offset, msg, instance in checker.run():
         errors.append(msg.split()[0])

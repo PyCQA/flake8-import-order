@@ -25,6 +25,7 @@ class Linter(ImportOrderChecker, BaseLinter):
     def run(self, path, **meta):
         self.filename = path
         self.tree = None
+        self.options = meta
 
         for error in self.check_order():
             yield error
