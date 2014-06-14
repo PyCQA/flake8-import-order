@@ -1,6 +1,6 @@
 from pylama.lint import Linter as BaseLinter
 
-from flake8_import_order import ImportOrderChecker
+from flake8_import_order import DEFAULT_IMPORT_ORDER_STYLE, ImportOrderChecker
 
 
 class Linter(ImportOrderChecker, BaseLinter):
@@ -25,6 +25,9 @@ class Linter(ImportOrderChecker, BaseLinter):
     def run(self, path, **meta):
         self.filename = path
         self.tree = None
+        self.options = dict(
+            {'import_order_style': DEFAULT_IMPORT_ORDER_STYLE},
+            **meta)
 
         for error in self.check_order():
             yield error

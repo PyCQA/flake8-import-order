@@ -12,6 +12,8 @@ __all__ = [
     "__email__", "__license__", "__copyright__",
 ]
 
+DEFAULT_IMPORT_ORDER_STYLE = 'cryptography'
+
 IMPORT_FUTURE = 0
 IMPORT_STDLIB = 10
 IMPORT_3RD_PARTY = 20
@@ -26,6 +28,14 @@ def root_package_name(name):
             return n.id
     else:
         return None
+
+
+def is_sorted(seq):
+    return sorted(seq) == list(seq)
+
+
+def lower_strings(l):
+    return [e.lower() if hasattr(e, 'lower') else e for e in l]
 
 
 class ImportVisitor(ast.NodeVisitor):
@@ -47,6 +57,7 @@ class ImportVisitor(ast.NodeVisitor):
         self.application_import_names = set(
             self.options.get("application_import_names", [])
         )
+        self.style = self.options['import_order_style']
 
     def visit_Import(self, node):  # noqa
         if node.col_offset != 0:
@@ -67,6 +78,7 @@ class ImportVisitor(ast.NodeVisitor):
         Return a key that will sort the nodes in the correct
         order for the Google Code Style guidelines.
         """
+        normalize_names = lower_strings if self.style == 'google' else list
 
         if isinstance(node, ast.Import):
             names = [nm.name for nm in node.names]
@@ -82,7 +94,10 @@ class ImportVisitor(ast.NodeVisitor):
                 import_type = IMPORT_MIXED
                 break
 
-        imported_names = [[nm.name, nm.asname] for nm in node.names]
+        names = normalize_names(names)
+
+        imported_names = [
+            normalize_names([nm.name, nm.asname]) for nm in node.names]
         is_star_import = not any(nm == "*" for nm, asnm in imported_names)
         from_level = getattr(node, "level", -1)
 
@@ -96,9 +111,7 @@ class ImportVisitor(ast.NodeVisitor):
 
         if n[0] == IMPORT_FUTURE:
             group = (n[0], None, None, None, n[4])
-        elif n[0] == IMPORT_STDLIB:
-            group = (n[0], n[2], n[1], n[3], n[4])
-        elif n[0] == IMPORT_STDLIB:
+        elif n[0] == IMPORT_STDLIB or self.style == 'google':
             group = (n[0], n[2], n[1], n[3], n[4])
         elif n[0] == IMPORT_3RD_PARTY:
             group = (n[0], n[1], n[2], n[3], n[4])
@@ -154,6 +167,8 @@ class ImportOrderChecker(object):
         self.visitor = self.visitor_class(self.filename, self.options)
         self.visitor.visit(self.tree)
 
+        style = self.options['import_order_style']
+
         prev_node = None
         for node in self.visitor.imports:
             if prev_node is None:
@@ -185,7 +200,7 @@ class ImportOrderChecker(object):
                     "Imports are in the wrong order"
                 )
 
-            if n[-1] and sorted(n[-1]) != n[-1]:
+            if n[-1] and not is_sorted(n[-1]):
                 yield self.error(
                     node, "I101",
                     "Imported names are in the wrong order"
@@ -198,6 +213,7 @@ class ImportOrderChecker(object):
                     n[0] != pn[0] or
                     (
                         n[0] == IMPORT_3RD_PARTY and
+                        style != 'google' and
                         root_package_name(n[1][0]) !=
                         root_package_name(pn[1][0])
                     )

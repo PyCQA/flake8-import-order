@@ -1,5 +1,5 @@
 import flake8_import_order
-from flake8_import_order import ImportOrderChecker
+from flake8_import_order import DEFAULT_IMPORT_ORDER_STYLE, ImportOrderChecker
 
 
 class Linter(ImportOrderChecker):
@@ -19,14 +19,25 @@ class Linter(ImportOrderChecker):
             type="string",
             help="Import names to consider as application specific"
         )
+        parser.add_option(
+            "--import-order-style",
+            default=DEFAULT_IMPORT_ORDER_STYLE,
+            action="store",
+            type="string",
+            help="Style to follow. Available: cryptography, google"
+        )
         parser.config_options.append("application-import-names")
+        parser.config_options.append("import-order-style")
 
     @classmethod
     def parse_options(cls, options):
         optdict = {}
 
         names = options.application_import_names.split(",")
-        optdict['application_import_names'] = [n.strip() for n in names]
+        optdict = dict(
+            application_import_names=[n.strip() for n in names],
+            import_order_style=options.import_order_style,
+        )
 
         cls.options = optdict
 

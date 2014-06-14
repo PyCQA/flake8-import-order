@@ -37,7 +37,8 @@ def test_expected_error(filename, expected):
     assert checker.allow(filename)
 
     errors = []
-    for error in checker.run(filename):
+    options = {'import_order_style': 'google'} if 'google' in filename else {}
+    for error in checker.run(filename, **options):
         code = error['type']
         errors.append(code)
     assert errors == expected
