@@ -171,11 +171,18 @@ class ImportOrderChecker(object):
 
         prev_node = None
         for node in self.visitor.imports:
+            n = self.visitor.node_sort_key(node)
+
+            if n[-1] and not is_sorted(n[-1]):
+                yield self.error(
+                    node, "I101",
+                    "Imported names are in the wrong order"
+                )
+
             if prev_node is None:
                 prev_node = node
                 continue
 
-            n = self.visitor.node_sort_key(node)
             pn = self.visitor.node_sort_key(prev_node)
 
             # FUTURES
@@ -198,12 +205,6 @@ class ImportOrderChecker(object):
                 yield self.error(
                     node, "I100",
                     "Imports are in the wrong order"
-                )
-
-            if n[-1] and not is_sorted(n[-1]):
-                yield self.error(
-                    node, "I101",
-                    "Imported names are in the wrong order"
                 )
 
             lines_apart = node.lineno - prev_node.lineno
