@@ -135,14 +135,15 @@ class ImportVisitor(ast.NodeVisitor):
         if pkg == "__future__":
             return IMPORT_FUTURE
 
-        elif pkg in STDLIB_NAMES:
-            return IMPORT_STDLIB
-
         elif (
             pkg in self.application_import_names or
             (isinstance(node, ast.ImportFrom) and node.level > 0)
         ):
             return IMPORT_APP
+
+        elif pkg in STDLIB_NAMES:
+            return IMPORT_STDLIB
+
         else:
             # Not future, stdlib or an application import.
             # Must be 3rd party.
