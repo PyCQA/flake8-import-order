@@ -163,7 +163,8 @@ class ImportOrderChecker(object):
         raise NotImplemented()
 
     def check_order(self):
-        self.tree = ast.parse(open(self.filename).read())
+        if not self.tree:
+            self.tree = ast.parse(open(self.filename).read())
 
         self.visitor = self.visitor_class(self.filename, self.options)
         self.visitor.visit(self.tree)
