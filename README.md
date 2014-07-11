@@ -6,11 +6,10 @@ Status](https://travis-ci.org/public/flake8-import-order.png?branch=master)](htt
 
 A [flake8](http://flake8.readthedocs.org/en/latest/) and
 [Pylama](https://github.com/klen/pylama) plugin that checks the ordering of
-your imports matches something similiar too but not quite the [Google Style
-Guidelines](http://google-styleguide.googlecode.com/svn/trunk/pyguide.html?showone=Imports_formatting#Imports_formatting). You can see an example of the style it checks for [here.](https://github.com/public/flake8-import-order/blob/master/tests/test_cases/complete.py)
+your imports.
 
-i.e. That stdlib comes first, then 3rd party, then local packages, and that
-each group is indivudually alphabetized.
+In general stdlib comes first, then 3rd party, then local packages, and that
+each group is indivudually alphabetized, see Configuration section for details.
 
 It will not check anything else about the imports. Merely that they are grouped
 and ordered correctly.
@@ -35,6 +34,13 @@ Configuration
 You will want to set the `application-import-names` option to a comma separated
 list of names that should be considered local to your application. These will
 be used to help categorise your import statements into the correct groups.
+
+`import-order-style` controls what style the plugin follows (`cryptography` is
+the default):
+  * `cryptography` - see an [example](https://github.com/public/flake8-import-order/blob/master/tests/test_cases/complete.py)
+  * `google` - style described in [Google Style
+Guidelines](http://google-styleguide.googlecode.com/svn/trunk/pyguide.html?showone=Imports_formatting#Imports_formatting),
+  see an [example](https://github.com/public/flake8-import-order/blob/master/tests/test_cases/complete_google.py)
 
 Limitations
 -----------
