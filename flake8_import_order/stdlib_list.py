@@ -11,6 +11,7 @@ STDLIB_NAMES = set((
     "array",
     "ast",
     "asynchat",
+    "asyncio",
     "asyncore",
     "atexit",
     "audioop",
