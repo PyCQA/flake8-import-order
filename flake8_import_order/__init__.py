@@ -83,7 +83,7 @@ class ImportVisitor(ast.NodeVisitor):
         if isinstance(node, ast.Import):
             names = [nm.name for nm in node.names]
         elif isinstance(node, ast.ImportFrom):
-            names = [node.module]
+            names = [node.module or '']
         else:
             raise TypeError(type(node))
 
