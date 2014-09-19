@@ -118,7 +118,7 @@ class ImportVisitor(ast.NodeVisitor):
         else:
             group = n
 
-        return group
+        return group, n
 
     def _import_type(self, node, name):
         if isinstance(name, int):
@@ -173,19 +173,23 @@ class ImportOrderChecker(object):
 
         prev_node = None
         for node in self.visitor.imports:
-            n = self.visitor.node_sort_key(node)
+            n, k = self.visitor.node_sort_key(node)
 
             if n[-1] and not is_sorted(n[-1]):
+                should_be = ", ".join(name[0] for name in sorted(n[-1]))
                 yield self.error(
                     node, "I101",
-                    "Imported names are in the wrong order"
+                    (
+                        "Imported names are in the wrong order. "
+                        "Should be {0}".format(should_be)
+                    )
                 )
 
             if prev_node is None:
                 prev_node = node
                 continue
 
-            pn = self.visitor.node_sort_key(prev_node)
+            pn, pk = self.visitor.node_sort_key(prev_node)
 
             # FUTURES
             # STDLIBS, STDLIB_FROMS
@@ -198,15 +202,28 @@ class ImportOrderChecker(object):
             if n[0] == IMPORT_MIXED:
                 yield self.error(
                     node, "I666",
-                    "Import statement crosses types"
+                    "Import statement mixes groups"
                 )
                 prev_node = node
                 continue
 
             if n < pn:
+                first_str = (
+                    ("from " if k[2] >= 0 else "import ") + ", ".join(k[1])
+                )
+                second_str = (
+                    ("from " if pk[2] >= 0 else "import ") + ", ".join(pk[1])
+                )
+
                 yield self.error(
                     node, "I100",
-                    "Imports are in the wrong order"
+                    (
+                        "Imports statements are in the wrong order. "
+                        "{0} should be before {1}".format(
+                            first_str,
+                            second_str
+                        )
+                    )
                 )
 
             lines_apart = node.lineno - prev_node.lineno
@@ -225,7 +242,7 @@ class ImportOrderChecker(object):
             ):
                 yield self.error(
                     node, "I201",
-                    "Missing newline between sections or imports"
+                    "Missing newline before sections or imports."
                 )
 
             prev_node = node
