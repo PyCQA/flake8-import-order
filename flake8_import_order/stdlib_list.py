@@ -138,6 +138,7 @@ STDLIB_NAMES = set((
     "imgfile",
     "imghdr",
     "imp",
+    "importlib",
     "imputil",
     "inspect",
     "io",
