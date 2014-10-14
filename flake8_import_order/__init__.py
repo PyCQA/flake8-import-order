@@ -208,12 +208,16 @@ class ImportOrderChecker(object):
                 continue
 
             if n < pn:
-                first_str = (
-                    ("from " if k[2] >= 0 else "import ") + ", ".join(k[1])
-                )
-                second_str = (
-                    ("from " if pk[2] >= 0 else "import ") + ", ".join(pk[1])
-                )
+                def build_str(key):
+                    level = key[2]
+                    if level >= 0:
+                        start = "from " + level * '.'
+                    else:
+                        start = "import "
+                    return start + ", ".join(key[1])
+
+                first_str = build_str(k)
+                second_str = build_str(pk)
 
                 yield self.error(
                     node, "I100",
