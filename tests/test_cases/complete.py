@@ -26,5 +26,9 @@ from flake8_import_error import *
 
 from . import A
 from . import B
+from .A import A
+from .B import B
 from .. import A
 from .. import B
+from ..A import A
+from ..B import B

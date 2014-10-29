@@ -115,6 +115,8 @@ class ImportVisitor(ast.NodeVisitor):
             group = (n[0], n[2], n[1], n[3], n[4])
         elif n[0] == IMPORT_3RD_PARTY:
             group = (n[0], n[1], n[2], n[3], n[4])
+        elif n[2]:
+            group = (n[0], n[2], n[1], n[3], n[4])
         else:
             group = n
 
@@ -197,7 +199,7 @@ class ImportOrderChecker(object):
             # 3RDPARTY[n+1], 3RDPARTY_FROM[n+1]
             # APPLICATION, APPLICATION_FROM
 
-            # import_type, names, is_from, level, imported_names,
+            # import_type, names, level, is_star_import, imported_names,
 
             if n[0] == IMPORT_MIXED:
                 yield self.error(

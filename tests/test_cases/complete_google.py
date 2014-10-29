@@ -23,5 +23,9 @@ from Z.A.B import A
 
 from . import A
 from . import B
+from .A import A
+from .B import B
 from .. import A
 from .. import B
+from ..A import A
+from ..B import B
