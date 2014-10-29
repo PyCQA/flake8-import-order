@@ -23,7 +23,7 @@ __summary__ = (
 )
 __uri__ = "https://github.com/public/flake8-import-order"
 
-__version__ = "0.5.1"
+__version__ = "0.5.2"
 
 __author__ = "Alex Stapleton"
 __email__ = "alexs@prol.etari.at"
