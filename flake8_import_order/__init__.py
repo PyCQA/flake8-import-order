@@ -18,6 +18,7 @@ IMPORT_FUTURE = 0
 IMPORT_STDLIB = 10
 IMPORT_3RD_PARTY = 20
 IMPORT_APP = 30
+IMPORT_APP_RELATIVE = 40
 IMPORT_MIXED = -1
 
 
@@ -111,12 +112,10 @@ class ImportVisitor(ast.NodeVisitor):
 
         if n[0] == IMPORT_FUTURE:
             group = (n[0], None, None, None, n[4])
-        elif n[0] == IMPORT_STDLIB or self.style == 'google':
+        elif n[0] in (IMPORT_STDLIB, IMPORT_APP_RELATIVE) or self.style == 'google':
             group = (n[0], n[2], n[1], n[3], n[4])
         elif n[0] == IMPORT_3RD_PARTY:
             group = (n[0], n[1], n[2], n[3], n[4])
-        elif n[2]:
-            group = (n[0], n[2], n[1], n[3], n[4])
         else:
             group = n
 
@@ -137,11 +136,11 @@ class ImportVisitor(ast.NodeVisitor):
         if pkg == "__future__":
             return IMPORT_FUTURE
 
-        elif (
-            pkg in self.application_import_names or
-            (isinstance(node, ast.ImportFrom) and node.level > 0)
-        ):
+        elif pkg in self.application_import_names:
             return IMPORT_APP
+
+        elif isinstance(node, ast.ImportFrom) and node.level > 0:
+            return IMPORT_APP_RELATIVE
 
         elif pkg in STDLIB_NAMES:
             return IMPORT_STDLIB

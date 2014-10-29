@@ -23,6 +23,12 @@ from Z.A.B import A
 
 import flake8_import_error
 from flake8_import_error import *
+from flake8_import_error import A
+from flake8_import_error import B
+
+import tests
+from tests import A
+from tests import B
 
 from . import A
 from . import B
