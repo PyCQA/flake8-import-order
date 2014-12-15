@@ -17,6 +17,9 @@ case "${TOX_ENV}" in
     py33)
         sudo apt-get install python3.3 python3.3-dev
         ;;
+    py34)
+        sudo apt-get install python3.4 python3.4-dev
+        ;;
     py3pep8)
         sudo apt-get install python3.3 python3.3-dev
         ;;
