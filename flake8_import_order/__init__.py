@@ -112,7 +112,9 @@ class ImportVisitor(ast.NodeVisitor):
 
         if n[0] == IMPORT_FUTURE:
             group = (n[0], None, None, None, n[4])
-        elif n[0] in (IMPORT_STDLIB, IMPORT_APP_RELATIVE) or self.style == 'google':
+        elif (
+                n[0] in (IMPORT_STDLIB, IMPORT_APP_RELATIVE) or
+                self.style == 'google'):
             group = (n[0], n[2], n[1], n[3], n[4])
         elif n[0] == IMPORT_3RD_PARTY:
             group = (n[0], n[1], n[2], n[3], n[4])
