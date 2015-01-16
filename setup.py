@@ -23,11 +23,13 @@ setup(
     zip_safe=False,
 
     install_requires=[
+        "pep8"
     ],
 
     tests_require=[
         "pytest",
         "flake8",
+        "pep8",
         "pylama"
     ],
 
