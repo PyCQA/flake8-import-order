@@ -199,6 +199,7 @@ STDLIB_NAMES = set((
     "poplib",
     "posix",
     "posixfile",
+    "posixpath",
     "pprint",
     "pty",
     "pwd",
