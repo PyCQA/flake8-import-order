@@ -1,5 +1,7 @@
 import ast
 
+import pep8
+
 from flake8_import_order.__about__ import (
     __author__, __copyright__, __email__, __license__, __summary__, __title__,
     __uri__, __version__
@@ -158,25 +160,41 @@ class ImportOrderChecker(object):
     options = None
 
     def __init__(self, filename, tree):
-        self.filename = filename
         self.tree = tree
-        self.visitor = None
+        self.filename = filename
+        self.lines = None
+
+    def load_file(self):
+        if self.filename in ("stdin", "-", None):
+            self.filename = "stdin"
+            self.lines = pep8.stdin_get_value().splitlines(True)
+        else:
+            self.lines = pep8.readlines(self.filename)
+
+        assert self.lines
+
+        if not self.tree:
+            self.tree = ast.parse("".join(self.lines))
 
     def error(self, node, code, message):
         raise NotImplemented()
 
     def check_order(self):
-        if not self.tree:
-            self.tree = ast.parse(open(self.filename).read())
+        if not self.tree or not self.lines:
+            self.load_file()
 
-        self.visitor = self.visitor_class(self.filename, self.options)
-        self.visitor.visit(self.tree)
+        visitor = self.visitor_class(self.filename, self.options)
+        visitor.visit(self.tree)
 
         style = self.options['import_order_style']
 
         prev_node = None
-        for node in self.visitor.imports:
-            n, k = self.visitor.node_sort_key(node)
+        for node in visitor.imports:
+            # Lines with the noqa flag are ignored entirely for import order checks
+            if pep8.noqa(self.lines[node.lineno - 1]):
+                continue
+
+            n, k = visitor.node_sort_key(node)
 
             if n[-1] and not is_sorted(n[-1]):
                 should_be = ", ".join(name[0] for name in sorted(n[-1]))
@@ -192,7 +210,7 @@ class ImportOrderChecker(object):
                 prev_node = node
                 continue
 
-            pn, pk = self.visitor.node_sort_key(prev_node)
+            pn, pk = visitor.node_sort_key(prev_node)
 
             # FUTURES
             # STDLIBS, STDLIB_FROMS
