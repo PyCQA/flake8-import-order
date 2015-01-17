@@ -190,7 +190,7 @@ class ImportOrderChecker(object):
 
         prev_node = None
         for node in visitor.imports:
-            # Lines with the noqa flag are ignored entirely for import order checks
+            # Lines with the noqa flag are ignored entirely
             if pep8.noqa(self.lines[node.lineno - 1]):
                 continue
 
