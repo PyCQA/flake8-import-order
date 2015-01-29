@@ -8,12 +8,16 @@ about = {}
 with open(os.path.join(base_dir, "flake8_import_order", "__about__.py")) as f:
     exec(f.read(), about)
 
+with open(os.path.join(base_dir, "README.md")) as f:
+    long_description = f.read()
+
 
 setup(
     name=about["__title__"],
     version=about["__version__"],
 
     description=about["__summary__"],
+    long_description=long_description,
     license=about["__license__"],
     url=about["__uri__"],
     author=about["__author__"],
