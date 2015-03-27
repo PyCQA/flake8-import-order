@@ -38,7 +38,29 @@ def is_sorted(seq):
 
 
 def lower_strings(l):
-    return [e.lower() if hasattr(e, 'lower') else e for e in l]
+    if l is None:
+        return None
+    else:
+        return [e.lower() if hasattr(e, 'lower') else e for e in l]
+
+
+def cmp_values(n, style):
+    if n[0] in (IMPORT_STDLIB, IMPORT_APP_RELATIVE) or style == "google":
+        return [
+            n[0],
+            n[1],
+            lower_strings(n[2]),
+            n[3],
+            [lower_strings(x) for x in n[4]]
+        ]
+    else:
+        return [
+            n[0],
+            lower_strings(n[1]),
+            n[2],
+            n[3],
+            [lower_strings(x) for x in n[4]]
+        ]
 
 
 class ImportVisitor(ast.NodeVisitor):
@@ -81,7 +103,6 @@ class ImportVisitor(ast.NodeVisitor):
         Return a key that will sort the nodes in the correct
         order for the Google Code Style guidelines.
         """
-        normalize_names = lower_strings if self.style == 'google' else list
 
         if isinstance(node, ast.Import):
             names = [nm.name for nm in node.names]
@@ -97,10 +118,7 @@ class ImportVisitor(ast.NodeVisitor):
                 import_type = IMPORT_MIXED
                 break
 
-        names = normalize_names(names)
-
-        imported_names = [
-            normalize_names([nm.name, nm.asname]) for nm in node.names]
+        imported_names = [[nm.name, nm.asname] for nm in node.names]
         is_star_import = not any(nm == "*" for nm, asnm in imported_names)
         from_level = getattr(node, "level", -1)
 
@@ -196,7 +214,12 @@ class ImportOrderChecker(object):
 
             n, k = visitor.node_sort_key(node)
 
-            if n[-1] and not is_sorted(n[-1]):
+            if style == "google":
+                cmp_n = cmp_values(n, style)
+            else:
+                cmp_n = n
+
+            if cmp_n[-1] and not is_sorted(cmp_n[-1]):
                 should_be = ", ".join(name[0] for name in sorted(n[-1]))
                 yield self.error(
                     node, "I101",
@@ -211,6 +234,11 @@ class ImportOrderChecker(object):
                 continue
 
             pn, pk = visitor.node_sort_key(prev_node)
+
+            if style == "google":
+                cmp_pn = cmp_values(pn, style)
+            else:
+                cmp_pn = pn
 
             # FUTURES
             # STDLIBS, STDLIB_FROMS
@@ -228,7 +256,7 @@ class ImportOrderChecker(object):
                 prev_node = node
                 continue
 
-            if n < pn:
+            if cmp_n < cmp_pn:
                 def build_str(key):
                     level = key[2]
                     if level >= 0:
@@ -255,12 +283,12 @@ class ImportOrderChecker(object):
 
             if (
                 (
-                    n[0] != pn[0] or
+                    cmp_n[0] != cmp_pn[0] or
                     (
                         n[0] == IMPORT_3RD_PARTY and
                         style != 'google' and
-                        root_package_name(n[1][0]) !=
-                        root_package_name(pn[1][0])
+                        root_package_name(cmp_n[1][0]) !=
+                        root_package_name(cmp_pn[1][0])
                     )
                 ) and
                 lines_apart == 1
