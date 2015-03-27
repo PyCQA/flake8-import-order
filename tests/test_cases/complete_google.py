@@ -6,8 +6,6 @@ import os
 from os import path
 import sys
 
-import flake8_import_error
-from flake8_import_error import *
 import X
 from X import *
 from X import A
@@ -21,6 +19,8 @@ from Z import A
 from Z.A import A
 from Z.A.B import A
 
+import flake8_import_order
+from flake8_import_order import *
 from . import A
 from . import B
 from .A import A

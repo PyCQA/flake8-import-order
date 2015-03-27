@@ -297,18 +297,16 @@ class ImportOrderChecker(object):
 
             lines_apart = node.lineno - prev_node.lineno
 
-            if (
-                (
-                    cmp_n[0] != cmp_pn[0] or
-                    (
-                        n[0] == IMPORT_3RD_PARTY and
-                        style != 'google' and
-                        root_package_name(cmp_n[1][0]) !=
-                        root_package_name(cmp_pn[1][0])
-                    )
-                ) and
-                lines_apart == 1
-            ):
+            if lines_apart == 1 and ((
+                cmp_n[0] != cmp_pn[0] and
+                (style != "google" or
+                 {cmp_n[0], cmp_pn[0]} != {IMPORT_APP, IMPORT_APP_RELATIVE})
+            ) or (
+                n[0] == IMPORT_3RD_PARTY and
+                style != 'google' and
+                root_package_name(cmp_n[1][0]) !=
+                root_package_name(cmp_pn[1][0])
+            )):
                 yield self.error(
                     node, "I201",
                     "Missing newline before sections or imports."

@@ -21,10 +21,10 @@ from Z import A
 from Z.A import A
 from Z.A.B import A
 
-import flake8_import_error
-from flake8_import_error import *
-from flake8_import_error import A
-from flake8_import_error import B
+import flake8_import_order
+from flake8_import_order import *
+from flake8_import_order import A
+from flake8_import_order import B
 
 import tests
 from tests import A

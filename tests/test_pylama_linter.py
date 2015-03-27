@@ -37,8 +37,15 @@ def test_expected_error(filename, expected):
     assert checker.allow(filename)
 
     errors = []
-    options = {'import_order_style': 'google'} if 'google' in filename else {}
+    options = {
+        "application_import_names": "flake8_import_order,tests"
+    }
+
+    if 'google' in filename:
+        options['import_order_style'] = 'google'
+
     for error in checker.run(filename, **options):
         code = error['type']
         errors.append(code)
+
     assert errors == expected

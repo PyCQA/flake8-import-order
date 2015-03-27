@@ -36,10 +36,16 @@ def load_test_cases():
     load_test_cases()
 )
 def test_expected_error(tree, filename, expected):
+    argv = [
+        "--application-import-names=flake8_import_order,tests"
+    ]
+
+    if 'google' in filename:
+        argv.append('--import-order-style=google')
+
     parser = pep8.get_parser('', '')
     Linter.add_options(parser)
-    options, args = parser.parse_args(
-        ['--import-order-style=google'] if 'google' in filename else [])
+    options, args = parser.parse_args(argv)
     Linter.parse_options(options)
 
     checker = Linter(tree, filename)
