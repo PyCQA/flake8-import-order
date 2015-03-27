@@ -118,23 +118,39 @@ class ImportVisitor(ast.NodeVisitor):
                 import_type = IMPORT_MIXED
                 break
 
-        imported_names = [[nm.name, nm.asname] for nm in node.names]
-        is_star_import = not any(nm == "*" for nm, asnm in imported_names)
-        from_level = getattr(node, "level", -1)
+        imported_names = [
+            [nm.name if nm.name != "*" else "{0}.*".format(node.module), nm.asname]
+            for nm in node.names
+        ]
+
+        if self.style == "google":
+            true_from_level = getattr(node, "level", -1)
+
+            if true_from_level == -1:
+                from_level = 0
+                is_not_star_import = False
+            else:
+                from_level = true_from_level
+                is_not_star_import = not any(nm.endswith("*") for nm, asnm in imported_names)
+
+        else:
+            from_level = getattr(node, "level", -1)
+            is_not_star_import = not any(nm.endswith("*") for nm, asnm in imported_names)
 
         n = (
             import_type,
             names,
             from_level,
-            is_star_import,
+            is_not_star_import,
             imported_names,
         )
 
         if n[0] == IMPORT_FUTURE:
             group = (n[0], None, None, None, n[4])
         elif (
-                n[0] in (IMPORT_STDLIB, IMPORT_APP_RELATIVE) or
-                self.style == 'google'):
+            n[0] in (IMPORT_STDLIB, IMPORT_APP_RELATIVE) or
+            self.style == 'google'
+        ):
             group = (n[0], n[2], n[1], n[3], n[4])
         elif n[0] == IMPORT_3RD_PARTY:
             group = (n[0], n[1], n[2], n[3], n[4])
