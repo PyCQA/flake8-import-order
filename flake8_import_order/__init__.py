@@ -298,7 +298,7 @@ class ImportOrderChecker(object):
             if lines_apart == 1 and ((
                 cmp_n[0] != cmp_pn[0] and
                 (style != "google" or
-                 set(cmp_n[0], cmp_pn[0]) != set(IMPORT_APP, IMPORT_APP_RELATIVE))
+                 set([cmp_n[0], cmp_pn[0]]) != set([IMPORT_APP, IMPORT_APP_RELATIVE]))
             ) or (
                 n[0] == IMPORT_3RD_PARTY and
                 style != 'google' and
