@@ -1,3 +1,5 @@
+from __future__ import absolute_import
+
 from pylama.lint import Linter as BaseLinter
 
 from flake8_import_order import DEFAULT_IMPORT_ORDER_STYLE, ImportOrderChecker
