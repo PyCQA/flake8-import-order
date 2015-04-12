@@ -119,7 +119,8 @@ class ImportVisitor(ast.NodeVisitor):
                 break
 
         imported_names = [
-            [nm.name if nm.name != "*" else "{0}.*".format(node.module), nm.asname]
+            [nm.name if nm.name != "*"
+             else "{0}.*".format(node.module), nm.asname]
             for nm in node.names
         ]
 
@@ -131,11 +132,17 @@ class ImportVisitor(ast.NodeVisitor):
                 is_not_star_import = False
             else:
                 from_level = true_from_level
-                is_not_star_import = not any(nm.endswith("*") for nm, asnm in imported_names)
+                is_not_star_import = (
+                    not any(nm.endswith("*")
+                            for nm, asnm in imported_names)
+                )
 
         else:
             from_level = getattr(node, "level", -1)
-            is_not_star_import = not any(nm.endswith("*") for nm, asnm in imported_names)
+            is_not_star_import = (
+                not any(nm.endswith("*")
+                        for nm, asnm in imported_names)
+            )
 
         n = (
             import_type,
@@ -295,10 +302,14 @@ class ImportOrderChecker(object):
 
             lines_apart = node.lineno - prev_node.lineno
 
+            is_app = (
+                set([cmp_n[0], cmp_pn[0]]) !=
+                set([IMPORT_APP, IMPORT_APP_RELATIVE])
+            )
+
             if lines_apart == 1 and ((
                 cmp_n[0] != cmp_pn[0] and
-                (style != "google" or
-                 set([cmp_n[0], cmp_pn[0]]) != set([IMPORT_APP, IMPORT_APP_RELATIVE]))
+                (style != "google" or is_app)
             ) or (
                 n[0] == IMPORT_3RD_PARTY and
                 style != 'google' and
