@@ -38,7 +38,7 @@ def test_expected_error(filename, expected):
 
     errors = []
     options = {
-        "application_import_names": "flake8_import_order,tests"
+        "application_import_names": ["flake8_import_order", "tests"]
     }
 
     if 'google' in filename:
