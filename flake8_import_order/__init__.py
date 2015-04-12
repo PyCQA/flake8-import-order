@@ -205,8 +205,6 @@ class ImportOrderChecker(object):
         else:
             self.lines = pep8.readlines(self.filename)
 
-        assert self.lines
-
         if not self.tree:
             self.tree = ast.parse("".join(self.lines))
 
