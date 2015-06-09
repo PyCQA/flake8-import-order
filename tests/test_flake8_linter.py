@@ -24,18 +24,18 @@ def load_test_cases():
         fullpath = os.path.join(test_case_path, fname)
         data = open(fullpath).read()
         tree = ast.parse(data, fullpath)
-        expected = extract_expected_errors(data)
+        codes, messages = extract_expected_errors(data)
 
-        test_cases.append((tree, fullpath, expected))
+        test_cases.append((tree, fullpath, codes, messages))
 
     return test_cases
 
 
 @pytest.mark.parametrize(
-    "tree, filename, expected",
+    "tree, filename, expected_codes, expected_messages",
     load_test_cases()
 )
-def test_expected_error(tree, filename, expected):
+def test_expected_error(tree, filename, expected_codes, expected_messages):
     argv = [
         "--application-import-names=flake8_import_order,tests"
     ]
@@ -49,7 +49,11 @@ def test_expected_error(tree, filename, expected):
     Linter.parse_options(options)
 
     checker = Linter(tree, filename)
-    errors = []
+    codes = []
+    messages = []
     for lineno, col_offset, msg, instance in checker.run():
-        errors.append(msg.split()[0])
-    assert errors == expected
+        code, message = msg.split(" ", 1)
+        codes.append(code)
+        messages.append(message)
+    assert codes == expected_codes
+    assert set(messages) >= set(expected_messages)

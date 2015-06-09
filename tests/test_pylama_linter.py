@@ -21,22 +21,24 @@ def load_test_cases():
 
         fullpath = os.path.join(test_case_path, fname)
         data = open(fullpath).read()
-        expected = extract_expected_errors(data)
+        codes, messages = extract_expected_errors(data)
 
-        test_cases.append((fullpath, expected))
+        test_cases.append((fullpath, codes, messages))
 
     return test_cases
 
 
 @pytest.mark.parametrize(
-    "filename, expected",
+    "filename, expected_codes, expected_messages",
     load_test_cases()
 )
-def test_expected_error(filename, expected):
+def test_expected_error(filename, expected_codes, expected_messages):
     checker = pylama_linter.Linter()
     assert checker.allow(filename)
 
-    errors = []
+    codes = []
+    messages = []
+
     options = {
         "application_import_names": ["flake8_import_order", "tests"]
     }
@@ -45,7 +47,8 @@ def test_expected_error(filename, expected):
         options['import_order_style'] = 'google'
 
     for error in checker.run(filename, **options):
-        code = error['type']
-        errors.append(code)
+        codes.append(error['type'])
+        messages.append(error['text'])
 
-    assert errors == expected
+    assert codes == expected_codes
+    assert set(messages) >= set(expected_messages)
