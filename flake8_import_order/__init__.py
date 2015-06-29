@@ -243,7 +243,7 @@ class ImportOrderChecker(object):
             if cmp_n[-1] and not is_sorted(cmp_n[-1]):
                 should_be = ", ".join(
                     name[0] for name in
-                    sorted(n[-1], key=lambda s: s[0].lower()))
+                    sorted(n[-1], key=lambda s: s[0]))
                 yield self.error(
                     node, "I101",
                     (
