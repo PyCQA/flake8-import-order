@@ -2,3 +2,6 @@
 *.pyo
 __pycache__
 *.egg-info
+*~
+.coverage
+.tox/
