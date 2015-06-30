@@ -241,9 +241,12 @@ class ImportOrderChecker(object):
                 cmp_n = n
 
             if cmp_n[-1] and not is_sorted(cmp_n[-1]):
+                sort_key = lambda s: s[0]
+                if style == "google":
+                    sort_key = lambda s: s[0].lower()
                 should_be = ", ".join(
                     name[0] for name in
-                    sorted(n[-1], key=lambda s: s[0]))
+                    sorted(n[-1], key=sort_key))
                 yield self.error(
                     node, "I101",
                     (
