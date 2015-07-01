@@ -57,3 +57,63 @@ def test_expected_error(tree, filename, expected_codes, expected_messages):
         messages.append(message)
     assert codes == expected_codes
     assert set(messages) >= set(expected_messages)
+
+
+def test_I101_default_style():
+    base_path = os.path.dirname(__file__)
+    test_case_path = os.path.join(base_path, "test_cases")
+    fullpath = os.path.join(test_case_path, "bad_order.py")
+    data = open(fullpath).read()
+    tree = ast.parse(data, fullpath)
+
+    argv = [
+        "--application-import-names=flake8_import_order,tests",
+#        "--import-order-style=google",
+    ]
+
+    parser = pep8.get_parser('', '')
+    Linter.add_options(parser)
+    options, args = parser.parse_args(argv)
+    Linter.parse_options(options)
+
+    checker = Linter(tree, fullpath)
+    codes = []
+    messages = []
+    for lineno, col_offset, msg, instance in checker.run():
+        code, message = msg.split(" ", 1)
+        codes.append(code)
+        messages.append(message)
+    assert codes == ["I101"]
+    assert messages == [
+        "Imported names are in the wrong order. Should be A, D, c"
+    ]
+
+
+def test_I101_google_style():
+    base_path = os.path.dirname(__file__)
+    test_case_path = os.path.join(base_path, "test_cases")
+    fullpath = os.path.join(test_case_path, "bad_order_google.py")
+    data = open(fullpath).read()
+    tree = ast.parse(data, fullpath)
+
+    argv = [
+        "--application-import-names=flake8_import_order,tests",
+        "--import-order-style=google",
+    ]
+
+    parser = pep8.get_parser('', '')
+    Linter.add_options(parser)
+    options, args = parser.parse_args(argv)
+    Linter.parse_options(options)
+
+    checker = Linter(tree, fullpath)
+    codes = []
+    messages = []
+    for lineno, col_offset, msg, instance in checker.run():
+        code, message = msg.split(" ", 1)
+        codes.append(code)
+        messages.append(message)
+    assert codes == ["I101"]
+    assert messages == [
+        "Imported names are in the wrong order. Should be A, c, D"
+    ]
