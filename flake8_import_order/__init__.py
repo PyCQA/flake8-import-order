@@ -44,6 +44,14 @@ def lower_strings(l):
         return [e.lower() if hasattr(e, 'lower') else e for e in l]
 
 
+def sorted_import_names(names, style):
+    if style in ('google', 'smarkets'):
+        sorted_names = sorted(names, key=lambda s: s[0].lower())
+    else:
+        sorted_names = sorted(names, key=lambda s: s[0])
+    return ", ".join(name[0] for name in sorted_names)
+
+
 def cmp_values(n, style):
     if style in ('google', 'smarkets'):
         return [
@@ -232,12 +240,7 @@ class ImportOrderChecker(object):
             cmp_n = cmp_values(n, style)
 
             if cmp_n[-1] and not is_sorted(cmp_n[-1]):
-                sort_key = lambda s: s[0]
-                if style in ('google', 'smarkets'):
-                    sort_key = lambda s: s[0].lower()
-                should_be = ", ".join(
-                    name[0] for name in
-                    sorted(n[-1], key=sort_key))
+                should_be = sorted_import_names(n[-1], style)
                 yield self.error(
                     node, "I101",
                     (
