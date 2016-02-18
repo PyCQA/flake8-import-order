@@ -45,7 +45,7 @@ def lower_strings(l):
 
 
 def cmp_values(n, style):
-    if n[0] in (IMPORT_STDLIB, IMPORT_APP_RELATIVE) or style == "google":
+    if style == "google":
         return [
             n[0],
             n[1],
@@ -54,13 +54,7 @@ def cmp_values(n, style):
             [lower_strings(x) for x in n[4]]
         ]
     else:
-        return [
-            n[0],
-            lower_strings(n[1]),
-            n[2],
-            n[3],
-            [lower_strings(x) for x in n[4]]
-        ]
+        return n
 
 
 class ImportVisitor(ast.NodeVisitor):
@@ -235,10 +229,7 @@ class ImportOrderChecker(object):
 
             n, k = visitor.node_sort_key(node)
 
-            if style == "google":
-                cmp_n = cmp_values(n, style)
-            else:
-                cmp_n = n
+            cmp_n = cmp_values(n, style)
 
             if cmp_n[-1] and not is_sorted(cmp_n[-1]):
                 sort_key = lambda s: s[0]
@@ -261,10 +252,7 @@ class ImportOrderChecker(object):
 
             pn, pk = visitor.node_sort_key(prev_node)
 
-            if style == "google":
-                cmp_pn = cmp_values(pn, style)
-            else:
-                cmp_pn = pn
+            cmp_pn = cmp_values(pn, style)
 
             # FUTURES
             # STDLIBS, STDLIB_FROMS
