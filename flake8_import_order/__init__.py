@@ -45,7 +45,7 @@ def lower_strings(l):
 
 
 def cmp_values(n, style):
-    if style == "google":
+    if style in ('google', 'smarkets'):
         return [
             n[0],
             n[1],
@@ -150,7 +150,7 @@ class ImportVisitor(ast.NodeVisitor):
             group = (n[0], None, None, None, n[4])
         elif (
             n[0] in (IMPORT_STDLIB, IMPORT_APP_RELATIVE) or
-            self.style == 'google'
+            self.style in ('google', 'smarkets')
         ):
             group = (n[0], n[2], n[1], n[3], n[4])
         elif n[0] == IMPORT_3RD_PARTY:
@@ -233,7 +233,7 @@ class ImportOrderChecker(object):
 
             if cmp_n[-1] and not is_sorted(cmp_n[-1]):
                 sort_key = lambda s: s[0]
-                if style == "google":
+                if style in ('google', 'smarkets'):
                     sort_key = lambda s: s[0].lower()
                 should_be = ", ".join(
                     name[0] for name in
@@ -302,10 +302,10 @@ class ImportOrderChecker(object):
 
             if lines_apart == 1 and ((
                 cmp_n[0] != cmp_pn[0] and
-                (style != "google" or is_app)
+                (style not in ('google', 'smarkets') or is_app)
             ) or (
                 n[0] == IMPORT_3RD_PARTY and
-                style != 'google' and
+                style not in ('google', 'smarkets') and
                 root_package_name(cmp_n[1][0]) !=
                 root_package_name(cmp_pn[1][0])
             )):

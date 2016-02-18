@@ -42,6 +42,8 @@ def test_expected_error(tree, filename, expected_codes, expected_messages):
 
     if 'google' in filename:
         argv.append('--import-order-style=google')
+    elif 'smarkets' in filename:
+        argv.append('--import-order-style=smarkets')
 
     parser = pep8.get_parser('', '')
     Linter.add_options(parser)
