@@ -288,7 +288,7 @@ class ImportOrderChecker(object):
                 yield self.error(
                     node, "I100",
                     (
-                        "Imports statements are in the wrong order. "
+                        "Import statements are in the wrong order. "
                         "{0} should be before {1}".format(
                             first_str,
                             second_str
