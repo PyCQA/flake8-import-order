@@ -295,6 +295,7 @@ STDLIB_NAMES = set((
     "tty",
     "turtle",
     "types",
+    "typing",
     "unicodedata",
     "unittest",
     "unittest.mock",
