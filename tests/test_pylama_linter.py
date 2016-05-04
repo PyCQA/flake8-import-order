@@ -43,10 +43,10 @@ def test_expected_error(filename, expected_codes, expected_messages):
         "application_import_names": ["flake8_import_order", "tests"]
     }
 
-    if 'google' in filename:
-        options['import_order_style'] = 'google'
-    elif 'smarkets' in filename:
-        options['import_order_style'] = 'smarkets'
+    for style in ['google', 'smarkets', 'pep8']:
+        if style in filename:
+            options['import_order_style'] = style
+            break
 
     for error in checker.run(filename, **options):
         codes.append(error['type'])

@@ -43,6 +43,7 @@ statements into the correct groups.
 * ``cryptography`` - see an `example <https://github.com/public/flake8-import-order/blob/master/tests/test_cases/complete.py>`__
 * ``google`` - style described in `Google Style Guidelines <http://google-styleguide.googlecode.com/svn/trunk/pyguide.html?showone=Imports_formatting#Imports_formatting>`__, see an `example <https://github.com/public/flake8-import-order/blob/master/tests/test_cases/complete_google.py>`__
 * ``smarkets`` - style as ``google`` only with `import` statements before `from X import ...` statements, see an `example <https://github.com/public/flake8-import-order/blob/master/tests/test_cases/complete_smarkets.py>`__
+* ``pep8`` - style that only enforces groups without enforcing the order within the groups
 
 Limitations
 -----------

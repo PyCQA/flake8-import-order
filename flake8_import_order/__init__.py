@@ -45,7 +45,7 @@ def lower_strings(l):
 
 
 def sorted_import_names(names, style):
-    if style in ('google', 'smarkets'):
+    if style != 'cryptography':
         sorted_names = sorted(names, key=lambda s: s[0].lower())
     else:
         sorted_names = sorted(names, key=lambda s: s[0])
@@ -53,7 +53,7 @@ def sorted_import_names(names, style):
 
 
 def cmp_values(n, style):
-    if style in ('google', 'smarkets'):
+    if style != 'cryptography':
         return [
             n[0],
             n[1],
@@ -126,7 +126,7 @@ class ImportVisitor(ast.NodeVisitor):
             for nm in node.names
         ]
 
-        if self.style == "google":
+        if self.style in ("google", "pep8"):
             true_from_level = getattr(node, "level", -1)
 
             if true_from_level == -1:
@@ -146,6 +146,10 @@ class ImportVisitor(ast.NodeVisitor):
                         for nm, asnm in imported_names)
             )
 
+        if self.style == 'pep8':
+            names = imported_names = ['']
+            from_level = is_not_star_import = None
+
         n = (
             import_type,
             names,
@@ -158,7 +162,7 @@ class ImportVisitor(ast.NodeVisitor):
             group = (n[0], None, None, None, n[4])
         elif (
             n[0] in (IMPORT_STDLIB, IMPORT_APP_RELATIVE) or
-            self.style in ('google', 'smarkets')
+            self.style != 'cryptography'
         ):
             group = (n[0], n[2], n[1], n[3], n[4])
         elif n[0] == IMPORT_3RD_PARTY:
@@ -305,10 +309,10 @@ class ImportOrderChecker(object):
 
             if lines_apart == 1 and ((
                 cmp_n[0] != cmp_pn[0] and
-                (style not in ('google', 'smarkets') or is_app)
+                (style == 'cryptography' or is_app)
             ) or (
                 n[0] == IMPORT_3RD_PARTY and
-                style not in ('google', 'smarkets') and
+                style == 'cryptography' and
                 root_package_name(cmp_n[1][0]) !=
                 root_package_name(cmp_pn[1][0])
             )):
