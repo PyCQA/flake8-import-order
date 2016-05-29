@@ -52,7 +52,7 @@ Conditional imports in module scope will also be ignored. The
 classification of an import as being non-stdlib of some kind depends on
 that package actually being installed.
 
-``I103`` only checks that groups of imports are not consecutive and only
+``I201`` only checks that groups of imports are not consecutive and only
 takes into account the first line of each import statement. This means
 that multi-line from imports, comments between imports and so on may
 cause this error not to be raised correctly in all situations. This
