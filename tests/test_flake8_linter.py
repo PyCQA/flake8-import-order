@@ -40,10 +40,10 @@ def test_expected_error(tree, filename, expected_codes, expected_messages):
         "--application-import-names=flake8_import_order,tests"
     ]
 
-    if 'google' in filename:
-        argv.append('--import-order-style=google')
-    elif 'smarkets' in filename:
-        argv.append('--import-order-style=smarkets')
+    for style in ['google', 'smarkets', 'pep8']:
+        if style in filename:
+            argv.append('--import-order-style=' + style)
+            break
 
     parser = pep8.get_parser('', '')
     Linter.add_options(parser)

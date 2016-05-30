@@ -26,7 +26,8 @@ class Linter(ImportOrderChecker):
             default=DEFAULT_IMPORT_ORDER_STYLE,
             action="store",
             type="string",
-            help="Style to follow. Available: cryptography, google, smarkets"
+            help=("Style to follow. Available: "
+                  "cryptography, google, smarkets, pep8")
         )
         parser.config_options.append("application-import-names")
         parser.config_options.append("import-order-style")
