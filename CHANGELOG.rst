@@ -1,3 +1,10 @@
+0.8
+---
+
+* Added profile, cProfile, pstats and typing to stdlib list.
+* Added new PEP8 style, that enforces grouping of importes but allows
+  any ordering within the groups.
+
 0.7
 ---
 
