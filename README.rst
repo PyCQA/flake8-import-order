@@ -8,7 +8,7 @@ A `flake8 <http://flake8.readthedocs.org/en/latest/>`__ and
 ordering of your imports.
 
 In general stdlib comes first, then 3rd party, then local packages, and
-that each group is indivudually alphabetized, see Configuration section
+that each group is individually alphabetized, see Configuration section
 for details.
 
 It will not check anything else about the imports. Merely that they are
