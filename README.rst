@@ -32,10 +32,11 @@ This package adds 3 new flake8 warnings
 Configuration
 -------------
 
-You will want to set the ``application-import-names`` option to a comma
-separated list of names that should be considered local to your
+You will want to set the ``application-import-names`` option to a
+comma separated list of names that should be considered local to your
 application. These will be used to help categorise your import
-statements into the correct groups.
+statements into the correct groups. Note that relative imports are
+always considered local.
 
 ``import-order-style`` controls what style the plugin follows
 (``cryptography`` is the default):
@@ -49,9 +50,12 @@ Limitations
 -----------
 
 Currently these checks are limited to module scope imports only.
-Conditional imports in module scope will also be ignored. The
-classification of an import as being non-stdlib of some kind depends on
-that package actually being installed.
+Conditional imports in module scope will also be ignored.
+
+Classification of an imported module is achieved by checking the
+module against a stdlib list and then if there is no match against the
+``application-import-names`` list. Only if neither of the lists
+contain the imported module will it be classified as third party.
 
 ``I201`` only checks that groups of imports are not consecutive and only
 takes into account the first line of each import statement. This means
