@@ -87,18 +87,12 @@ class ImportVisitor(ast.NodeVisitor):
         self.style = self.options['import_order_style']
 
     def visit_Import(self, node):  # noqa
-        if node.col_offset != 0:
-            return
-        else:
+        if node.col_offset == 0:
             self.imports.append(node)
-            return
 
     def visit_ImportFrom(self, node):  # noqa
-        if node.col_offset != 0:
-            return
-        else:
+        if node.col_offset == 0:
             self.imports.append(node)
-            return
 
     def node_sort_key(self, node):
         """
