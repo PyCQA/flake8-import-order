@@ -182,8 +182,6 @@ class ImportVisitor(ast.NodeVisitor):
 
         pkg = root_package_name(name)
 
-        # Entirely not confusingly we use "False" for "True" in the flags.
-
         if pkg == "__future__":
             return IMPORT_FUTURE
 
