@@ -2,7 +2,7 @@ import ast
 import re
 import os
 
-import pep8
+import pycodestyle
 import pytest
 
 from flake8_import_order.flake8_linter import Linter
@@ -45,7 +45,7 @@ def test_expected_error(tree, filename, expected_codes, expected_messages):
             argv.append('--import-order-style=' + style)
             break
 
-    parser = pep8.get_parser('', '')
+    parser = pycodestyle.get_parser('', '')
     Linter.add_options(parser)
     options, args = parser.parse_args(argv)
     Linter.parse_options(options)
@@ -73,7 +73,7 @@ def test_I101_default_style():
 #        "--import-order-style=google",
     ]
 
-    parser = pep8.get_parser('', '')
+    parser = pycodestyle.get_parser('', '')
     Linter.add_options(parser)
     options, args = parser.parse_args(argv)
     Linter.parse_options(options)
@@ -103,7 +103,7 @@ def test_I101_google_style():
         "--import-order-style=google",
     ]
 
-    parser = pep8.get_parser('', '')
+    parser = pycodestyle.get_parser('', '')
     Linter.add_options(parser)
     options, args = parser.parse_args(argv)
     Linter.parse_options(options)

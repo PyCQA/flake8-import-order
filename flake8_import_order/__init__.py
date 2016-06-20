@@ -1,6 +1,6 @@
 import ast
 
-import pep8
+import pycodestyle
 
 from flake8_import_order.__about__ import (
     __author__, __copyright__, __email__, __license__, __summary__, __title__,
@@ -214,9 +214,9 @@ class ImportOrderChecker(object):
     def load_file(self):
         if self.filename in ("stdin", "-", None):
             self.filename = "stdin"
-            self.lines = pep8.stdin_get_value().splitlines(True)
+            self.lines = pycodestyle.stdin_get_value().splitlines(True)
         else:
-            self.lines = pep8.readlines(self.filename)
+            self.lines = pycodestyle.readlines(self.filename)
 
         if not self.tree:
             self.tree = ast.parse("".join(self.lines))
@@ -236,7 +236,7 @@ class ImportOrderChecker(object):
         prev_node = None
         for node in visitor.imports:
             # Lines with the noqa flag are ignored entirely
-            if pep8.noqa(self.lines[node.lineno - 1]):
+            if pycodestyle.noqa(self.lines[node.lineno - 1]):
                 continue
 
             n, k = visitor.node_sort_key(node)
