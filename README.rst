@@ -41,9 +41,9 @@ always considered local.
 ``import-order-style`` controls what style the plugin follows
 (``cryptography`` is the default):
 
-* ``cryptography`` - see an `example <https://github.com/public/flake8-import-order/blob/master/tests/test_cases/complete.py>`__
-* ``google`` - style described in `Google Style Guidelines <http://google-styleguide.googlecode.com/svn/trunk/pyguide.html?showone=Imports_formatting#Imports_formatting>`__, see an `example <https://github.com/public/flake8-import-order/blob/master/tests/test_cases/complete_google.py>`__
-* ``smarkets`` - style as ``google`` only with `import` statements before `from X import ...` statements, see an `example <https://github.com/public/flake8-import-order/blob/master/tests/test_cases/complete_smarkets.py>`__
+* ``cryptography`` - see an `example <https://github.com/pycqa/flake8-import-order/blob/master/tests/test_cases/complete.py>`__
+* ``google`` - style described in `Google Style Guidelines <http://google-styleguide.googlecode.com/svn/trunk/pyguide.html?showone=Imports_formatting#Imports_formatting>`__, see an `example <https://github.com/pycqa/flake8-import-order/blob/master/tests/test_cases/complete_google.py>`__
+* ``smarkets`` - style as ``google`` only with `import` statements before `from X import ...` statements, see an `example <https://github.com/pycqa/flake8-import-order/blob/master/tests/test_cases/complete_smarkets.py>`__
 * ``pep8`` - style that only enforces groups without enforcing the order within the groups
 
 Limitations
@@ -63,5 +63,5 @@ that multi-line from imports, comments between imports and so on may
 cause this error not to be raised correctly in all situations. This
 restriction is due to the data provided by the stdlib ``ast`` module.
 
-.. |Build Status| image:: https://travis-ci.org/public/flake8-import-order.png?branch=master
-   :target: https://travis-ci.org/public/flake8-import-order
+.. |Build Status| image:: https://travis-ci.org/pycqa/flake8-import-order.png?branch=master
+   :target: https://travis-ci.org/pycqa/flake8-import-order
