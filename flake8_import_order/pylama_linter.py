@@ -2,12 +2,15 @@ from __future__ import absolute_import
 
 from pylama.lint import Linter as BaseLinter
 
-from flake8_import_order import DEFAULT_IMPORT_ORDER_STYLE, ImportOrderChecker
+from flake8_import_order import __version__
+from flake8_import_order.checker import (
+    DEFAULT_IMPORT_ORDER_STYLE, ImportOrderChecker,
+)
 
 
 class Linter(ImportOrderChecker, BaseLinter):
     name = "import-order"
-    version = "0.1"
+    version = __version__
 
     def __init__(self):
         super(Linter, self).__init__(None, None)
@@ -15,13 +18,12 @@ class Linter(ImportOrderChecker, BaseLinter):
     def allow(self, path):
         return path.endswith(".py")
 
-    def error(self, node, code, message):
-        lineno, col_offset = node.lineno, node.col_offset
+    def error(self, error):
         return {
-            "lnum": lineno,
-            "col": col_offset,
-            "text": message,
-            "type": code
+            'lnum': error.lineno,
+            'col': 0,
+            'text': error.message,
+            'type': error.code,
         }
 
     def run(self, path, **meta):
@@ -29,7 +31,8 @@ class Linter(ImportOrderChecker, BaseLinter):
         self.tree = None
         self.options = dict(
             {'import_order_style': DEFAULT_IMPORT_ORDER_STYLE},
-            **meta)
+            **meta
+        )
 
         for error in self.check_order():
             yield error
