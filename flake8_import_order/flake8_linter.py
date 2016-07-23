@@ -2,13 +2,15 @@ from __future__ import absolute_import
 
 import optparse
 
-import flake8_import_order
-from flake8_import_order import DEFAULT_IMPORT_ORDER_STYLE, ImportOrderChecker
+from flake8_import_order import __version__
+from flake8_import_order.checker import (
+    DEFAULT_IMPORT_ORDER_STYLE, ImportOrderChecker,
+)
 
 
 class Linter(ImportOrderChecker):
     name = "import-order"
-    version = flake8_import_order.__version__
+    version = __version__
 
     def __init__(self, tree, filename):
         super(Linter, self).__init__(filename, tree)
@@ -52,9 +54,13 @@ class Linter(ImportOrderChecker):
 
         cls.options = optdict
 
-    def error(self, node, code, message):
-        lineno, col_offset = node.lineno, node.col_offset
-        return (lineno, col_offset, '{0} {1}'.format(code, message), Linter)
+    def error(self, error):
+        return (
+            error.lineno,
+            0,
+            "{0} {1}".format(error.code, error.message),
+            Linter,
+        )
 
     def run(self):
         for error in self.check_order():

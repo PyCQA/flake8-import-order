@@ -1,3 +1,14 @@
+0.9 (Unreleased)
+----------------
+
+* Drop pep8 requirement and replace with pycodestyle.
+* Support Flake8 3.0 (alongside Flake8 2.X).
+* Drop Python2.6 compatibility.
+* Fixed a bug where intermixed 1st and 3rd party imports cause an
+  error with the PEP8 style.
+* Fixed a bug whereby the I101 recommended ordering wasn't a valid
+  ordering in the cryptography style.
+
 0.8
 ---
 
