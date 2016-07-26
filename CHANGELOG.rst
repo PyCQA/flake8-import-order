@@ -1,5 +1,5 @@
-0.9 (Unreleased)
-----------------
+0.9 2016-07-26
+--------------
 
 * Drop pep8 requirement and replace with pycodestyle.
 * Support Flake8 3.0 (alongside Flake8 2.X).
