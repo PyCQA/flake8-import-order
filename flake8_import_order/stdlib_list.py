@@ -82,6 +82,7 @@ STDLIB_NAMES = set((
     "colorsys",
     "commands",
     "compileall",
+    "concurrent",
     "concurrent.futures",
     "configparser",
     "contextlib",
