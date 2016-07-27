@@ -90,7 +90,8 @@ class Google(Style):
 
     @staticmethod
     def key(import_):
-        return (import_.type, import_.level, import_.modules)
+        modules = [module.lower() for module in import_.modules]
+        return (import_.type, import_.level, modules)
 
 
 class Smarkets(Style):
@@ -101,7 +102,8 @@ class Smarkets(Style):
 
     @staticmethod
     def key(import_):
-        return (import_.type, import_.is_from, import_.level, import_.modules)
+        modules = [module.lower() for module in import_.modules]
+        return (import_.type, import_.is_from, import_.level, modules)
 
 
 class Cryptography(Style):

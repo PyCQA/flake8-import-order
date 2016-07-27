@@ -2,6 +2,7 @@ from __future__ import absolute_import
 
 import ast
 import os
+import StringIO
 import sys
 from functools import *
 from os import path
