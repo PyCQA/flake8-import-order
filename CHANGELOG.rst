@@ -1,3 +1,8 @@
+0.9.1 2016-07-27
+----------------
+
+* Fix case sensitivity bug for Google and Smarkets style.
+
 0.9 2016-07-26
 --------------
 
