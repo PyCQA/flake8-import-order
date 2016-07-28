@@ -4,7 +4,7 @@ from flake8_import_order import (
     IMPORT_3RD_PARTY, IMPORT_APP, IMPORT_APP_RELATIVE,
 )
 
-RELATIVE_SET = {IMPORT_APP, IMPORT_APP_RELATIVE}
+RELATIVE_SET = set((IMPORT_APP, IMPORT_APP_RELATIVE))
 
 Error = namedtuple('Error', ['lineno', 'code', 'message'])
 
@@ -66,7 +66,7 @@ class Style(object):
     @staticmethod
     def same_section(previous, current):
         same_type = current.type == previous.type
-        both_relative = {previous.type, current.type} <= RELATIVE_SET
+        both_relative = set((previous.type, current.type)) <= RELATIVE_SET
         return same_type or both_relative
 
     @staticmethod
@@ -114,7 +114,7 @@ class Cryptography(Style):
 
     @staticmethod
     def key(import_):
-        if import_.type in {IMPORT_3RD_PARTY, IMPORT_APP}:
+        if import_.type in set((IMPORT_3RD_PARTY, IMPORT_APP)):
             return (
                 import_.type, import_.package, import_.is_from,
                 import_.level, import_.modules,
@@ -127,9 +127,9 @@ class Cryptography(Style):
 
     @staticmethod
     def same_section(previous, current):
-        app_or_third = current.type in {IMPORT_3RD_PARTY, IMPORT_APP}
+        app_or_third = current.type in set((IMPORT_3RD_PARTY, IMPORT_APP))
         same_type = current.type == previous.type
-        both_relative = {previous.type, current.type} <= RELATIVE_SET
+        both_relative = set((previous.type, current.type)) <= RELATIVE_SET
         same_package = previous.package == current.package
         return (
             (not app_or_third and same_type or both_relative) or

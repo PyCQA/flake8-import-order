@@ -45,7 +45,7 @@ class ImportVisitor(ast.NodeVisitor):
     def visit_Import(self, node):  # noqa
         if node.col_offset == 0:
             modules = [alias.name for alias in node.names]
-            types_ = {self._classify_type(module) for module in modules}
+            types_ = set(self._classify_type(module) for module in modules)
             if len(types_) == 1:
                 type_ = types_.pop()
             else:
