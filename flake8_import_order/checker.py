@@ -58,7 +58,7 @@ class ImportOrderChecker(object):
         elif style_option == 'smarkets':
             style = Smarkets(imports)
         else:
-            raise AssertionError("Unknown style {)".format(style_option))
+            raise AssertionError("Unknown style {}".format(style_option))
 
         for error in style.check():
             yield self.error(error)

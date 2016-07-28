@@ -12,8 +12,9 @@ class Linter(ImportOrderChecker):
     name = "import-order"
     version = __version__
 
-    def __init__(self, tree, filename):
+    def __init__(self, tree, filename, lines=None):
         super(Linter, self).__init__(filename, tree)
+        self.lines = lines
 
     @classmethod
     def add_options(cls, parser):
