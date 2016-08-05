@@ -1,3 +1,8 @@
+0.9.2 2016-08-05
+----------------
+
+* Fix error when checking from stdin using flake8 3.0.
+
 0.9.1 2016-07-27
 ----------------
 
