@@ -48,6 +48,7 @@ setup(
     },
 
     classifiers=[
+        "Framework :: Flake8",
         "Intended Audience :: Developers",
         "Development Status :: 4 - Beta",
         "License :: OSI Approved :: MIT License",
