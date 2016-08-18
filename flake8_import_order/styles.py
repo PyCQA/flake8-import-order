@@ -41,7 +41,7 @@ class Style(object):
                     yield Error(
                         current.lineno,
                         'I100',
-                        "Import statements are in the wrong order."
+                        "Import statements are in the wrong order. "
                         "{0} should be before {1}".format(first, second),
                     )
 
