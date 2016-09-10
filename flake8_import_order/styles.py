@@ -91,7 +91,7 @@ class Google(Style):
     @staticmethod
     def key(import_):
         modules = [module.lower() for module in import_.modules]
-        return (import_.type, import_.level, modules)
+        return (import_.type, import_.level, modules, import_.names)
 
 
 class AppNexus(Google):
@@ -107,7 +107,10 @@ class Smarkets(Style):
     @staticmethod
     def key(import_):
         modules = [module.lower() for module in import_.modules]
-        return (import_.type, import_.is_from, import_.level, modules)
+        return (
+            import_.type, import_.is_from, import_.level, modules,
+            import_.names,
+        )
 
 
 class Cryptography(Style):
@@ -121,12 +124,12 @@ class Cryptography(Style):
         if import_.type in {IMPORT_3RD_PARTY, IMPORT_APP}:
             return (
                 import_.type, import_.package, import_.is_from,
-                import_.level, import_.modules,
+                import_.level, import_.modules, import_.names,
             )
         else:
             return (
                 import_.type, '', import_.is_from, import_.level,
-                import_.modules,
+                import_.modules, import_.names,
             )
 
     @staticmethod
