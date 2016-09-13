@@ -38,12 +38,21 @@ application. These will be used to help categorise your import
 statements into the correct groups. Note that relative imports are
 always considered local.
 
+You will want to set the ``application-package-names`` option to a
+comma separated list of names that should be considered local to your
+company or organisation, but which are obtained using some sort of
+package manager like Pip, Apt, or Yum.  Typically, code representing the
+values listed in this option is located in a different repository than
+the code being developed.  This option is only supported if using the
+``appnexus`` style.
+
 ``import-order-style`` controls what style the plugin follows
 (``cryptography`` is the default):
 
 * ``cryptography`` - see an `example <https://github.com/PyCQA/flake8-import-order/blob/master/tests/test_cases/complete.py>`__
 * ``google`` - style described in `Google Style Guidelines <http://google-styleguide.googlecode.com/svn/trunk/pyguide.html?showone=Imports_formatting#Imports_formatting>`__, see an `example <https://github.com/PyCQA/flake8-import-order/blob/master/tests/test_cases/complete_google.py>`__
 * ``smarkets`` - style as ``google`` only with `import` statements before `from X import ...` statements, see an `example <https://github.com/PyCQA/flake8-import-order/blob/master/tests/test_cases/complete_smarkets.py>`__
+* ``appnexus`` - style as ``google`` only with `import` statements for packages local to your company or organisation coming after `import` statements for third-party packages, see an `example <https://github.com/PyCQA/flake8-import-order/blob/master/tests/test_cases/complete_appnexus.py>`__
 * ``pep8`` - style that only enforces groups without enforcing the order within the groups
 
 Limitations
@@ -54,7 +63,8 @@ Conditional imports in module scope will also be ignored.
 
 Classification of an imported module is achieved by checking the
 module against a stdlib list and then if there is no match against the
-``application-import-names`` list. Only if neither of the lists
+``application-import-names`` list. (If using the ``appnexus`` style, also
+the ``application-package-names`` list.) Only if none of these lists
 contain the imported module will it be classified as third party.
 
 ``I201`` only checks that groups of imports are not consecutive and only

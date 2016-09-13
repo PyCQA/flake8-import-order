@@ -4,7 +4,7 @@ import pycodestyle
 
 from flake8_import_order import ImportVisitor
 from flake8_import_order.styles import (
-    Cryptography, Google, PEP8, Smarkets,
+    AppNexus, Cryptography, Google, PEP8, Smarkets,
 )
 
 DEFAULT_IMPORT_ORDER_STYLE = 'cryptography'
@@ -36,9 +36,21 @@ class ImportOrderChecker(object):
         if not self.tree or not self.lines:
             self.load_file()
 
-        visitor = self.visitor_class(
-            self.options.get('application_import_names', []),
+        style_option = self.options.get(
+            'import_order_style', DEFAULT_IMPORT_ORDER_STYLE,
         )
+
+        # application_package_names is supported only for the 'appnexus' style
+        if style_option == 'appnexus':
+            visitor = self.visitor_class(
+                self.options.get('application_import_names', []),
+                self.options.get('application_package_names', []),
+            )
+        else:
+            visitor = self.visitor_class(
+                self.options.get('application_import_names', []),
+                [],
+            )
         visitor.visit(self.tree)
 
         imports = []
@@ -46,9 +58,6 @@ class ImportOrderChecker(object):
             if not pycodestyle.noqa(self.lines[import_.lineno - 1]):
                 imports.append(import_)
 
-        style_option = self.options.get(
-            'import_order_style', DEFAULT_IMPORT_ORDER_STYLE,
-        )
         if style_option == 'cryptography':
             style = Cryptography(imports)
         elif style_option == 'google':
@@ -57,6 +66,8 @@ class ImportOrderChecker(object):
             style = PEP8(imports)
         elif style_option == 'smarkets':
             style = Smarkets(imports)
+        elif style_option == 'appnexus':
+            style = AppNexus(imports)
         else:
             raise AssertionError("Unknown style {}".format(style_option))
 

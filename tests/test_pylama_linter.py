@@ -43,9 +43,11 @@ def test_expected_error(filename, expected_codes, expected_messages):
         "application_import_names": ["flake8_import_order", "tests"]
     }
 
-    for style in ['google', 'smarkets', 'pep8']:
+    for style in ['google', 'smarkets', 'appnexus', 'pep8']:
         if style in filename:
             options['import_order_style'] = style
+            if style == 'appnexus':
+                options['application_package_names'] = ['local_package']
             break
 
     for error in checker.run(filename, **options):
