@@ -17,8 +17,9 @@ DEFAULT_IMPORT_ORDER_STYLE = 'cryptography'
 IMPORT_FUTURE = 0
 IMPORT_STDLIB = 10
 IMPORT_3RD_PARTY = 20
-IMPORT_APP = 30
-IMPORT_APP_RELATIVE = 40
+IMPORT_APP_PACKAGE = 30
+IMPORT_APP = 40
+IMPORT_APP_RELATIVE = 50
 IMPORT_MIXED = -1
 
 ClassifiedImport = namedtuple(
@@ -38,9 +39,10 @@ def root_package_name(name):
 
 class ImportVisitor(ast.NodeVisitor):
 
-    def __init__(self, application_import_names):
+    def __init__(self, application_import_names, application_package_names):
         self.imports = []
         self.application_import_names = application_import_names
+        self.application_package_names = application_package_names
 
     def visit_Import(self, node):  # noqa
         if node.col_offset == 0:
@@ -78,6 +80,8 @@ class ImportVisitor(ast.NodeVisitor):
             return IMPORT_FUTURE
         elif package in self.application_import_names:
             return IMPORT_APP
+        elif package in self.application_package_names:
+            return IMPORT_APP_PACKAGE
         elif package in STDLIB_NAMES:
             return IMPORT_STDLIB
         else:

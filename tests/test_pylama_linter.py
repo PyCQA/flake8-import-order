@@ -40,7 +40,8 @@ def test_expected_error(filename, expected_codes, expected_messages):
     messages = []
 
     options = {
-        "application_import_names": ["flake8_import_order", "tests"]
+        "application_import_names": ["flake8_import_order", "tests"],
+        "application_package_names": ["local_package"],
     }
 
     for style in ['google', 'smarkets', 'pep8']:

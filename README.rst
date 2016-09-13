@@ -38,6 +38,13 @@ application. These will be used to help categorise your import
 statements into the correct groups. Note that relative imports are
 always considered local.
 
+You will want to set the ``application-package-names`` option to a
+comma separated list of names that should be considered local to your
+company or organisation, but which is obtained using some sort of
+package manager like Pip, Apt, or Yum.  Typically, code representing the
+values listed in this option is located in a different repository than
+the code being developed.
+
 ``import-order-style`` controls what style the plugin follows
 (``cryptography`` is the default):
 
@@ -54,8 +61,9 @@ Conditional imports in module scope will also be ignored.
 
 Classification of an imported module is achieved by checking the
 module against a stdlib list and then if there is no match against the
-``application-import-names`` list. Only if neither of the lists
-contain the imported module will it be classified as third party.
+``application-import-names`` and ``application-package-names`` lists.
+Only if none of these three lists contain the imported module will it be
+classified as third party.
 
 ``I201`` only checks that groups of imports are not consecutive and only
 takes into account the first line of each import statement. This means
