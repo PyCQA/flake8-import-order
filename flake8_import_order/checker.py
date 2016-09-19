@@ -38,6 +38,7 @@ class ImportOrderChecker(object):
 
         visitor = self.visitor_class(
             self.options.get('application_import_names', []),
+            self.options.get('application_package_names', []),
         )
         visitor.visit(self.tree)
 
