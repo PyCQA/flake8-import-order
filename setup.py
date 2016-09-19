@@ -22,6 +22,8 @@ setup(
     url=about["__uri__"],
     author=about["__author__"],
     author_email=about["__email__"],
+    maintainer=about['__maintainer__'],
+    maintainer_email=about['__maintainer_email__'],
 
     packages=find_packages(exclude=["tests", "tests.*"]),
     zip_safe=False,
