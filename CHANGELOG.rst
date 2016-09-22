@@ -1,3 +1,10 @@
+0.10
+----
+
+* Added new AppNexus style, this is equivalent to the google style
+  except that values specified in the `application-package-names`
+  option must be imported after third-party import statements
+
 0.9.2 2016-08-05
 ----------------
 

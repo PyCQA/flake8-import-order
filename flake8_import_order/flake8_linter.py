@@ -25,7 +25,18 @@ class Linter(ImportOrderChecker):
             default="",
             action="store",
             type="string",
-            help="Import names to consider as application specific",
+            help="Import names to consider as application-specific",
+            parse_from_config=True,
+            comma_separated_list=True,
+        )
+        register_opt(
+            parser,
+            "--application-package-names",
+            default="",
+            action="store",
+            type="string",
+            help=("Package names to consider as company-specific "
+                  "(used only by 'appnexus' style)"),
             parse_from_config=True,
             comma_separated_list=True,
         )
@@ -36,7 +47,7 @@ class Linter(ImportOrderChecker):
             action="store",
             type="string",
             help=("Style to follow. Available: "
-                  "cryptography, google, smarkets, pep8"),
+                  "cryptography, google, smarkets, appnexus, pep8"),
             parse_from_config=True,
         )
 
@@ -48,8 +59,13 @@ class Linter(ImportOrderChecker):
         if not isinstance(names, list):
             names = options.application_import_names.split(",")
 
+        pkg_names = options.application_package_names
+        if not isinstance(pkg_names, list):
+            pkg_names = options.application_package_names.split(",")
+
         optdict = dict(
             application_import_names=[n.strip() for n in names],
+            application_package_names=[p.strip() for p in pkg_names],
             import_order_style=options.import_order_style,
         )
 

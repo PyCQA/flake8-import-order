@@ -94,6 +94,10 @@ class Google(Style):
         return (import_.type, import_.level, modules)
 
 
+class AppNexus(Google):
+    pass
+
+
 class Smarkets(Style):
 
     @staticmethod
