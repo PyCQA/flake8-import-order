@@ -75,7 +75,10 @@ restriction is due to the data provided by the stdlib ``ast`` module.
 
 Imported modules are classified as stdlib if the module is in a
 vendored list of stdlib modules. This list is based on the latest
-release of Python and hence the results can be missleading.
+release of Python and hence the results can be misleading. This list
+is also the same for all Python versions because otherwise it would
+be impossible to write programs that work under both Python 2 and 3
+*and* pass the import order check.
 
 .. |Build Status| image:: https://travis-ci.org/PyCQA/flake8-import-order.png?branch=master
    :target: https://travis-ci.org/PyCQA/flake8-import-order
