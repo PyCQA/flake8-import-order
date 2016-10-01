@@ -73,5 +73,9 @@ that multi-line from imports, comments between imports and so on may
 cause this error not to be raised correctly in all situations. This
 restriction is due to the data provided by the stdlib ``ast`` module.
 
+Imported modules are classified as stdlib if the module is in a
+vendored list of stdlib modules. This list is based on the latest
+release of Python and hence the results can be missleading.
+
 .. |Build Status| image:: https://travis-ci.org/PyCQA/flake8-import-order.png?branch=master
    :target: https://travis-ci.org/PyCQA/flake8-import-order
