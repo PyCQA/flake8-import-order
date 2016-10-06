@@ -50,7 +50,7 @@ the code being developed.  This option is only supported if using the
 (``cryptography`` is the default):
 
 * ``cryptography`` - see an `example <https://github.com/PyCQA/flake8-import-order/blob/master/tests/test_cases/complete.py>`__
-* ``google`` - style described in `Google Style Guidelines <http://google-styleguide.googlecode.com/svn/trunk/pyguide.html?showone=Imports_formatting#Imports_formatting>`__, see an `example <https://github.com/PyCQA/flake8-import-order/blob/master/tests/test_cases/complete_google.py>`__
+* ``google`` - style described in `Google Style Guidelines <https://google.github.io/styleguide/pyguide.html?showone=Imports_formatting#Imports_formatting>`__, see an `example <https://github.com/PyCQA/flake8-import-order/blob/master/tests/test_cases/complete_google.py>`__
 * ``smarkets`` - style as ``google`` only with `import` statements before `from X import ...` statements, see an `example <https://github.com/PyCQA/flake8-import-order/blob/master/tests/test_cases/complete_smarkets.py>`__
 * ``appnexus`` - style as ``google`` only with `import` statements for packages local to your company or organisation coming after `import` statements for third-party packages, see an `example <https://github.com/PyCQA/flake8-import-order/blob/master/tests/test_cases/complete_appnexus.py>`__
 * ``pep8`` - style that only enforces groups without enforcing the order within the groups
