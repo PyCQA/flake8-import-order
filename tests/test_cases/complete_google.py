@@ -7,6 +7,9 @@ from os import path
 import StringIO
 import sys
 
+from W import foo
+from W import FooBar
+
 import X
 from X import *
 from X import A

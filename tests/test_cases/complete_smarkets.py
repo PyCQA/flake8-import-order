@@ -10,6 +10,10 @@ from os import path
 import X
 import Y
 import Z
+
+from W import foo
+from W import FooBar
+
 from X import *
 from X import A
 from X import b, C, d
