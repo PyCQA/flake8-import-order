@@ -91,7 +91,8 @@ class Google(Style):
     @staticmethod
     def key(import_):
         modules = [module.lower() for module in import_.modules]
-        return (import_.type, import_.level, modules, import_.names)
+        names = [name.lower() for name in import_.names]
+        return (import_.type, import_.level, modules, names)
 
 
 class AppNexus(Google):
@@ -107,10 +108,9 @@ class Smarkets(Style):
     @staticmethod
     def key(import_):
         modules = [module.lower() for module in import_.modules]
+        names = [name.lower() for name in import_.names]
         return (
-            import_.type, import_.is_from, import_.level, modules,
-            import_.names,
-        )
+            import_.type, import_.is_from, import_.level, modules, names)
 
 
 class Cryptography(Style):

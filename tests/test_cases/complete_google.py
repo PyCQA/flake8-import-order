@@ -11,6 +11,7 @@ import X
 from X import *
 from X import A
 from X import b, C, d
+from X import E
 import Y
 from Y import *
 from Y import A
