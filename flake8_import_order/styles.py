@@ -35,7 +35,7 @@ class Style(object):
                 )
 
             if previous is not None:
-                if self.key(previous) > self.key(current):
+                if self.import_key(previous) > self.import_key(current):
                     first = self._explain(current)
                     second = self._explain(previous)
                     yield Error(
@@ -60,7 +60,7 @@ class Style(object):
         return names
 
     @staticmethod
-    def key(import_):
+    def import_key(import_):
         return (import_.type,)
 
     @staticmethod
@@ -86,12 +86,17 @@ class Google(Style):
 
     @staticmethod
     def sorted_names(names):
-        return sorted(names, key=lambda n: (n.lower(), n))
+        return sorted(names, key=Google.name_key)
 
     @staticmethod
-    def key(import_):
+    def name_key(name):
+        return (name.lower(), name)
+
+    @staticmethod
+    def import_key(import_):
         modules = [module.lower() for module in import_.modules]
-        return (import_.type, import_.level, modules, import_.names)
+        names = [Google.name_key(name) for name in import_.names]
+        return (import_.type, import_.level, modules, names)
 
 
 class AppNexus(Google):
@@ -102,15 +107,17 @@ class Smarkets(Style):
 
     @staticmethod
     def sorted_names(names):
-        return sorted(names, key=lambda n: (n.lower(), n))
+        return sorted(names, key=Smarkets.name_key)
 
     @staticmethod
-    def key(import_):
+    def name_key(name):
+        return (name.lower(), name)
+
+    @staticmethod
+    def import_key(import_):
         modules = [module.lower() for module in import_.modules]
-        return (
-            import_.type, import_.is_from, import_.level, modules,
-            import_.names,
-        )
+        names = [Smarkets.name_key(name) for name in import_.names]
+        return (import_.type, import_.is_from, import_.level, modules, names)
 
 
 class Cryptography(Style):
@@ -120,7 +127,7 @@ class Cryptography(Style):
         return sorted(names)
 
     @staticmethod
-    def key(import_):
+    def import_key(import_):
         if import_.type in {IMPORT_3RD_PARTY, IMPORT_APP}:
             return (
                 import_.type, import_.package, import_.is_from,
