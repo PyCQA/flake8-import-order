@@ -86,7 +86,7 @@ class Google(Style):
 
     @staticmethod
     def sorted_names(names):
-        return sorted(names, key=lambda n: n.lower())
+        return sorted(names, key=lambda n: (n.lower(), n))
 
     @staticmethod
     def key(import_):
@@ -102,7 +102,7 @@ class Smarkets(Style):
 
     @staticmethod
     def sorted_names(names):
-        return sorted(names, key=lambda n: n.lower())
+        return sorted(names, key=lambda n: (n.lower(), n))
 
     @staticmethod
     def key(import_):

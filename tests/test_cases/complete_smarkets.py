@@ -12,7 +12,7 @@ import Y
 import Z
 from X import *
 from X import A
-from X import b, C, d
+from X import B, b, C, d
 from Y import *
 from Y import A
 from Y import B, C, D
