@@ -94,7 +94,7 @@ class Google(Style):
 
     @staticmethod
     def import_key(import_):
-        modules = [module.lower() for module in import_.modules]
+        modules = [Google.name_key(module) for module in import_.modules]
         names = [Google.name_key(name) for name in import_.names]
         return (import_.type, import_.level, modules, names)
 
@@ -115,7 +115,7 @@ class Smarkets(Style):
 
     @staticmethod
     def import_key(import_):
-        modules = [module.lower() for module in import_.modules]
+        modules = [Smarkets.name_key(module) for module in import_.modules]
         names = [Smarkets.name_key(name) for name in import_.names]
         return (import_.type, import_.is_from, import_.level, modules, names)
 
