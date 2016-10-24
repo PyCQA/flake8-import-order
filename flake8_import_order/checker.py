@@ -30,7 +30,7 @@ class ImportOrderChecker(object):
             self.tree = ast.parse("".join(self.lines))
 
     def error(self, error):
-        raise NotImplemented()
+        return error
 
     def check_order(self):
         if not self.tree or not self.lines:
