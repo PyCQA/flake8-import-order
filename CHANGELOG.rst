@@ -1,3 +1,12 @@
+0.11 2016-11-09
+---------------
+
+* Enforce lexicographic ordering for Google, Smarkets and AppNexus
+  styles. This may introduce warnings not present in previous
+  releases relating to case sensitivity.
+* Fix I100 case sensitivity for ungrouped imports, again enforcing
+  lexicographic ordering.
+
 0.10 2016-10-16
 ---------------
 
