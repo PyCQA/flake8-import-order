@@ -38,6 +38,9 @@ class Style(object):
                 if self.import_key(previous) > self.import_key(current):
                     first = self._explain(current)
                     second = self._explain(previous)
+                    if first == second:
+                        first = ", ".join(current.names)
+                        second = ", ".join(previous.names)
                     yield Error(
                         current.lineno,
                         'I100',
