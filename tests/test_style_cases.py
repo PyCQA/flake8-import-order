@@ -45,7 +45,7 @@ def _checker(filename, tree, style):
         'application_import_names': ['flake8_import_order', 'tests'],
         'import_order_style': style,
     }
-    if style == 'appnexus':
+    if style in ['appnexus', 'edited']:
         options['application_package_names'] = ['localpackage']
     checker = ImportOrderChecker(filename, tree)
     checker.options = options
