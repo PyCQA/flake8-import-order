@@ -123,6 +123,10 @@ class Smarkets(Style):
         return (import_.type, import_.is_from, import_.level, modules, names)
 
 
+class Edited(Smarkets):
+    pass
+
+
 class Cryptography(Style):
 
     @staticmethod

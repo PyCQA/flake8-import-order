@@ -1,3 +1,9 @@
+Unreleased 2017-01-23
+---------------------
+* Added new Edited style, this is equivalent to the Smarkets style
+  except that values specified in the `application-package-names`
+  option must be imported after third-party import statements
+
 0.11 2016-11-09
 ---------------
 
