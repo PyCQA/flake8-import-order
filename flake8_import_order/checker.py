@@ -40,7 +40,8 @@ class ImportOrderChecker(object):
             'import_order_style', DEFAULT_IMPORT_ORDER_STYLE,
         )
 
-        # application_package_names is supported only for the 'appnexus' and 'edited' styles
+        # application_package_names is supported only for the
+        # 'appnexus' and 'edited' styles
         if style_option in ['appnexus', 'edited']:
             visitor = self.visitor_class(
                 self.options.get('application_import_names', []),
