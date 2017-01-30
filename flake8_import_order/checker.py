@@ -1,10 +1,9 @@
 import ast
 
-import pkg_resources
-
 import pycodestyle
 
 from flake8_import_order import ImportVisitor
+from flake8_import_order.styles import lookup_entry_point
 
 DEFAULT_IMPORT_ORDER_STYLE = 'cryptography'
 
@@ -35,13 +34,14 @@ class ImportOrderChecker(object):
         if not self.tree or not self.lines:
             self.load_file()
 
-        style_option = self.options.get(
-            'import_order_style', DEFAULT_IMPORT_ORDER_STYLE,
-        )
+        try:
+            style_entry_point = self.options['import_order_style']
+        except KeyError:
+            style_entry_point = lookup_entry_point(DEFAULT_IMPORT_ORDER_STYLE)
 
         # application_package_names is supported only for the
         # 'appnexus' and 'edited' styles
-        if style_option in ['appnexus', 'edited']:
+        if style_entry_point.name in ['appnexus', 'edited']:
             visitor = self.visitor_class(
                 self.options.get('application_import_names', []),
                 self.options.get('application_package_names', []),
@@ -58,18 +58,8 @@ class ImportOrderChecker(object):
             if not pycodestyle.noqa(self.lines[import_.lineno - 1]):
                 imports.append(import_)
 
-        try:
-            style_entry_point = next(
-                pkg_resources.iter_entry_points(
-                    'flake8_import_order.styles',
-                    name=style_option
-                )
-            )
-        except StopIteration:
-            raise AssertionError("Unknown style {}".format(style_option))
-        else:
-            style_cls = style_entry_point.load()
-            style = style_cls(imports)
+        style_cls = style_entry_point.load()
+        style = style_cls(imports)
 
         for error in style.check():
             yield self.error(error)
