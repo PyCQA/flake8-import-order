@@ -2,6 +2,8 @@ from __future__ import absolute_import
 
 import optparse
 
+import pkg_resources
+
 from flake8_import_order import __version__
 from flake8_import_order.checker import (
     DEFAULT_IMPORT_ORDER_STYLE, ImportOrderChecker,
@@ -46,10 +48,18 @@ class Linter(ImportOrderChecker):
             default=DEFAULT_IMPORT_ORDER_STYLE,
             action="store",
             type="string",
-            help=("Style to follow. Available: "
-                  "cryptography, google, smarkets, appnexus, pep8"),
+            help=("Style to follow. Available: " +
+                  ", ".join(cls.list_available_styles())),
             parse_from_config=True,
         )
+
+    @staticmethod
+    def list_available_styles():
+        entry_points = pkg_resources.iter_entry_points(
+            'flake8_import_order.styles'
+        )
+        for entry_point in entry_points:
+            yield entry_point.name
 
     @classmethod
     def parse_options(cls, options):

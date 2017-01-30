@@ -1,11 +1,10 @@
 import ast
 
+import pkg_resources
+
 import pycodestyle
 
 from flake8_import_order import ImportVisitor
-from flake8_import_order.styles import (
-    AppNexus, Cryptography, Edited, Google, PEP8, Smarkets,
-)
 
 DEFAULT_IMPORT_ORDER_STYLE = 'cryptography'
 
@@ -59,20 +58,18 @@ class ImportOrderChecker(object):
             if not pycodestyle.noqa(self.lines[import_.lineno - 1]):
                 imports.append(import_)
 
-        if style_option == 'cryptography':
-            style = Cryptography(imports)
-        elif style_option == 'google':
-            style = Google(imports)
-        elif style_option == 'pep8':
-            style = PEP8(imports)
-        elif style_option == 'smarkets':
-            style = Smarkets(imports)
-        elif style_option == 'appnexus':
-            style = AppNexus(imports)
-        elif style_option == 'edited':
-            style = Edited(imports)
-        else:
+        try:
+            style_entry_point = next(
+                pkg_resources.iter_entry_points(
+                    'flake8_import_order.styles',
+                    name=style_option
+                )
+            )
+        except StopIteration:
             raise AssertionError("Unknown style {}".format(style_option))
+        else:
+            style_cls = style_entry_point.load()
+            style = style_cls(imports)
 
         for error in style.check():
             yield self.error(error)

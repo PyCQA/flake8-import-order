@@ -56,6 +56,9 @@ the code being developed.  This option is only supported if using the
 * ``edited`` - style as ``smarkets`` only with `import` statements for packages local to your company or organisation coming after `import` statements for third-party packages, see an `example <https://github.com/PyCQA/flake8-import-order/blob/master/tests/test_cases/complete_edited.py>`__
 * ``pep8`` - style that only enforces groups without enforcing the order within the groups
 
+You can also `add your own style <#extending-styles>`_ by extending ``Style``
+class.
+
 Limitations
 -----------
 
@@ -81,6 +84,46 @@ release of Python and hence the results can be misleading. This list
 is also the same for all Python versions because otherwise it would
 be impossible to write programs that work under both Python 2 and 3
 *and* pass the import order check.
+
+Extending styles
+----------------
+
+You can add your own style by extending ``flake8_import_order.styles.Style``
+class.  Here's an example:
+
+.. code-block:: python
+
+    from flake8_import_order.styles import Cryptography
+
+
+    class ReversedCryptography(Cryptography):
+        # Note that Cryptography is a subclass of Style.
+
+        @staticmethod
+        def sorted_names(names):
+            return reversed(Cryptography.sorted_names(names))
+
+To make flake8-import-order able to discover your extended style, you need to
+register it as ``flake8_import_order.styles`` using setuptools' `entry points
+<https://setuptools.readthedocs.io/en/latest/pkg_resources.html#entry-points>`__
+mechanism:
+
+.. code-block:: python
+
+    # setup.py of your style package
+    setup(
+        name='flake8-import-order-reversed-cryptography',
+        ...,
+        entry_points={
+            'flake8_import_order.styles': [
+                'reversed = reversedcryptography:ReversedCryptography',
+                # 'reversed' is a style name.  You can pass it to
+                # --import-order-style option
+                # 'reversedcryptography:ReversedCryptography' is an import path
+                # of your extended style class.
+            ]
+        }
+    )
 
 .. |Build Status| image:: https://travis-ci.org/PyCQA/flake8-import-order.png?branch=master
    :target: https://travis-ci.org/PyCQA/flake8-import-order
