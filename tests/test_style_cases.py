@@ -6,6 +6,7 @@ import re
 import pytest
 
 from flake8_import_order.checker import ImportOrderChecker
+from flake8_import_order.styles import lookup_entry_point
 
 ERROR_RX = re.compile("# ((I[0-9]{3} ?)+) ?.*$")
 
@@ -34,18 +35,19 @@ def _load_test_cases():
         styles = data.splitlines()[0].lstrip('#').strip().split()
         codes = _extract_expected_errors(data)
         tree = ast.parse(data, fullpath)
-        for style in styles:
-            test_cases.append((filename, tree, style, codes))
+        for style_name in styles:
+            style_entry_point = lookup_entry_point(style_name)
+            test_cases.append((filename, tree, style_entry_point, codes))
 
     return test_cases
 
 
-def _checker(filename, tree, style):
+def _checker(filename, tree, style_entry_point):
     options = {
         'application_import_names': ['flake8_import_order', 'tests'],
-        'import_order_style': style,
+        'import_order_style': style_entry_point,
     }
-    if style in ['appnexus', 'edited']:
+    if style_entry_point.name in ['appnexus', 'edited']:
         options['application_package_names'] = ['localpackage']
     checker = ImportOrderChecker(filename, tree)
     checker.options = options

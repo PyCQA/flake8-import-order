@@ -3,6 +3,7 @@ import ast
 import pycodestyle
 
 from flake8_import_order.flake8_linter import Linter
+from flake8_import_order.styles import Google
 
 
 def test_parsing():
@@ -20,7 +21,8 @@ def test_parsing():
     options, args = parser.parse_args(argv)
     Linter.parse_options(options)
 
-    assert Linter.options['import_order_style'] == style
+    assert Linter.options['import_order_style'].name == style
+    assert Linter.options['import_order_style'].load() is Google
     assert Linter.options['application_import_names'] == import_names
     assert Linter.options['application_package_names'] == package_names
 

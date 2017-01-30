@@ -1,5 +1,7 @@
 from collections import namedtuple
 
+from pkg_resources import iter_entry_points
+
 from flake8_import_order import (
     IMPORT_3RD_PARTY, IMPORT_APP, IMPORT_APP_RELATIVE,
 )
@@ -7,6 +9,17 @@ from flake8_import_order import (
 RELATIVE_SET = {IMPORT_APP, IMPORT_APP_RELATIVE}
 
 Error = namedtuple('Error', ['lineno', 'code', 'message'])
+
+
+def list_entry_points():
+    return iter_entry_points('flake8_import_order.styles')
+
+
+def lookup_entry_point(name):
+    try:
+        return next(iter_entry_points('flake8_import_order.styles', name=name))
+    except StopIteration:
+        raise LookupError('Unknown style {}'.format(name))
 
 
 class Style(object):

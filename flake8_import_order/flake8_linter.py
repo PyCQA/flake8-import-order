@@ -2,12 +2,11 @@ from __future__ import absolute_import
 
 import optparse
 
-import pkg_resources
-
 from flake8_import_order import __version__
 from flake8_import_order.checker import (
     DEFAULT_IMPORT_ORDER_STYLE, ImportOrderChecker,
 )
+from flake8_import_order.styles import list_entry_points, lookup_entry_point
 
 
 class Linter(ImportOrderChecker):
@@ -55,11 +54,8 @@ class Linter(ImportOrderChecker):
 
     @staticmethod
     def list_available_styles():
-        entry_points = pkg_resources.iter_entry_points(
-            'flake8_import_order.styles'
-        )
-        for entry_point in entry_points:
-            yield entry_point.name
+        entry_points = list_entry_points()
+        return sorted(entry_point.name for entry_point in entry_points)
 
     @classmethod
     def parse_options(cls, options):
@@ -73,10 +69,12 @@ class Linter(ImportOrderChecker):
         if not isinstance(pkg_names, list):
             pkg_names = options.application_package_names.split(",")
 
+        style_entry_point = lookup_entry_point(options.import_order_style)
+
         optdict = dict(
             application_import_names=[n.strip() for n in names],
             application_package_names=[p.strip() for p in pkg_names],
-            import_order_style=options.import_order_style,
+            import_order_style=style_entry_point,
         )
 
         cls.options = optdict
