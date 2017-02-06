@@ -1,6 +1,7 @@
 import ast
 
 import pycodestyle
+
 import pytest
 
 from flake8_import_order import STDLIB_NAMES
