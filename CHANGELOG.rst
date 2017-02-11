@@ -1,8 +1,11 @@
-Unreleased 2017-01-23
----------------------
+0.12 2017-02-11
+---------------
+
 * Added new Edited style, this is equivalent to the Smarkets style
-  except that values specified in the `application-package-names`
+  except that values specified in the ``application-package-names``
   option must be imported after third-party import statements
+* Added ability to extend a style using an entrypoint.
+* Fix ambiguous I100 error, now lists correct packages.
 
 0.11 2016-11-09
 ---------------
