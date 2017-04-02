@@ -125,5 +125,5 @@ mechanism:
         }
     )
 
-.. |Build Status| image:: https://travis-ci.org/PyCQA/flake8-import-order.png?branch=master
+.. |Build Status| image:: https://travis-ci.org/PyCQA/flake8-import-order.svg?branch=master
    :target: https://travis-ci.org/PyCQA/flake8-import-order
