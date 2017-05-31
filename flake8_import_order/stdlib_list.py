@@ -242,6 +242,7 @@ STDLIB_NAMES = set((
     "robotparser",
     "runpy",
     "sched",
+    "secrets",
     "select",
     "sets",
     "sgmllib",
