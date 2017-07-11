@@ -40,8 +40,8 @@ class ImportOrderChecker(object):
             style_entry_point = lookup_entry_point(DEFAULT_IMPORT_ORDER_STYLE)
 
         # application_package_names is supported only for the
-        # 'appnexus' and 'edited' styles
-        if style_entry_point.name in ['appnexus', 'edited']:
+        # 'appnexus', 'edited', and 'pep8' styles
+        if style_entry_point.name in ['appnexus', 'edited', 'pep8']:
             visitor = self.visitor_class(
                 self.options.get('application_import_names', []),
                 self.options.get('application_package_names', []),
