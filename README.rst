@@ -44,7 +44,7 @@ company or organisation, but which are obtained using some sort of
 package manager like Pip, Apt, or Yum.  Typically, code representing the
 values listed in this option is located in a different repository than
 the code being developed.  This option is only supported if using the
-``appnexus`` or ``edited`` styles.
+``appnexus``, ``edited``, or ``pep8`` styles.
 
 ``import-order-style`` controls what style the plugin follows
 (``cryptography`` is the default):
