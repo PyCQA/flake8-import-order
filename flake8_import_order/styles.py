@@ -24,6 +24,8 @@ def lookup_entry_point(name):
 
 class Style(object):
 
+    accepts_application_package_names = False
+
     def __init__(self, imports):
         self.imports = imports
 
@@ -116,7 +118,7 @@ class Google(Style):
 
 
 class AppNexus(Google):
-    pass
+    accepts_application_package_names = True
 
 
 class Smarkets(Style):
@@ -137,7 +139,7 @@ class Smarkets(Style):
 
 
 class Edited(Smarkets):
-    pass
+    accepts_application_package_names = True
 
 
 class Cryptography(Style):

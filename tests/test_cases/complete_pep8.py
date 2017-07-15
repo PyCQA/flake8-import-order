@@ -7,6 +7,7 @@ import os
 from functools import *
 import ast
 
+import localpackage
 import X
 from X import A, d
 from X import *

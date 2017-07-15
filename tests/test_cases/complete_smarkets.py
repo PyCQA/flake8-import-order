@@ -8,6 +8,7 @@ import sys
 from functools import *
 from os import path
 
+import localpackage
 import X
 import Y
 import Z

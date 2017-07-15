@@ -8,6 +8,7 @@ from os import path
 import StringIO
 import sys
 
+import localpackage
 import X
 from X import *
 from X import A

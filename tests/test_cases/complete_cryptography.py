@@ -22,6 +22,8 @@ from Z import A
 from Z.A import A
 from Z.A.B import A
 
+import localpackage
+
 import flake8_import_order
 from flake8_import_order import *
 from flake8_import_order import A
