@@ -61,3 +61,8 @@ def test_styles(filename, tree, style, expected_codes):
     checker = _checker(filename, tree, style)
     codes = [error.code for error in checker.check_order()]
     assert codes == expected_codes
+
+
+def test_unknown_style():
+    with pytest.raises(LookupError):
+        lookup_entry_point('Unknown')
