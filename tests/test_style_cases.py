@@ -45,10 +45,9 @@ def _load_test_cases():
 def _checker(filename, tree, style_entry_point):
     options = {
         'application_import_names': ['flake8_import_order', 'tests'],
+        'application_package_names': ['localpackage'],
         'import_order_style': style_entry_point,
     }
-    if style_entry_point.name in ['appnexus', 'edited']:
-        options['application_package_names'] = ['localpackage']
     checker = ImportOrderChecker(filename, tree)
     checker.options = options
     return checker

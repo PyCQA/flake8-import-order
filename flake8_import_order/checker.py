@@ -38,10 +38,9 @@ class ImportOrderChecker(object):
             style_entry_point = self.options['import_order_style']
         except KeyError:
             style_entry_point = lookup_entry_point(DEFAULT_IMPORT_ORDER_STYLE)
+        style_cls = style_entry_point.load()
 
-        # application_package_names is supported only for the
-        # 'appnexus' and 'edited' styles
-        if style_entry_point.name in ['appnexus', 'edited']:
+        if style_cls.accepts_application_package_names:
             visitor = self.visitor_class(
                 self.options.get('application_import_names', []),
                 self.options.get('application_package_names', []),
@@ -58,7 +57,6 @@ class ImportOrderChecker(object):
             if not pycodestyle.noqa(self.lines[import_.lineno - 1]):
                 imports.append(import_)
 
-        style_cls = style_entry_point.load()
         style = style_cls(imports)
 
         for error in style.check():
