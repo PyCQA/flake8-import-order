@@ -1,3 +1,9 @@
+0.13 2017-07-29
+---------------
+
+* Added ``secrets`` to stdlib list.
+* Allow for any style to use application-package grouping.
+
 0.12 2017-02-11
 ---------------
 
