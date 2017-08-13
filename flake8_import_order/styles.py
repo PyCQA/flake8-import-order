@@ -62,11 +62,19 @@ class Style(object):
                     )
 
                 spacing = current.lineno - previous.lineno
-                if not self.same_section(previous, current) and spacing == 1:
+                same_section = self.same_section(previous, current)
+                if not same_section and spacing == 1:
                     yield Error(
                         current.lineno,
                         'I201',
                         'Missing newline before sections or imports.',
+                    )
+
+                if same_section and spacing > 1:
+                    yield Error(
+                        current.lineno,
+                        'I202',
+                        'Additional newline in a section of imports.',
                     )
 
             previous = current

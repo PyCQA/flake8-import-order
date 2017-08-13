@@ -21,11 +21,12 @@ with this style remaining the default.
 Warnings
 --------
 
-This package adds 3 new flake8 warnings
+This package adds 4 new flake8 warnings
 
 -  ``I100``: Your import statements are in the wrong order.
 -  ``I101``: The names in your from import are in the wrong order.
 -  ``I201``: Missing newline between sections or imports.
+-  ``I202``: Additional newline in a section of imports.
 
 Styles
 ------
