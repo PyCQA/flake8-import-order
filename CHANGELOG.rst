@@ -2,6 +2,8 @@
 ----
 
 * Fixed I201 error raising for cryptography style.
+* Added I202 error when there is an additional newline in a section of
+  imports.
 
 0.13 2017-07-29
 ---------------
