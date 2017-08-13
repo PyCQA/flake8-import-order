@@ -1,3 +1,8 @@
+0.14
+----
+
+* Fixed I201 error raising for cryptography style.
+
 0.13 2017-07-29
 ---------------
 
