@@ -57,8 +57,8 @@ company or organisation, but which are obtained using some sort of
 package manager like Pip, Apt, or Yum.  Typically, code representing
 the values listed in this option is located in a different repository
 than the code being developed.  This option is only accepted in the
-supported ``appnexus`` or ``edited`` styles or in any style that
-accepts application package names.
+supported ``appnexus``, ``edited`` or ``pep8`` styles or in any style
+that accepts application package names.
 
 ``import-order-style`` controls what style the plugin follows
 (``cryptography`` is the default).

@@ -97,7 +97,7 @@ class Style(object):
 
 
 class PEP8(Style):
-    pass
+    accepts_application_package_names = True
 
 
 class Google(Style):
