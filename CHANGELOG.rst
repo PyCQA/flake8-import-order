@@ -1,9 +1,10 @@
-0.14
-----
+0.14 2017-10-24
+---------------
 
 * Fixed I201 error raising for cryptography style.
 * Added I202 error when there is an additional newline in a section of
   imports.
+* Added ``ntpath`` and ``os2emxpath`` to stdlib list.
 
 0.13 2017-07-29
 ---------------
