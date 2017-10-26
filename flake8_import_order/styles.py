@@ -32,7 +32,7 @@ class Style(object):
         for current in self.imports:
             if current.type == -1:
                 yield Error(
-                    current.lineno,
+                    current.start_line,
                     'I666',
                     'Import statement mixes groups',
                 )
@@ -41,7 +41,7 @@ class Style(object):
             if correct_names != current.names:
                 corrected = ', '.join(correct_names)
                 yield Error(
-                    current.lineno,
+                    current.start_line,
                     'I101',
                     "Imported names are in the wrong order. "
                     "Should be {0}".format(corrected),
@@ -55,24 +55,24 @@ class Style(object):
                         first = ", ".join(current.names)
                         second = ", ".join(previous.names)
                     yield Error(
-                        current.lineno,
+                        current.start_line,
                         'I100',
                         "Import statements are in the wrong order. "
                         "{0} should be before {1}".format(first, second),
                     )
 
-                spacing = current.lineno - previous.lineno
+                spacing = current.start_line - previous.end_line
                 same_section = self.same_section(previous, current)
                 if not same_section and spacing == 1:
                     yield Error(
-                        current.lineno,
+                        current.start_line,
                         'I201',
                         'Missing newline before sections or imports.',
                     )
 
                 if same_section and spacing > 1:
                     yield Error(
-                        current.lineno,
+                        current.start_line,
                         'I202',
                         'Additional newline in a section of imports.',
                     )

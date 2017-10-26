@@ -1,5 +1,4 @@
-import ast
-
+import asttokens
 import pycodestyle
 
 from flake8_import_order import ImportVisitor
@@ -12,10 +11,10 @@ class ImportOrderChecker(object):
     visitor_class = ImportVisitor
     options = None
 
-    def __init__(self, filename, tree):
-        self.tree = tree
+    def __init__(self, filename):
         self.filename = filename
         self.lines = None
+        self.tree = None
 
     def load_file(self):
         if self.filename in ("stdin", "-", None):
@@ -24,8 +23,7 @@ class ImportOrderChecker(object):
         else:
             self.lines = pycodestyle.readlines(self.filename)
 
-        if not self.tree:
-            self.tree = ast.parse("".join(self.lines))
+        self.tree = asttokens.ASTTokens(''.join(self.lines), parse=True).tree
 
     def error(self, error):
         return error
@@ -54,7 +52,7 @@ class ImportOrderChecker(object):
 
         imports = []
         for import_ in visitor.imports:
-            if not pycodestyle.noqa(self.lines[import_.lineno - 1]):
+            if not pycodestyle.noqa(self.lines[import_.start_line - 1]):
                 imports.append(import_)
 
         style = style_cls(imports)

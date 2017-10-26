@@ -4,8 +4,15 @@ import ast
 import signal # I202
 
 import X
+from X import B, b, \
+    C, d
 
-import Y  # I202
+from Y import A # I202
+from Y import (
+    B, b,
+    C, d,
+)
+from Z import A
 
 import flake8_import_order
 

@@ -1,4 +1,3 @@
-import ast
 import glob
 import os
 import re
@@ -34,31 +33,30 @@ def _load_test_cases():
             data = file_.read()
         styles = data.splitlines()[0].lstrip('#').strip().split()
         codes = _extract_expected_errors(data)
-        tree = ast.parse(data, fullpath)
         for style_name in styles:
             style_entry_point = lookup_entry_point(style_name)
-            test_cases.append((filename, tree, style_entry_point, codes))
+            test_cases.append((filename, style_entry_point, codes))
 
     return test_cases
 
 
-def _checker(filename, tree, style_entry_point):
+def _checker(filename, style_entry_point):
     options = {
         'application_import_names': ['flake8_import_order', 'tests'],
         'application_package_names': ['localpackage'],
         'import_order_style': style_entry_point,
     }
-    checker = ImportOrderChecker(filename, tree)
+    checker = ImportOrderChecker(filename)
     checker.options = options
     return checker
 
 
 @pytest.mark.parametrize(
-    'filename, tree, style, expected_codes',
+    'filename, style, expected_codes',
     _load_test_cases(),
 )
-def test_styles(filename, tree, style, expected_codes):
-    checker = _checker(filename, tree, style)
+def test_styles(filename, style, expected_codes):
+    checker = _checker(filename, style)
     codes = [error.code for error in checker.check_order()]
     assert codes == expected_codes
 

@@ -1,5 +1,3 @@
-import ast
-
 import pycodestyle
 
 import pytest
@@ -18,8 +16,7 @@ def _load_test_cases():
 
 def _checker(data):
     pycodestyle.stdin_get_value = lambda: data
-    tree = ast.parse(data)
-    checker = ImportOrderChecker(None, tree)
+    checker = ImportOrderChecker(None)
     checker.options = {}
     return checker
 

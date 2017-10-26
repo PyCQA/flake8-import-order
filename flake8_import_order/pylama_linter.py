@@ -14,7 +14,7 @@ class Linter(ImportOrderChecker, BaseLinter):
     version = __version__
 
     def __init__(self):
-        super(Linter, self).__init__(None, None)
+        super(Linter, self).__init__(None)
 
     def allow(self, path):
         return path.endswith(".py")
