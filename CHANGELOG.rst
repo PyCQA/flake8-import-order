@@ -1,3 +1,8 @@
+0.14.1 2017-10-17
+-----------------
+
+* Bug fix, cope with multi-line imports when considering I202.
+
 0.14 2017-10-24
 ---------------
 
