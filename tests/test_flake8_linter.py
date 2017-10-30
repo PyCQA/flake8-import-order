@@ -1,3 +1,5 @@
+import ast
+
 import pycodestyle
 
 from flake8_import_order.flake8_linter import Linter
@@ -34,6 +36,7 @@ def test_linter():
 
     data = 'import ast\nimport flake8_import_order\n'
     pycodestyle.stdin_get_value = lambda: data
-    checker = Linter(None)
+    tree = ast.parse(data)
+    checker = Linter(tree, None)
     for lineno, col_offset, msg, instance in checker.run():
         assert msg == 'I201 Missing newline before sections or imports.'

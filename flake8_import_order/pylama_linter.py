@@ -14,7 +14,7 @@ class Linter(ImportOrderChecker, BaseLinter):
     version = __version__
 
     def __init__(self):
-        super(Linter, self).__init__(None)
+        super(Linter, self).__init__(None, None)
 
     def allow(self, path):
         return path.endswith(".py")
@@ -29,7 +29,7 @@ class Linter(ImportOrderChecker, BaseLinter):
 
     def run(self, path, **meta):
         self.filename = path
-        self.tree = None
+        self.ast_tree = None
         meta.setdefault('import_order_style', DEFAULT_IMPORT_ORDER_STYLE)
         meta['import_order_style'] = lookup_entry_point(
             meta['import_order_style']
