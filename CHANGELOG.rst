@@ -1,4 +1,9 @@
-0.14.1 2017-10-17
+0.14.2 2017-10-30
+-----------------
+
+* Bug fix, ensure the plugin is invoked by flake8.
+
+0.14.1 2017-10-27
 -----------------
 
 * Bug fix, cope with multi-line imports when considering I202.
