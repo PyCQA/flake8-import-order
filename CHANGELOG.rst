@@ -1,3 +1,8 @@
+0.15
+----
+
+* Drop Python 3.3 support, as Python 3.3 is beyond it's end of lfe.
+
 0.14.3 2017-11-01
 -----------------
 
