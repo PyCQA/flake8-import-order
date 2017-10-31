@@ -58,12 +58,8 @@ class ImportOrderChecker(object):
             )
         visitor.visit(tree)
 
-        imports = []
-        for import_ in visitor.imports:
-            if not pycodestyle.noqa(self.lines[import_.start_line - 1]):
-                imports.append(import_)
-
-        style = style_cls(imports)
+        style = style_cls(visitor.imports)
 
         for error in style.check():
-            yield self.error(error)
+            if not pycodestyle.noqa(self.lines[error.lineno - 1]):
+                yield self.error(error)
