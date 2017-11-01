@@ -1,3 +1,8 @@
+0.14.3 2017-11-01
+-----------------
+
+* Bug fix, allow for noqa directives to work with I202.
+
 0.14.2 2017-10-30
 -----------------
 
