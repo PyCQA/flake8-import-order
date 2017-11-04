@@ -2,6 +2,9 @@
 ----
 
 * Drop Python 3.3 support, as Python 3.3 is beyond it's end of lfe.
+* Correct the flake8 entrypoint to report all ``I`` errors, this may
+  result in ``I2XX`` errors being reported that were absent
+  previously.
 
 0.14.3 2017-11-01
 -----------------
