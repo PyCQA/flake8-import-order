@@ -5,6 +5,9 @@
 * Correct the flake8 entrypoint to report all ``I`` errors, this may
   result in ``I2XX`` errors being reported that were absent
   previously.
+* Support in-line ``# noqa`` comments specifing only the error codes
+  to be ignored, e.g., ``# noqa: I101``.
+
 
 0.14.3 2017-11-01
 -----------------
