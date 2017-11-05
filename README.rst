@@ -77,11 +77,19 @@ the style accepts application-package names. Only if none of these
 lists contain the imported module will it be classified as third
 party.
 
-``I201`` only checks that groups of imports are not consecutive and only
-takes into account the first line of each import statement. This means
-that multi-line from imports, comments between imports and so on may
-cause this error not to be raised correctly in all situations. This
-restriction is due to the data provided by the stdlib ``ast`` module.
+These checks only consider an import against its previous import,
+rather than considering all the imports together. This means that
+``I100`` errors are only raised for the latter of adjacent imports out
+of order. For example,
+
+.. code-block:: python
+
+    import X.B
+    import X  # I100
+    import X.A
+
+only ``import X`` raises an ``I100`` error, yet ``import X.A`` is also
+out of order compared with the ``import X.B``.
 
 Imported modules are classified as stdlib if the module is in a
 vendored list of stdlib modules. This list is based on the latest
