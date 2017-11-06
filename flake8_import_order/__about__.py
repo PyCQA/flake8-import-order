@@ -12,7 +12,7 @@ __summary__ = (
 )
 __uri__ = "https://github.com/PyCQA/flake8-import-order"
 
-__version__ = "0.14.3"
+__version__ = "0.15"
 
 __author__ = "Alex Stapleton"
 __email__ = "alexs@prol.etari.at"

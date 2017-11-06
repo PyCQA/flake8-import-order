@@ -1,5 +1,5 @@
-0.15
-----
+0.15 2017-11-06
+---------------
 
 * Drop Python 3.3 support, as Python 3.3 is beyond it's end of lfe.
 * Correct the flake8 entrypoint to report all ``I`` errors, this may
@@ -7,6 +7,8 @@
   previously.
 * Support in-line ``# noqa`` comments specifing only the error codes
   to be ignored, e.g., ``# noqa: I101``.
+* Accept only ``# noqa`` directives on the line reporting the error,
+  see limitations.
 
 
 0.14.3 2017-11-01
