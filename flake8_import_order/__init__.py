@@ -24,11 +24,9 @@ IMPORT_MIXED = -1
 
 ClassifiedImport = namedtuple(
     'ClassifiedImport',
-    [
-        'type', 'is_from', 'modules', 'names', 'start_line', 'end_line',
-        'level', 'package',
-    ],
+    ['type', 'is_from', 'modules', 'names', 'lineno', 'level', 'package'],
 )
+NewLine = namedtuple('NewLine', ['lineno'])
 
 
 def root_package_name(name):
@@ -56,8 +54,7 @@ class ImportVisitor(ast.NodeVisitor):
             else:
                 type_ = IMPORT_MIXED
             classified_import = ClassifiedImport(
-                type_, False, modules, [], node.first_token.start[0],
-                node.last_token.end[0], 0,
+                type_, False, modules, [], node.lineno, 0,
                 root_package_name(modules[0]),
             )
             self.imports.append(classified_import)
@@ -72,8 +69,7 @@ class ImportVisitor(ast.NodeVisitor):
             names = [alias.name for alias in node.names]
             classified_import = ClassifiedImport(
                 type_, True, [module], names,
-                node.first_token.start[0], node.last_token.end[0],
-                node.level,
+                node.lineno, node.level,
                 root_package_name(module),
             )
             self.imports.append(classified_import)

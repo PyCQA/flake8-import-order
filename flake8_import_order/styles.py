@@ -3,7 +3,8 @@ from collections import namedtuple
 from pkg_resources import iter_entry_points
 
 from flake8_import_order import (
-    IMPORT_3RD_PARTY, IMPORT_APP, IMPORT_APP_RELATIVE,
+    ClassifiedImport, IMPORT_3RD_PARTY, IMPORT_APP, IMPORT_APP_RELATIVE,
+    NewLine,
 )
 
 Error = namedtuple('Error', ['lineno', 'code', 'message'])
@@ -24,60 +25,68 @@ class Style(object):
 
     accepts_application_package_names = False
 
-    def __init__(self, imports):
-        self.imports = imports
+    def __init__(self, nodes):
+        self.nodes = nodes
 
     def check(self):
         previous = None
-        for current in self.imports:
-            if current.type == -1:
-                yield Error(
-                    current.start_line,
-                    'I666',
-                    'Import statement mixes groups',
-                )
-
-            correct_names = self.sorted_names(current.names)
-            if correct_names != current.names:
-                corrected = ', '.join(correct_names)
-                yield Error(
-                    current.start_line,
-                    'I101',
-                    "Imported names are in the wrong order. "
-                    "Should be {0}".format(corrected),
-                )
-
-            if previous is not None:
-                if self.import_key(previous) > self.import_key(current):
-                    first = self._explain(current)
-                    second = self._explain(previous)
-                    if first == second:
-                        first = ", ".join(current.names)
-                        second = ", ".join(previous.names)
-                    yield Error(
-                        current.start_line,
-                        'I100',
-                        "Import statements are in the wrong order. "
-                        "{0} should be before {1}".format(first, second),
-                    )
-
-                spacing = current.start_line - previous.end_line
-                same_section = self.same_section(previous, current)
-                if not same_section and spacing == 1:
-                    yield Error(
-                        current.start_line,
-                        'I201',
-                        'Missing newline before sections or imports.',
-                    )
-
-                if same_section and spacing > 1:
-                    yield Error(
-                        current.start_line,
-                        'I202',
-                        'Additional newline in a section of imports.',
-                    )
-
+        previous_import = None
+        for current in self.nodes:
+            if isinstance(current, ClassifiedImport):
+                for error in self._check(previous_import, previous, current):
+                    yield error
+                previous_import = current
             previous = current
+
+    def _check(self, previous_import, previous, current_import):
+        if current_import.type == -1:
+            yield Error(
+                current_import.lineno,
+                'I666',
+                'Import statement mixes groups',
+            )
+
+        correct_names = self.sorted_names(current_import.names)
+        if correct_names != current_import.names:
+            corrected = ', '.join(correct_names)
+            yield Error(
+                current_import.lineno,
+                'I101',
+                "Imported names are in the wrong order. "
+                "Should be {0}".format(corrected),
+            )
+
+        if previous_import is not None:
+            previous_key = self.import_key(previous_import)
+            current_key = self.import_key(current_import)
+            if previous_key > current_key:
+                first = self._explain(current_import)
+                second = self._explain(previous_import)
+                if first == second:
+                    first = ", ".join(current_import.names)
+                    second = ", ".join(previous_import.names)
+                yield Error(
+                    current_import.lineno,
+                    'I100',
+                    "Import statements are in the wrong order. "
+                    "{0} should be before {1}".format(first, second),
+                )
+
+            same_section = self.same_section(previous_import, current_import)
+            has_newline = isinstance(previous, NewLine)
+            if not same_section and not has_newline:
+                yield Error(
+                    current_import.lineno,
+                    'I201',
+                    'Missing newline before sections or imports.',
+                )
+
+            if same_section and has_newline:
+                yield Error(
+                    current_import.lineno,
+                    'I202',
+                    'Additional newline in a section of imports.',
+                )
 
     @staticmethod
     def sorted_names(names):

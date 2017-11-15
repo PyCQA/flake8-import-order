@@ -1,11 +1,10 @@
 import ast
 import re
-
-import asttokens
+from itertools import chain
 
 import pycodestyle
 
-from flake8_import_order import ImportVisitor
+from flake8_import_order import ImportVisitor, NewLine
 from flake8_import_order.styles import lookup_entry_point
 
 DEFAULT_IMPORT_ORDER_STYLE = 'cryptography'
@@ -23,6 +22,7 @@ NOQA_INLINE_REGEXP = re.compile(
     re.IGNORECASE
 )
 COMMA_SEPARATED_LIST_RE = re.compile(r'[,\s]')
+BLANK_LINE_RE = re.compile(r'\s*\n')
 
 
 class ImportOrderChecker(object):
@@ -30,7 +30,7 @@ class ImportOrderChecker(object):
     options = None
 
     def __init__(self, filename, tree):
-        self.ast_tree = tree
+        self.tree = tree
         self.filename = filename
         self.lines = None
 
@@ -41,19 +41,15 @@ class ImportOrderChecker(object):
         else:
             self.lines = pycodestyle.readlines(self.filename)
 
-        if self.ast_tree is None:
-            self.ast_tree = ast.parse(''.join(self.lines))
+        if self.tree is None:
+            self.tree = ast.parse(''.join(self.lines))
 
     def error(self, error):
         return error
 
     def check_order(self):
-        if not self.ast_tree or not self.lines:
+        if not self.tree or not self.lines:
             self.load_file()
-
-        tree = asttokens.ASTTokens(
-            ''.join(self.lines), parse=False, tree=self.ast_tree,
-        ).tree
 
         try:
             style_entry_point = self.options['import_order_style']
@@ -71,9 +67,19 @@ class ImportOrderChecker(object):
                 self.options.get('application_import_names', []),
                 [],
             )
-        visitor.visit(tree)
+        visitor.visit(self.tree)
 
-        style = style_cls(visitor.imports)
+        newlines = [
+            NewLine(lineno + 1)  # Lines are ordinal, no zero line
+            for lineno, line in enumerate(self.lines)
+            if BLANK_LINE_RE.match(line)
+        ]
+        # Replace the below with heapq merge, when Python2 is dropped.
+        combined = sorted(
+            chain(newlines, visitor.imports),
+            key=lambda element: element.lineno,
+        )
+        style = style_cls(combined)
 
         for error in style.check():
             if not self.error_is_ignored(error):

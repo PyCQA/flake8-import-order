@@ -1,3 +1,11 @@
+0.16
+----
+
+* Change spacing determination to consider only blank newlines as a
+  space. This adds NewLine nodes to the checker and hence could break
+  custom styles (that use the nodes directly). This also drops the
+  asttokens dependency as it is no longer required.
+
 0.15 2017-11-06
 ---------------
 

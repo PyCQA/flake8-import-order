@@ -1,5 +1,7 @@
 # appnexus edited google pep8 smarkets
 import ast
+# This comment should not trigger a I202 (not a newline)
+import os
 
 import signal # I202
 
