@@ -246,6 +246,7 @@ STDLIB_NAMES = set((
     "sched",
     "secrets",
     "select",
+    "selectors",
     "sets",
     "sgmllib",
     "sha",
