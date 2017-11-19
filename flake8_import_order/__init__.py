@@ -1,5 +1,9 @@
 import ast
 from collections import namedtuple
+try:
+    from importlib.util import find_spec
+except ImportError:
+    find_spec = lambda _: None  # noqa: E731
 
 from flake8_import_order.__about__ import (
     __author__, __copyright__, __email__, __license__, __summary__, __title__,
@@ -30,12 +34,24 @@ NewLine = namedtuple('NewLine', ['lineno'])
 
 
 def root_package_name(name):
-    p = ast.parse(name)
-    for n in ast.walk(p):
-        if isinstance(n, ast.Name):
-            return n.id
-    else:
-        return None
+    tree = ast.parse(name)
+    attributes = []
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Attribute):
+            attributes.append(node.attr)
+        if isinstance(node, ast.Name):
+            return root_package(node.id, attributes)
+
+
+def root_package(name, attributes):
+    while is_namespace_package(name):
+        name = "%s.%s" % (name, attributes.pop())
+    return name
+
+
+def is_namespace_package(name):
+    spec = find_spec(name)
+    return spec is not None and spec.origin == 'namespace'
 
 
 class ImportVisitor(ast.NodeVisitor):

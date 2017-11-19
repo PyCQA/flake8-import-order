@@ -98,6 +98,10 @@ is also the same for all Python versions because otherwise it would
 be impossible to write programs that work under both Python 2 and 3
 *and* pass the import order check.
 
+Namespaced packages are understood and the namespace itself is not
+considered the root package name. This however does not work in
+Python2 due to limitations in finding the module specification.
+
 Extending styles
 ----------------
 

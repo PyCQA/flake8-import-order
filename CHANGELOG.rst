@@ -5,6 +5,8 @@
   space. This adds NewLine nodes to the checker and hence could break
   custom styles (that use the nodes directly). This also drops the
   asttokens dependency as it is no longer required.
+* Understand the existance of namespaced packages, thereby allowing
+  different namespaced pacakges to be defined as local or third party.
 
 0.15 2017-11-06
 ---------------

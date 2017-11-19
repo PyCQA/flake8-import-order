@@ -2,11 +2,17 @@ import ast
 import glob
 import os
 import re
+import sys
 
 import pytest
 
 from flake8_import_order.checker import ImportOrderChecker
 from flake8_import_order.styles import lookup_entry_point
+
+# The namespace test requires the namespace directory within the test
+# directory to be on the import path. To do this we extend the path to
+# the directory of this file.
+sys.path.append(os.path.dirname(__file__))
 
 ERROR_RX = re.compile("# ((I[0-9]{3} ?)+) ?.*$")
 
@@ -29,6 +35,9 @@ def _load_test_cases():
     wildcard_path = os.path.join(test_case_path, '*.py')
 
     for filename in glob.glob(wildcard_path):
+        # The namespace.py test only works with Python3
+        if filename.endswith('namespace.py') and sys.version_info.major < 3:
+            continue
         fullpath = os.path.join(test_case_path, filename)
         with open(fullpath) as file_:
             data = file_.read()
@@ -44,7 +53,9 @@ def _load_test_cases():
 
 def _checker(filename, tree, style_entry_point):
     options = {
-        'application_import_names': ['flake8_import_order', 'tests'],
+        'application_import_names': [
+            'flake8_import_order', 'namespace.package_b', 'tests',
+        ],
         'application_package_names': ['localpackage'],
         'import_order_style': style_entry_point,
     }
