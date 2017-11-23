@@ -1,9 +1,5 @@
 import ast
 from collections import namedtuple
-try:
-    from importlib.util import find_spec
-except ImportError:  # Remove when drop Python2
-    find_spec = lambda _: None  # noqa: E731
 
 from flake8_import_order.__about__ import (
     __author__, __copyright__, __email__, __license__, __summary__, __title__,
@@ -33,36 +29,43 @@ ClassifiedImport = namedtuple(
 NewLine = namedtuple('NewLine', ['lineno'])
 
 
-def root_package_name(name):
+def get_package_names(name):
     tree = ast.parse(name)
-    attributes = []
+    parts = []
     for node in ast.walk(tree):
         if isinstance(node, ast.Attribute):
-            attributes.append(node.attr)
+            parts.append(node.attr)
         if isinstance(node, ast.Name):
-            return root_package(node.id, attributes)
+            parts.append(node.id)
+
+    if not parts:
+        return []
+
+    last_package_name = parts[-1]
+    package_names = [last_package_name]
+
+    for part in parts[-2::-1]:
+        last_package_name = '%s.%s' % (last_package_name, part)
+        package_names.append(last_package_name)
+
+    return package_names
 
 
-def root_package(name, attributes):
-    while is_namespace_package(name):
-        try:
-            name = "%s.%s" % (name, attributes.pop())
-        except IndexError:  # Direct import of a namespace package
-            break
-    return name
-
-
-def is_namespace_package(name):
-    spec = find_spec(name)
-    return spec is not None and spec.origin == 'namespace'
+def root_package_name(name):
+    p = ast.parse(name)
+    for n in ast.walk(p):
+        if isinstance(n, ast.Name):
+            return n.id
+    else:
+        return None
 
 
 class ImportVisitor(ast.NodeVisitor):
 
     def __init__(self, application_import_names, application_package_names):
         self.imports = []
-        self.application_import_names = application_import_names
-        self.application_package_names = application_package_names
+        self.application_import_names = frozenset(application_import_names)
+        self.application_package_names = frozenset(application_package_names)
 
     def visit_Import(self, node):  # noqa
         if node.col_offset == 0:
@@ -94,17 +97,20 @@ class ImportVisitor(ast.NodeVisitor):
             self.imports.append(classified_import)
 
     def _classify_type(self, module):
-        package = root_package_name(module)
+        package_names = get_package_names(module)
 
-        if package == "__future__":
-            return IMPORT_FUTURE
-        elif package in self.application_import_names:
-            return IMPORT_APP
-        elif package in self.application_package_names:
-            return IMPORT_APP_PACKAGE
-        elif package in STDLIB_NAMES:
-            return IMPORT_STDLIB
-        else:
-            # Not future, stdlib or an application import.
-            # Must be 3rd party.
-            return IMPORT_3RD_PARTY
+        # Walk through package names from most-specific to least-specific,
+        # taking the first match found.
+        for package in package_names[::-1]:
+            if package == "__future__":
+                return IMPORT_FUTURE
+            elif package in self.application_import_names:
+                return IMPORT_APP
+            elif package in self.application_package_names:
+                return IMPORT_APP_PACKAGE
+            elif package in STDLIB_NAMES:
+                return IMPORT_STDLIB
+
+        # Not future, stdlib or an application import.
+        # Must be 3rd party.
+        return IMPORT_3RD_PARTY
