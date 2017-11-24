@@ -36,6 +36,23 @@ class Style(object):
             previous = current
 
     def _check(self, previous_import, previous, current_import):
+        for error in self._check_I666(current_import):
+            yield error
+        for error in self._check_I101(current_import):
+            yield error
+        if previous_import is not None:
+            for error in self._check_I100(previous_import, current_import):
+                yield error
+            for error in self._check_I201(
+                    previous_import, previous, current_import,
+            ):
+                yield error
+            for error in self._check_I202(
+                    previous_import, previous, current_import,
+            ):
+                yield error
+
+    def _check_I666(self, current_import):  # noqa: N802
         if current_import.type == ImportType.MIXED:
             yield Error(
                 current_import.lineno,
@@ -43,6 +60,7 @@ class Style(object):
                 'Import statement mixes groups',
             )
 
+    def _check_I101(self, current_import):  # noqa: N802
         correct_names = self.sorted_names(current_import.names)
         if correct_names != current_import.names:
             corrected = ', '.join(correct_names)
@@ -53,11 +71,10 @@ class Style(object):
                 "Should be {0}".format(corrected),
             )
 
-        if previous_import is not None:
-            same_section = self.same_section(previous_import, current_import)
-            previous_key = self.import_key(previous_import)
-            current_key = self.import_key(current_import)
-            if previous_key > current_key:
+    def _check_I100(self, previous_import, current_import):  # noqa: N802
+        previous_key = self.import_key(previous_import)
+        current_key = self.import_key(current_import)
+        if previous_key > current_key:
                 message = (
                     "Import statements are in the wrong order. "
                     "'{0}' should be before '{1}'"
@@ -65,31 +82,40 @@ class Style(object):
                     self._explain_import(current_import),
                     self._explain_import(previous_import),
                 )
+                same_section = self.same_section(
+                    previous_import, current_import,
+                )
                 if not same_section:
                     message = "{0} and in a different group.".format(message)
                 yield Error(current_import.lineno, 'I100', message)
 
-            has_newline = isinstance(previous, NewLine)
-            if not same_section and not has_newline:
-                yield Error(
-                    current_import.lineno,
-                    'I201',
-                    "Missing newline between import groups. {}".format(
-                        self._explain_grouping(
-                            current_import, previous_import,
-                        )
-                    ),
-                )
-            elif same_section and has_newline:
-                yield Error(
-                    current_import.lineno,
-                    'I202',
-                    "Additional newline in a group of imports. {}".format(
-                        self._explain_grouping(
-                            current_import, previous_import,
-                        )
-                    ),
-                )
+    def _check_I201(self, previous_import, previous, current_import):  # noqa: N802,E501
+        same_section = self.same_section(previous_import, current_import)
+        has_newline = isinstance(previous, NewLine)
+        if not same_section and not has_newline:
+            yield Error(
+                current_import.lineno,
+                'I201',
+                "Missing newline between import groups. {}".format(
+                    self._explain_grouping(
+                        current_import, previous_import,
+                    )
+                ),
+            )
+
+    def _check_I202(self, previous_import, previous, current_import):  # noqa: N802,E501
+        same_section = self.same_section(previous_import, current_import)
+        has_newline = isinstance(previous, NewLine)
+        if same_section and has_newline:
+            yield Error(
+                current_import.lineno,
+                'I202',
+                "Additional newline in a group of imports. {}".format(
+                    self._explain_grouping(
+                        current_import, previous_import,
+                    )
+                ),
+            )
 
     @staticmethod
     def sorted_names(names):
@@ -177,6 +203,21 @@ class Smarkets(Style):
 
 class Edited(Smarkets):
     accepts_application_package_names = True
+
+    def _check_I202(self, previous_import, previous, current_import):  # noqa: N802,E501
+        same_section = self.same_section(previous_import, current_import)
+        has_newline = isinstance(previous, NewLine)
+        optional_split = current_import.is_from and not previous_import.is_from
+        if same_section and has_newline and not optional_split:
+            yield Error(
+                current_import.lineno,
+                'I202',
+                "Additional newline in a group of imports. {}".format(
+                    self._explain_grouping(
+                        current_import, previous_import,
+                    )
+                ),
+            )
 
 
 class Cryptography(Style):

@@ -23,6 +23,7 @@ from Z.A import A
 from Z.A.B import A
 
 import localpackage
+
 from localpackage import A, b
 
 import flake8_import_order
