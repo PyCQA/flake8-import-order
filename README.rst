@@ -102,6 +102,26 @@ is also the same for all Python versions because otherwise it would
 be impossible to write programs that work under both Python 2 and 3
 *and* pass the import order check.
 
+The ``I202`` check will consider any blank line between imports to
+count, even if the line is not contextually related to the
+imports. For example,
+
+.. code-block:: python
+
+    import logging
+    try:
+        from logging import NullHandler
+    except ImportError:
+        class NullHandler(logging.Handler):
+            """Shim for version of Python < 2.7."""
+
+            def emit(self, record):
+                pass
+    import sys  # I202 due to the blank line before the 'def emit'
+
+will trigger a ``I202`` error despite the blank line not being
+contextually related.
+
 Extending styles
 ----------------
 
