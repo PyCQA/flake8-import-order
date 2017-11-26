@@ -41,10 +41,10 @@ def get_package_names(name):
     if not parts:
         return []
 
-    last_package_name = parts[-1]
+    last_package_name = parts.pop()
     package_names = [last_package_name]
 
-    for part in parts[-2::-1]:
+    for part in reversed(parts):
         last_package_name = '%s.%s' % (last_package_name, part)
         package_names.append(last_package_name)
 
@@ -52,10 +52,10 @@ def get_package_names(name):
 
 
 def root_package_name(name):
-    p = ast.parse(name)
-    for n in ast.walk(p):
-        if isinstance(n, ast.Name):
-            return n.id
+    tree = ast.parse(name)
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Name):
+            return node.id
     else:
         return None
 
@@ -101,7 +101,7 @@ class ImportVisitor(ast.NodeVisitor):
 
         # Walk through package names from most-specific to least-specific,
         # taking the first match found.
-        for package in package_names[::-1]:
+        for package in reversed(package_names):
             if package == "__future__":
                 return IMPORT_FUTURE
             elif package in self.application_import_names:

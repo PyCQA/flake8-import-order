@@ -61,6 +61,10 @@ than the code being developed.  This option is only accepted in the
 supported ``appnexus`` or ``edited`` styles or in any style that
 accepts application package names.
 
+The ``application-import-names`` and ``application-package-names`` can
+contain namespaced packages or even exact nested module names. (This
+is possible with 0.16 onwards).
+
 ``import-order-style`` controls what style the plugin follows
 (``cryptography`` is the default).
 
@@ -97,10 +101,6 @@ release of Python and hence the results can be misleading. This list
 is also the same for all Python versions because otherwise it would
 be impossible to write programs that work under both Python 2 and 3
 *and* pass the import order check.
-
-Namespaced packages are understood and the namespace itself is not
-considered the root package name. This however does not work in
-Python2 due to limitations in finding the module specification.
 
 Extending styles
 ----------------

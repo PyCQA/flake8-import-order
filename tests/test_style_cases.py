@@ -9,11 +9,6 @@ import pytest
 from flake8_import_order.checker import ImportOrderChecker
 from flake8_import_order.styles import lookup_entry_point
 
-# The namespace test requires the namespace directory within the test
-# directory to be on the import path. To do this we extend the path to
-# the directory of this file.
-sys.path.append(os.path.dirname(__file__))
-
 ERROR_RX = re.compile("# ((I[0-9]{3} ?)+) ?.*$")
 
 
