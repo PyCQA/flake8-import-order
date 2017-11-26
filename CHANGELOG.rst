@@ -1,5 +1,5 @@
-0.16
-----
+0.16 2017-11-26
+---------------
 
 * Change spacing determination to consider only blank newlines as a
   space. This adds NewLine nodes to the checker and hence could break
