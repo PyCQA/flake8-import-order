@@ -328,6 +328,8 @@ STDLIB_NAMES = set((
     "wsgiref",
     "xdrlib",
     "xml",
+    "xmlrpc.client",
+    "xmlrpc.server",
     "xmlrpclib",
     "zipfile",
     "zipimport",
