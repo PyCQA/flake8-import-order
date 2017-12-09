@@ -1,4 +1,4 @@
-# appnexus google pep8 smarkets
+# edited
 import ast
 # This comment should not trigger a I202 (not a newline)
 import os
@@ -19,6 +19,7 @@ from Z import A
 import flake8_import_order
 
 import tests  # I202
+
 from . import A
 
 from . import B  # I202

@@ -28,6 +28,7 @@ from localpackage import A, b
 
 import flake8_import_order
 from flake8_import_order import *
+
 from . import A
 from . import B
 from .A import A
