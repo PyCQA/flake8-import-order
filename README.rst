@@ -37,7 +37,7 @@ The following styles are directly supported,
 * ``google`` - style described in `Google Style Guidelines <https://google.github.io/styleguide/pyguide.html?showone=Imports_formatting#Imports_formatting>`__, see an `example <https://github.com/PyCQA/flake8-import-order/blob/master/tests/test_cases/complete_google.py>`__
 * ``smarkets`` - style as ``google`` only with `import` statements before `from X import ...` statements, see an `example <https://github.com/PyCQA/flake8-import-order/blob/master/tests/test_cases/complete_smarkets.py>`__
 * ``appnexus`` - style as ``google`` only with `import` statements for packages local to your company or organisation coming after `import` statements for third-party packages, see an `example <https://github.com/PyCQA/flake8-import-order/blob/master/tests/test_cases/complete_appnexus.py>`__
-* ``edited`` - style as ``smarkets`` only with `import` statements for packages local to your company or organisation coming after `import` statements for third-party packages and that the `import` and `from X import` statements may or may not be separated by a newline, see an `example <https://github.com/PyCQA/flake8-import-order/blob/master/tests/test_cases/complete_edited.py>`__
+* ``edited`` - ssee an `example <https://github.com/PyCQA/flake8-import-order/blob/master/tests/test_cases/complete_edited.py>`__
 * ``pep8`` - style that only enforces groups without enforcing the order within the groups
 
 You can also `add your own style <#extending-styles>`_ by extending ``Style``

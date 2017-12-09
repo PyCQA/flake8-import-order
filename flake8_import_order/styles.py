@@ -219,6 +219,10 @@ class Edited(Smarkets):
                 ),
             )
 
+    @staticmethod
+    def same_section(previous, current):
+        return current.type == previous.type
+
 
 class Cryptography(Style):
 
