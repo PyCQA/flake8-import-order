@@ -29,6 +29,7 @@ setup(
     zip_safe=False,
 
     install_requires=[
+        "enum34 ;  python_version <= '2.7'",
         "pycodestyle",
         "setuptools",
     ],

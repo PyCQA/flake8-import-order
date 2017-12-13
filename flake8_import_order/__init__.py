@@ -1,5 +1,6 @@
 import ast
 from collections import namedtuple
+from enum import IntEnum
 
 from flake8_import_order.__about__ import (
     __author__, __copyright__, __email__, __license__, __summary__, __title__,
@@ -14,19 +15,21 @@ __all__ = [
 
 DEFAULT_IMPORT_ORDER_STYLE = 'cryptography'
 
-IMPORT_FUTURE = 0
-IMPORT_STDLIB = 10
-IMPORT_3RD_PARTY = 20
-IMPORT_APP_PACKAGE = 30
-IMPORT_APP = 40
-IMPORT_APP_RELATIVE = 50
-IMPORT_MIXED = -1
-
 ClassifiedImport = namedtuple(
     'ClassifiedImport',
     ['type', 'is_from', 'modules', 'names', 'lineno', 'level', 'package'],
 )
 NewLine = namedtuple('NewLine', ['lineno'])
+
+
+class ImportType(IntEnum):
+    FUTURE = 0
+    STDLIB = 10
+    THIRD_PARTY = 20
+    APPLICATION_PACKAGE = 30
+    APPLICATION = 40
+    APPLICATION_RELATIVE = 50
+    MIXED = -1
 
 
 def get_package_names(name):
@@ -74,7 +77,7 @@ class ImportVisitor(ast.NodeVisitor):
             if len(types_) == 1:
                 type_ = types_.pop()
             else:
-                type_ = IMPORT_MIXED
+                type_ = ImportType.MIXED
             classified_import = ClassifiedImport(
                 type_, False, modules, [], node.lineno, 0,
                 root_package_name(modules[0]),
@@ -85,7 +88,7 @@ class ImportVisitor(ast.NodeVisitor):
         if node.col_offset == 0:
             module = node.module or ''
             if node.level > 0:
-                type_ = IMPORT_APP_RELATIVE
+                type_ = ImportType.APPLICATION_RELATIVE
             else:
                 type_ = self._classify_type(module)
             names = [alias.name for alias in node.names]
@@ -103,14 +106,14 @@ class ImportVisitor(ast.NodeVisitor):
         # taking the first match found.
         for package in reversed(package_names):
             if package == "__future__":
-                return IMPORT_FUTURE
+                return ImportType.FUTURE
             elif package in self.application_import_names:
-                return IMPORT_APP
+                return ImportType.APPLICATION
             elif package in self.application_package_names:
-                return IMPORT_APP_PACKAGE
+                return ImportType.APPLICATION_PACKAGE
             elif package in STDLIB_NAMES:
-                return IMPORT_STDLIB
+                return ImportType.STDLIB
 
         # Not future, stdlib or an application import.
         # Must be 3rd party.
-        return IMPORT_3RD_PARTY
+        return ImportType.THIRD_PARTY

@@ -2,10 +2,7 @@ from collections import namedtuple
 
 from pkg_resources import iter_entry_points
 
-from flake8_import_order import (
-    ClassifiedImport, IMPORT_3RD_PARTY, IMPORT_APP, IMPORT_APP_RELATIVE,
-    NewLine,
-)
+from flake8_import_order import ClassifiedImport, ImportType, NewLine
 
 Error = namedtuple('Error', ['lineno', 'code', 'message'])
 
@@ -57,35 +54,50 @@ class Style(object):
             )
 
         if previous_import is not None:
+            first = self._explain(current_import)
+            second = self._explain(previous_import)
+            same_section = self.same_section(previous_import, current_import)
+
             previous_key = self.import_key(previous_import)
             current_key = self.import_key(current_import)
             if previous_key > current_key:
-                first = self._explain(current_import)
-                second = self._explain(previous_import)
                 if first == second:
                     first = ", ".join(current_import.names)
                     second = ", ".join(previous_import.names)
-                yield Error(
-                    current_import.lineno,
-                    'I100',
+                message = (
                     "Import statements are in the wrong order. "
-                    "{0} should be before {1}".format(first, second),
-                )
+                    "'{0}' should be before '{1}'"
+                ).format(first, second)
+                if not same_section:
+                    message = "{0} and in a different group.".format(message)
+                yield Error(current_import.lineno, 'I100', message)
 
-            same_section = self.same_section(previous_import, current_import)
             has_newline = isinstance(previous, NewLine)
+            explain = (
+                "'{0}' is identified as {1} and "
+                "'{2}' is identified as {3}."
+            ).format(
+                first,
+                current_import.type.name.title().replace('_', ' '),
+                second,
+                previous_import.type.name.title().replace('_', ' '),
+            )
             if not same_section and not has_newline:
                 yield Error(
                     current_import.lineno,
                     'I201',
-                    'Missing newline before sections or imports.',
+                    "Missing newline between import groups. {}".format(
+                        explain,
+                    ),
                 )
 
             if same_section and has_newline:
                 yield Error(
                     current_import.lineno,
                     'I202',
-                    'Additional newline in a section of imports.',
+                    "Additional newline in a group of imports. {}".format(
+                        explain,
+                    ),
                 )
 
     @staticmethod
@@ -100,7 +112,9 @@ class Style(object):
     def same_section(previous, current):
         same_type = current.type == previous.type
         both_first = (
-            {previous.type, current.type} <= {IMPORT_APP, IMPORT_APP_RELATIVE}
+            {previous.type, current.type} <= {
+                ImportType.APPLICATION, ImportType.APPLICATION_RELATIVE,
+            }
         )
         return same_type or both_first
 
@@ -167,7 +181,7 @@ class Cryptography(Style):
 
     @staticmethod
     def import_key(import_):
-        if import_.type in {IMPORT_3RD_PARTY, IMPORT_APP}:
+        if import_.type in {ImportType.THIRD_PARTY, ImportType.APPLICATION}:
             return (
                 import_.type, import_.package, import_.is_from,
                 import_.level, import_.modules, import_.names,
@@ -180,9 +194,13 @@ class Cryptography(Style):
 
     @staticmethod
     def same_section(previous, current):
-        app_or_third = current.type in {IMPORT_3RD_PARTY, IMPORT_APP}
+        app_or_third = current.type in {
+            ImportType.THIRD_PARTY, ImportType.APPLICATION,
+        }
         same_type = current.type == previous.type
-        both_relative = previous.type == current.type == IMPORT_APP_RELATIVE
+        both_relative = (
+            previous.type == current.type == ImportType.APPLICATION_RELATIVE
+        )
         same_package = previous.package == current.package
         return (
             (not app_or_third and same_type or both_relative) or

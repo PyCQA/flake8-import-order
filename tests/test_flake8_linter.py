@@ -39,4 +39,6 @@ def test_linter():
     tree = ast.parse(data)
     checker = Linter(tree, None)
     for lineno, col_offset, msg, instance in checker.run():
-        assert msg == 'I201 Missing newline before sections or imports.'
+        assert msg.startswith(
+            'I201 Missing newline between import groups.',
+        )
