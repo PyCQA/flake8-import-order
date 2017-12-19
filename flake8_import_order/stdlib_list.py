@@ -40,6 +40,7 @@ STDLIB_NAMES = set((
     "__main__",
     "_dummy_thread",
     "_thread",
+    "_threading_local",
     "abc",
     "aepack",
     "aetools",
