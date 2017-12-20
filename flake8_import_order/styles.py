@@ -224,6 +224,12 @@ class Edited(Smarkets):
         return current.type == previous.type
 
 
+class PyCharm(Smarkets):
+    @staticmethod
+    def sorted_names(names):
+        return sorted(names)
+
+
 class Cryptography(Style):
 
     @staticmethod
