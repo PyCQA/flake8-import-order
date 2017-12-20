@@ -24,6 +24,7 @@ NewLine = namedtuple('NewLine', ['lineno'])
 
 class ImportType(IntEnum):
     FUTURE = 0
+    PRIORITY = 5
     STDLIB = 10
     THIRD_PARTY = 20
     APPLICATION_PACKAGE = 30
@@ -65,10 +66,12 @@ def root_package_name(name):
 
 class ImportVisitor(ast.NodeVisitor):
 
-    def __init__(self, application_import_names, application_package_names):
+    def __init__(self, application_import_names, application_package_names,
+                 priority_import_names):
         self.imports = []
         self.application_import_names = frozenset(application_import_names)
         self.application_package_names = frozenset(application_package_names)
+        self.priority_import_names = frozenset(priority_import_names)
 
     def visit_Import(self, node):  # noqa
         if node.col_offset == 0:
@@ -107,6 +110,8 @@ class ImportVisitor(ast.NodeVisitor):
         for package in reversed(package_names):
             if package == "__future__":
                 return ImportType.FUTURE
+            elif package in self.priority_import_names:
+                return ImportType.PRIORITY
             elif package in self.application_import_names:
                 return ImportType.APPLICATION
             elif package in self.application_package_names:
@@ -114,6 +119,6 @@ class ImportVisitor(ast.NodeVisitor):
             elif package in STDLIB_NAMES:
                 return ImportType.STDLIB
 
-        # Not future, stdlib or an application import.
+        # Not future, priority, stdlib or an application import.
         # Must be 3rd party.
         return ImportType.THIRD_PARTY
