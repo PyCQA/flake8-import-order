@@ -38,6 +38,7 @@ The following styles are directly supported,
 * ``smarkets`` - style as ``google`` only with `import` statements before `from X import ...` statements, see an `example <https://github.com/PyCQA/flake8-import-order/blob/master/tests/test_cases/complete_smarkets.py>`__
 * ``appnexus`` - style as ``google`` only with `import` statements for packages local to your company or organisation coming after `import` statements for third-party packages, see an `example <https://github.com/PyCQA/flake8-import-order/blob/master/tests/test_cases/complete_appnexus.py>`__
 * ``edited`` - see an `example <https://github.com/PyCQA/flake8-import-order/blob/master/tests/test_cases/complete_edited.py>`__
+* ``pycharm`` - style as ``smarkets`` only with case sensitive sorting imported names
 * ``pep8`` - style that only enforces groups without enforcing the order within the groups
 
 You can also `add your own style <#extending-styles>`_ by extending ``Style``

@@ -50,6 +50,7 @@ setup(
             'smarkets = flake8_import_order.styles:Smarkets',
             'appnexus = flake8_import_order.styles:AppNexus',
             'edited = flake8_import_order.styles:Edited',
+            'pycharm = flake8_import_order.styles:PyCharm',
         ],
         'flake8.extension': [
             'I = flake8_import_order.flake8_linter:Linter',
