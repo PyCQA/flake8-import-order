@@ -90,7 +90,7 @@ class ImportOrderChecker(object):
         if noqa_match is None:
             return False
 
-        codes_str = noqa_match.groupdict()['codes']
+        codes_str = noqa_match.group('codes')
         if codes_str is None:
             return True
 
