@@ -36,7 +36,7 @@ class Style(object):
             previous = current
 
     def _check(self, previous_import, previous, current_import):
-        if current_import.type == -1:
+        if current_import.type == ImportType.MIXED:
             yield Error(
                 current_import.lineno,
                 'I666',
