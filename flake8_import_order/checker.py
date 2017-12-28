@@ -70,8 +70,8 @@ class ImportOrderChecker(object):
         visitor.visit(self.tree)
 
         newlines = [
-            NewLine(lineno + 1)  # Lines are ordinal, no zero line
-            for lineno, line in enumerate(self.lines)
+            NewLine(lineno)  # Lines are ordinal, no zero line
+            for lineno, line in enumerate(self.lines, start=1)
             if BLANK_LINE_RE.match(line)
         ]
         # Replace the below with heapq merge, when Python2 is dropped.
