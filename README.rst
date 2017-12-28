@@ -61,9 +61,15 @@ than the code being developed.  This option is only accepted in the
 supported ``appnexus`` or ``edited`` styles or in any style that
 accepts application package names.
 
-The ``application-import-names`` and ``application-package-names`` can
-contain namespaced packages or even exact nested module names. (This
-is possible with 0.16 onwards).
+You can also set the ``priority-import-names`` option to a comma
+separated list of names that will be considered "priority" imports.
+These names are allowed to appear *before* the standard library
+grouping, making it easier to apply custom behavior (e.g. monkey
+patches) to subsequent import statements.
+
+The ``application-import-names``, ``application-package-names``, and
+``priority-import-names`` options can contain namespaced packages or
+even exact nested module names. (This is possible with 0.16 onwards).
 
 ``import-order-style`` controls what style the plugin follows
 (``cryptography`` is the default).

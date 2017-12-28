@@ -51,6 +51,16 @@ class Linter(ImportOrderChecker):
                   ", ".join(cls.list_available_styles())),
             parse_from_config=True,
         )
+        register_opt(
+            parser,
+            "--priority-import-names",
+            default="",
+            action="store",
+            type="string",
+            help=("Import names to consider as high priority (before stdlib)"),
+            parse_from_config=True,
+            comma_separated_list=True,
+        )
 
     @staticmethod
     def list_available_styles():
@@ -69,12 +79,17 @@ class Linter(ImportOrderChecker):
         if not isinstance(pkg_names, list):
             pkg_names = options.application_package_names.split(",")
 
+        priority_names = options.priority_import_names
+        if not isinstance(priority_names, list):
+            priority_names = options.priority_import_names.split(",")
+
         style_entry_point = lookup_entry_point(options.import_order_style)
 
         optdict = dict(
             application_import_names=[n.strip() for n in names],
             application_package_names=[p.strip() for p in pkg_names],
             import_order_style=style_entry_point,
+            priority_import_names=[p.strip() for p in priority_names],
         )
 
         cls.options = optdict
