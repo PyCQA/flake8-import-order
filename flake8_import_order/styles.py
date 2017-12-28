@@ -54,20 +54,17 @@ class Style(object):
             )
 
         if previous_import is not None:
-            first = self._explain_import(current_import)
-            second = self._explain_import(previous_import)
             same_section = self.same_section(previous_import, current_import)
-
             previous_key = self.import_key(previous_import)
             current_key = self.import_key(current_import)
             if previous_key > current_key:
-                if first == second:
-                    first = ", ".join(current_import.names)
-                    second = ", ".join(previous_import.names)
                 message = (
                     "Import statements are in the wrong order. "
                     "'{0}' should be before '{1}'"
-                ).format(first, second)
+                ).format(
+                    self._explain_import(current_import),
+                    self._explain_import(previous_import),
+                )
                 if not same_section:
                     message = "{0} and in a different group.".format(message)
                 yield Error(current_import.lineno, 'I100', message)
@@ -79,8 +76,8 @@ class Style(object):
                     'I201',
                     "Missing newline between import groups. {}".format(
                         self._explain_grouping(
-                            first, second,
-                            current_import, previous_import)
+                            current_import, previous_import,
+                        )
                     ),
                 )
             elif same_section and has_newline:
@@ -89,8 +86,8 @@ class Style(object):
                     'I202',
                     "Additional newline in a group of imports. {}".format(
                         self._explain_grouping(
-                            first, second,
-                            current_import, previous_import)
+                            current_import, previous_import,
+                        )
                     ),
                 )
 
@@ -115,20 +112,23 @@ class Style(object):
     @staticmethod
     def _explain_import(import_):
         if import_.is_from:
-            text = 'from ' + import_.level * '.'
+            return "from {}{} import {}".format(
+                import_.level * '.',
+                ', '.join(import_.modules),
+                ', '.join(import_.names),
+            )
         else:
-            text = 'import '
-        return text + ', '.join(import_.modules)
+            return "import {}".format(', '.join(import_.modules))
 
     @staticmethod
-    def _explain_grouping(first, second, current_import, previous_import):
+    def _explain_grouping(current_import, previous_import):
         return (
             "'{0}' is identified as {1} and "
             "'{2}' is identified as {3}."
         ).format(
-            first,
+            Style._explain_import(current_import),
             current_import.type.name.title().replace('_', ' '),
-            second,
+            Style._explain_import(previous_import),
             previous_import.type.name.title().replace('_', ' '),
         )
 
