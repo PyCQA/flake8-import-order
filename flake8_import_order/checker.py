@@ -94,7 +94,7 @@ class ImportOrderChecker(object):
         if codes_str is None:
             return True
 
-        codes = set(parse_comma_separated_list(codes_str))
+        codes = parse_comma_separated_list(codes_str)
         if error.code in codes:
             return True
 
@@ -104,4 +104,4 @@ class ImportOrderChecker(object):
 def parse_comma_separated_list(value):
     value = COMMA_SEPARATED_LIST_RE.split(value)
     item_gen = (item.strip() for item in value)
-    return [item for item in item_gen if item]
+    return {item for item in item_gen if item}
