@@ -54,8 +54,8 @@ class Style(object):
             )
 
         if previous_import is not None:
-            first = self._explain(current_import)
-            second = self._explain(previous_import)
+            first = self._explain_import(current_import)
+            second = self._explain_import(previous_import)
             same_section = self.same_section(previous_import, current_import)
 
             previous_key = self.import_key(previous_import)
@@ -73,30 +73,24 @@ class Style(object):
                 yield Error(current_import.lineno, 'I100', message)
 
             has_newline = isinstance(previous, NewLine)
-            explain = (
-                "'{0}' is identified as {1} and "
-                "'{2}' is identified as {3}."
-            ).format(
-                first,
-                current_import.type.name.title().replace('_', ' '),
-                second,
-                previous_import.type.name.title().replace('_', ' '),
-            )
             if not same_section and not has_newline:
                 yield Error(
                     current_import.lineno,
                     'I201',
                     "Missing newline between import groups. {}".format(
-                        explain,
+                        self._explain_grouping(
+                            first, second,
+                            current_import, previous_import)
                     ),
                 )
-
-            if same_section and has_newline:
+            elif same_section and has_newline:
                 yield Error(
                     current_import.lineno,
                     'I202',
                     "Additional newline in a group of imports. {}".format(
-                        explain,
+                        self._explain_grouping(
+                            first, second,
+                            current_import, previous_import)
                     ),
                 )
 
@@ -119,12 +113,24 @@ class Style(object):
         return same_type or both_first
 
     @staticmethod
-    def _explain(import_):
+    def _explain_import(import_):
         if import_.is_from:
             text = 'from ' + import_.level * '.'
         else:
             text = 'import '
         return text + ', '.join(import_.modules)
+
+    @staticmethod
+    def _explain_grouping(first, second, current_import, previous_import):
+        return (
+            "'{0}' is identified as {1} and "
+            "'{2}' is identified as {3}."
+        ).format(
+            first,
+            current_import.type.name.title().replace('_', ' '),
+            second,
+            previous_import.type.name.title().replace('_', ' '),
+        )
 
 
 class PEP8(Style):
