@@ -1,3 +1,14 @@
+0.17 2018-02-11
+---------------
+
+* Add all Python3 modules to stdlib list (should be no more missing
+  modules).
+* Clarify the error messages (more context).
+* Allow styles to override specific checks.
+* Correct the edited style to match the actual edited style guide.
+* Add pycharm style, to match the pycharm auto formatter.
+
+
 0.16 2017-11-26
 ---------------
 
