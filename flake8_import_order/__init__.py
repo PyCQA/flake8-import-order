@@ -70,7 +70,7 @@ class ImportVisitor(ast.NodeVisitor):
         self.application_import_names = frozenset(application_import_names)
         self.application_package_names = frozenset(application_package_names)
 
-    def visit_Import(self, node):  # noqa
+    def visit_Import(self, node):  # noqa: N802
         if node.col_offset == 0:
             modules = [alias.name for alias in node.names]
             types_ = {self._classify_type(module) for module in modules}
@@ -84,7 +84,7 @@ class ImportVisitor(ast.NodeVisitor):
             )
             self.imports.append(classified_import)
 
-    def visit_ImportFrom(self, node):  # noqa
+    def visit_ImportFrom(self, node):  # noqa: N802
         if node.col_offset == 0:
             module = node.module or ''
             if node.level > 0:
