@@ -171,13 +171,13 @@ class Google(Style):
 
     @staticmethod
     def name_key(name):
-        return (name.lower(), name)
+        return name.lower(), name
 
     @staticmethod
     def import_key(import_):
         modules = [Google.name_key(module) for module in import_.modules]
         names = [Google.name_key(name) for name in import_.names]
-        return (import_.type, import_.level, modules, names)
+        return import_.type, import_.level, modules, names
 
 
 class AppNexus(Google):
@@ -192,13 +192,13 @@ class Smarkets(Style):
 
     @staticmethod
     def name_key(name):
-        return (name.lower(), name)
+        return name.lower(), name
 
     @staticmethod
     def import_key(import_):
         modules = [Smarkets.name_key(module) for module in import_.modules]
         names = [Smarkets.name_key(name) for name in import_.names]
-        return (import_.type, import_.is_from, import_.level, modules, names)
+        return import_.type, import_.is_from, import_.level, modules, names
 
 
 class Edited(Smarkets):

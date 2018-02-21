@@ -59,25 +59,22 @@ class Linter(ImportOrderChecker):
 
     @classmethod
     def parse_options(cls, options):
-        optdict = {}
+        def get_names(it):
+            if not isinstance(it, list):
+                it = it.split(',')
+            return [item.strip()
+                    for item in it
+                    if item and item.strip()]
 
-        names = options.application_import_names
-        if not isinstance(names, list):
-            names = options.application_import_names.split(",")
-
-        pkg_names = options.application_package_names
-        if not isinstance(pkg_names, list):
-            pkg_names = options.application_package_names.split(",")
-
+        names = get_names(options.application_import_names)
+        packages = get_names(options.application_package_names)
         style_entry_point = lookup_entry_point(options.import_order_style)
 
-        optdict = dict(
-            application_import_names=[n.strip() for n in names],
-            application_package_names=[p.strip() for p in pkg_names],
-            import_order_style=style_entry_point,
-        )
-
-        cls.options = optdict
+        cls.options = {
+            'application_import_names': names,
+            'application_package_names': packages,
+            'import_order_style': style_entry_point,
+        }
 
     def error(self, error):
         return (
