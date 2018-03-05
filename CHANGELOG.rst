@@ -1,3 +1,9 @@
+0.17.1 2018-03-05
+-----------------
+
+* Rebuild of 0.17 with the latest setuptools to fix an enum34
+  dependency bug.
+
 0.17 2018-02-11
 ---------------
 
