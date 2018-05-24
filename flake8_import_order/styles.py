@@ -201,6 +201,28 @@ class Smarkets(Style):
         return (import_.type, import_.is_from, import_.level, modules, names)
 
 
+class FromsFirst(Smarkets):
+
+    @staticmethod
+    def import_key(import_):
+        modules = [Smarkets.name_key(module) for module in import_.modules]
+        names = [Smarkets.name_key(name) for name in import_.names]
+
+        # froms first
+        reverse_from = not import_.is_from
+
+        # collapse the application types into a single group
+        import_type = import_.type
+        if import_.type in {
+            ImportType.APPLICATION_PACKAGE,
+            ImportType.APPLICATION,
+            ImportType.APPLICATION_RELATIVE
+        }:
+            import_type = ImportType.APPLICATION_PACKAGE
+
+        return (import_type, reverse_from, import_.level, modules, names)
+
+
 class Edited(Smarkets):
     accepts_application_package_names = True
 

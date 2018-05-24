@@ -40,6 +40,7 @@ The following styles are directly supported,
 * ``edited`` - see an `example <https://github.com/PyCQA/flake8-import-order/blob/master/tests/test_cases/complete_edited.py>`__
 * ``pycharm`` - style as ``smarkets`` only with case sensitive sorting imported names
 * ``pep8`` - style that only enforces groups without enforcing the order within the groups
+* ``fromsfirst`` - like ``smarkets``, but with `from X import ...` statements before `import ...` statements and all application, application relative, and application package imports grouped, see an `example <https://github.com/PyCQA/flake8-import-order/blob/master/tests/test_cases/complete_fromsfirst.py>`__
 
 You can also `add your own style <#extending-styles>`_ by extending ``Style``
 class.

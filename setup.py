@@ -51,6 +51,7 @@ setup(
             'appnexus = flake8_import_order.styles:AppNexus',
             'edited = flake8_import_order.styles:Edited',
             'pycharm = flake8_import_order.styles:PyCharm',
+            'fromsfirst = flake8_import_order.styles:FromsFirst',
         ],
         'flake8.extension': [
             'I = flake8_import_order.flake8_linter:Linter',
