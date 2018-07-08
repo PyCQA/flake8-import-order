@@ -1,3 +1,8 @@
+0.18 2018-07-08
+---------------
+
+* Add new Python 3.7 modules to the stdlib list, and support 3.7.
+
 0.17.1 2018-03-05
 -----------------
 
