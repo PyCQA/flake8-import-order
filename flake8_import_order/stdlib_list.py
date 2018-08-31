@@ -96,6 +96,7 @@ STDLIB_NAMES = {
     "curses",
     "dataclasses",
     "datetime",
+    "dateutil",
     "dbhash",
     "dbm",
     "decimal",
