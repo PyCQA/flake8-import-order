@@ -229,6 +229,10 @@ class PyCharm(Smarkets):
     def sorted_names(names):
         return sorted(names)
 
+    @staticmethod
+    def import_key(import_):
+        return (import_.type, import_.is_from, import_.level, import_.modules, import_.names)
+
 
 class Cryptography(Style):
 
