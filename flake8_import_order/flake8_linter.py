@@ -74,22 +74,22 @@ class Linter(ImportOrderChecker):
 
         names = options.application_import_names
         if not isinstance(names, list):
-            names = options.application_import_names.split(",")
+            names = split_by_comma(options.application_import_names)
 
         pkg_names = options.application_package_names
         if not isinstance(pkg_names, list):
-            pkg_names = options.application_package_names.split(",")
+            pkg_names = split_by_comma(options.application_package_names)
 
         app_paths = options.application_paths
         if not isinstance(app_paths, list):
-            app_paths = options.application_paths.split(",")
+            app_paths = split_by_comma(options.application_paths)
         names += cls.appnames_from_paths(app_paths)
 
         style_entry_point = lookup_entry_point(options.import_order_style)
 
         optdict = dict(
-            application_import_names=[n.strip() for n in names],
-            application_package_names=[p.strip() for p in pkg_names],
+            application_import_names=names,
+            application_package_names=pkg_names,
             import_order_style=style_entry_point,
         )
 
@@ -120,3 +120,6 @@ def register_opt(parser, *args, **kwargs):
         parser.add_option(*args, **kwargs)
         if parse_from_config:
             parser.config_options.append(args[-1].lstrip('-'))
+
+def split_by_comma(text):
+    return list(filter(None, map(str.strip, text.split(','))))
