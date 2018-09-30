@@ -80,11 +80,16 @@ class Linter(ImportOrderChecker):
         if not isinstance(pkg_names, list):
             pkg_names = options.application_package_names.split(",")
 
+        app_paths = options.application_paths
+        if not isinstance(app_paths, list):
+            app_paths = options.application_paths.split(",")
+
         style_entry_point = lookup_entry_point(options.import_order_style)
 
         optdict = dict(
             application_import_names=[n.strip() for n in names],
             application_package_names=[p.strip() for p in pkg_names],
+            application_paths=[p.strip() for p in app_paths],
             import_order_style=style_entry_point,
         )
 

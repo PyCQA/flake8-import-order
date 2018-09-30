@@ -5,13 +5,19 @@ try:
     # Python3
     from importlib.util import find_spec
     def get_module_path(name):
-        spec = find_spec(name)
+        try:
+            spec = find_spec(name)
+        except ImportError:
+            return None
         return getattr(spec, 'origin', None)
 except ImportError:
     # Python2
     from pkgutil import find_loader
     def get_module_path(name):
-        loader = find_loader(name)
+        try:
+            loader = find_loader(name)
+        except ImportError:
+            return None
         return getattr(loader, 'filename', None)
 
 
