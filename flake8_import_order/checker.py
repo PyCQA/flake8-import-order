@@ -1,6 +1,7 @@
 import ast
 import re
 from itertools import chain
+from os import path
 
 import pycodestyle
 
@@ -57,15 +58,18 @@ class ImportOrderChecker(object):
             style_entry_point = lookup_entry_point(DEFAULT_IMPORT_ORDER_STYLE)
         style_cls = style_entry_point.load()
 
+        application_paths = (path.join(path.abspath(p), '') for p in self.options.get('application_paths', []))
         if style_cls.accepts_application_package_names:
             visitor = self.visitor_class(
                 self.options.get('application_import_names', []),
                 self.options.get('application_package_names', []),
+                application_paths,
             )
         else:
             visitor = self.visitor_class(
                 self.options.get('application_import_names', []),
                 [],
+                application_paths,
             )
         visitor.visit(self.tree)
 

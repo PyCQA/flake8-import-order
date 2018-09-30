@@ -49,7 +49,10 @@ def _load_test_cases():
 def _checker(filename, tree, style_entry_point):
     options = {
         'application_import_names': [
-            'flake8_import_order', 'namespace.package_b', 'tests',
+            'namespace.package_b',
+        ],
+        'application_paths': [
+            '.'
         ],
         'application_package_names': ['localpackage'],
         'import_order_style': style_entry_point,

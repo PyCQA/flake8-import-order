@@ -43,6 +43,17 @@ class Linter(ImportOrderChecker):
         )
         register_opt(
             parser,
+            "--application-paths",
+            default="",
+            action="store",
+            type="string",
+            help=("Modules under those paths are considered as "
+                  "application-specific"),
+            parse_from_config=True,
+            comma_separated_list=True,
+        )
+        register_opt(
+            parser,
             "--import-order-style",
             default=DEFAULT_IMPORT_ORDER_STYLE,
             action="store",
