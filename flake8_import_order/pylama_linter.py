@@ -27,14 +27,21 @@ class Linter(ImportOrderChecker, BaseLinter):
             'type': error.code,
         }
 
-    def run(self, path, **meta):
-        self.filename = path
-        self.ast_tree = None
+    @classmethod
+    def parse_meta(cls, meta):
         meta.setdefault('import_order_style', DEFAULT_IMPORT_ORDER_STYLE)
         meta['import_order_style'] = lookup_entry_point(
             meta['import_order_style']
         )
-        self.options = meta
+        meta.setdefault('application_import_names', [])
+        app_paths = meta.get('application_paths', [])
+        meta['application_import_names'] += cls.appnames_from_paths(app_paths)
+        return meta
+
+    def run(self, path, **meta):
+        self.filename = path
+        self.ast_tree = None
+        self.options = self.parse_meta(meta)
 
         for error in self.check_order():
             yield error

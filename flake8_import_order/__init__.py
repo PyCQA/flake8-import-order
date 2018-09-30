@@ -1,25 +1,6 @@
 import ast
 from collections import namedtuple
 from enum import IntEnum
-try:
-    # Python3
-    from importlib.util import find_spec
-    def get_module_path(name):
-        try:
-            spec = find_spec(name)
-        except ImportError:
-            return None
-        return getattr(spec, 'origin', None)
-except ImportError:
-    # Python2
-    from pkgutil import find_loader
-    def get_module_path(name):
-        try:
-            loader = find_loader(name)
-        except ImportError:
-            return None
-        return getattr(loader, 'filename', None)
-
 
 from flake8_import_order.__about__ import (
     __author__, __copyright__, __email__, __license__, __summary__, __title__,
@@ -84,11 +65,10 @@ def root_package_name(name):
 
 class ImportVisitor(ast.NodeVisitor):
 
-    def __init__(self, application_import_names, application_package_names, application_paths):
+    def __init__(self, application_import_names, application_package_names):
         self.imports = []
         self.application_import_names = frozenset(application_import_names)
         self.application_package_names = frozenset(application_package_names)
-        self.application_paths = frozenset(application_paths)
 
     def visit_Import(self, node):  # noqa: N802
         if node.col_offset == 0:
@@ -133,11 +113,6 @@ class ImportVisitor(ast.NodeVisitor):
                 return ImportType.APPLICATION_PACKAGE
             elif package in STDLIB_NAMES:
                 return ImportType.STDLIB
-
-        # Check if module's path matches any of given application paths
-        path = get_module_path(module)
-        if path and any(path.startswith(app_path) for app_path in self.application_paths):
-            return ImportType.APPLICATION
 
         # Not future, stdlib or an application import.
         # Must be 3rd party.
