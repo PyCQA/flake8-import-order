@@ -122,4 +122,4 @@ def register_opt(parser, *args, **kwargs):
             parser.config_options.append(args[-1].lstrip('-'))
 
 def split_by_comma(text):
-    return list(filter(None, map(str.strip, text.split(','))))
+    return list(filter(None, map(lambda s: s.strip(), text.split(','))))
