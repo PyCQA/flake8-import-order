@@ -1,3 +1,9 @@
+0.18.1 2019-03-04
+-----------------
+
+* Fix case-sensitive related I100 errors for the pycharm style
+* Fix noqa regexp
+
 0.18 2018-07-08
 ---------------
 
