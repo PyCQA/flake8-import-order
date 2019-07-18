@@ -51,6 +51,17 @@ class Linter(ImportOrderChecker):
                   ", ".join(cls.list_available_styles())),
             parse_from_config=True,
         )
+        register_opt(
+            parser,
+            "--additional-stdlib-names",
+            default="",
+            action="store",
+            type="string",
+            help=("Additional import names to be considered as part of "
+                  "the standard library for the purposes of grouping."),
+            parse_from_config=True,
+            comma_separated_list=True,
+        )
 
     @staticmethod
     def list_available_styles():
@@ -69,12 +80,20 @@ class Linter(ImportOrderChecker):
         if not isinstance(pkg_names, list):
             pkg_names = options.application_package_names.split(",")
 
+        additional_stdlib_names = options.additional_stdlib_names
+        if not isinstance(additional_stdlib_names, list):
+            additional_stdlib_names = options.additional_stdlib_names \
+                                             .split(",")
+
+        additional_stdlib_names = [s.strip() for s in additional_stdlib_names]
+
         style_entry_point = lookup_entry_point(options.import_order_style)
 
         optdict = dict(
             application_import_names=[n.strip() for n in names],
             application_package_names=[p.strip() for p in pkg_names],
             import_order_style=style_entry_point,
+            additional_stdlib_names=additional_stdlib_names,
         )
 
         cls.options = optdict

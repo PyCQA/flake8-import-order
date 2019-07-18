@@ -65,10 +65,14 @@ def root_package_name(name):
 
 class ImportVisitor(ast.NodeVisitor):
 
-    def __init__(self, application_import_names, application_package_names):
+    def __init__(self,
+                 application_import_names,
+                 application_package_names,
+                 additional_stdlib_names):
         self.imports = []
         self.application_import_names = frozenset(application_import_names)
         self.application_package_names = frozenset(application_package_names)
+        self.stdlib_names = STDLIB_NAMES | frozenset(additional_stdlib_names)
 
     def visit_Import(self, node):  # noqa: N802
         if node.col_offset == 0:
@@ -111,7 +115,7 @@ class ImportVisitor(ast.NodeVisitor):
                 return ImportType.APPLICATION
             elif package in self.application_package_names:
                 return ImportType.APPLICATION_PACKAGE
-            elif package in STDLIB_NAMES:
+            elif package in self.stdlib_names:
                 return ImportType.STDLIB
 
         # Not future, stdlib or an application import.

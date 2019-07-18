@@ -53,6 +53,7 @@ def _checker(filename, tree, style_entry_point):
         ],
         'application_package_names': ['localpackage'],
         'import_order_style': style_entry_point,
+        'additional_stdlib_names': ['additional_stdlib'],
     }
     checker = ImportOrderChecker(filename, tree)
     checker.options = options

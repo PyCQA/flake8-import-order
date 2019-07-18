@@ -10,10 +10,12 @@ def test_parsing():
     style = 'google'
     import_names = ['flake8_import_order', 'tests']
     package_names = ['local_package']
+    additional_stdlib = ['additional_stdlib']
     argv = [
         "--application-import-names={}".format(','.join(import_names)),
         "--import-order-style={}".format(style),
         "--application-package-names={}".format(','.join(package_names)),
+        "--additional-stdlib-names={}".format(','.join(additional_stdlib)),
     ]
 
     parser = pycodestyle.get_parser('', '')
@@ -25,6 +27,7 @@ def test_parsing():
     assert Linter.options['import_order_style'].load() is Google
     assert Linter.options['application_import_names'] == import_names
     assert Linter.options['application_package_names'] == package_names
+    assert Linter.options['additional_stdlib_names'] == additional_stdlib
 
 
 def test_linter():

@@ -61,11 +61,13 @@ class ImportOrderChecker(object):
             visitor = self.visitor_class(
                 self.options.get('application_import_names', []),
                 self.options.get('application_package_names', []),
+                self.options.get('additional_stdlib_names', []),
             )
         else:
             visitor = self.visitor_class(
                 self.options.get('application_import_names', []),
                 [],
+                self.options.get('additional_stdlib_names', []),
             )
         visitor.visit(self.tree)
 
