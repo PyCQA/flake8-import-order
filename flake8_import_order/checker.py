@@ -55,6 +55,8 @@ class ImportOrderChecker(object):
             style_entry_point = self.options['import_order_style']
         except KeyError:
             style_entry_point = lookup_entry_point(DEFAULT_IMPORT_ORDER_STYLE)
+        except TypeError:
+            style_entry_point = lookup_entry_point(DEFAULT_IMPORT_ORDER_STYLE)
         style_cls = style_entry_point.load()
 
         if style_cls.accepts_application_package_names:
