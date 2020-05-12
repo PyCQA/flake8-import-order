@@ -30,7 +30,7 @@ setup(
 
     install_requires=[
         "enum34 ;  python_version <= '2.7'",
-        "pycodestyle",
+        "pycodestyle >= 2.6.0a1, < 2.7.0",
         "setuptools",
     ],
 
