@@ -41,6 +41,7 @@ STDLIB_NAMES = {
     "_dummy_thread",
     "_thread",
     "_threading_local",
+    "_winapi",
     "abc",
     "aepack",
     "aetools",
