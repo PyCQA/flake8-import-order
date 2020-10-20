@@ -316,4 +316,5 @@ STDLIB_NAMES = {
     "zipfile",
     "zipimport",
     "zlib",
+    "zoneinfo",
 }
