@@ -228,6 +228,18 @@ class PyCharm(Smarkets):
         return (import_.type, import_.is_from, import_.level, import_.modules, import_.names)
 
 
+class ISort(PyCharm):
+    @staticmethod
+    def name_key(name):
+        # Group by CONSTANT, Class, func.
+        group = 0 if name.isupper() else 2 if name.islower() else 1
+        return (group, name)
+
+    @staticmethod
+    def sorted_names(names):
+        return sorted(names, key=ISort.name_key)
+
+
 class Cryptography(Style):
 
     @staticmethod
