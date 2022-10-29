@@ -64,7 +64,7 @@ setup(
         "Framework :: Flake8",
         "Intended Audience :: Developers",
         "Development Status :: 4 - Beta",
-        "License :: OSI Approved :: MIT License",
+        "License :: OSI Approved :: LGPL-3.0-only",
         "Programming Language :: Python",
         "Programming Language :: Python :: 2",
         "Programming Language :: Python :: 3",
