@@ -25,7 +25,7 @@ class Linter(ImportOrderChecker):
             "--application-import-names",
             default="",
             action="store",
-            type="string",
+            type=str,
             help="Import names to consider as application-specific",
             parse_from_config=True,
             comma_separated_list=True,
@@ -35,7 +35,7 @@ class Linter(ImportOrderChecker):
             "--application-package-names",
             default="",
             action="store",
-            type="string",
+            type=str,
             help=("Package names to consider as company-specific "
                   "(used only by 'appnexus' style)"),
             parse_from_config=True,
@@ -46,7 +46,7 @@ class Linter(ImportOrderChecker):
             "--import-order-style",
             default=DEFAULT_IMPORT_ORDER_STYLE,
             action="store",
-            type="string",
+            type=str,
             help=("Style to follow. Available: " +
                   ", ".join(cls.list_available_styles())),
             parse_from_config=True,
