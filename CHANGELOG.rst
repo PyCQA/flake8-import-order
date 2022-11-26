@@ -1,3 +1,9 @@
+0.18.2 2022-11-26
+-----------------
+
+* Add ``zoneinfo`` to list of standard library modules
+* Fix registering of options with Flake8 >= 6.0
+
 0.18.1 2019-03-04
 -----------------
 
