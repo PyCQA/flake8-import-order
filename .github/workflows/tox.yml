@@ -9,22 +9,14 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        job: [py37-flake83,py39-flake83,py311-flake83]  # ,pypy,pep8,py3pep8,setuppy,manifest]
-    runs-on: ubuntu-latest
+        os: [ubuntu-latest]  # [macos-latest, ubuntu-latest, windows-latest]
+        python-version: ['3.7', '3.9', '3.11']  # ,pypy3.9,pep8,py3pep8,setuppy,manifest]
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-python@v4
-        if: ${{ startswith(matrix.job, 'py37') }}
         with:
-          python-version: 3.7
-      - uses: actions/setup-python@v4
-        if: ${{ startswith(matrix.job, 'py39') }}
-        with:
-          python-version: 3.9
-      - uses: actions/setup-python@v4
-        if: ${{ startswith(matrix.job, 'py311') }}
-        with:
-          python-version: 3.11
+          python-version: ${{ matrix.python-version }}
       - run: pip install --upgrade pip
       - run: pip install tox
-      - run: tox -e ${{ matrix.job }}
+      - run: tox -e py
