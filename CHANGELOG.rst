@@ -39,7 +39,7 @@
   space. This adds NewLine nodes to the checker and hence could break
   custom styles (that use the nodes directly). This also drops the
   asttokens dependency as it is no longer required.
-* Understand the existance of namespaced packages, thereby allowing
+* Understand the existence of namespaced packages, thereby allowing
   different namespaced pacakages to be defined as local or third party.
 
 0.15 2017-11-06
@@ -49,7 +49,7 @@
 * Correct the flake8 entrypoint to report all ``I`` errors, this may
   result in ``I2XX`` errors being reported that were absent
   previously.
-* Support in-line ``# noqa`` comments specifing only the error codes
+* Support in-line ``# noqa`` comments specifying only the error codes
   to be ignored, e.g., ``# noqa: I101``.
 * Accept only ``# noqa`` directives on the line reporting the error,
   see limitations.
@@ -143,7 +143,7 @@
 
 * Added new Smarkets style, this is equivalent to the google style
   except that any `import X` statements must come before any `from X
-  import y` statments.
+  import y` statements.
 
 0.6.2
 -----
