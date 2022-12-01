@@ -1,5 +1,4 @@
 # cryptography
-from __future__ import absolute_import
 
 import ast
 import os

@@ -25,7 +25,7 @@ COMMA_SEPARATED_LIST_RE = re.compile(r'[,\s]')
 BLANK_LINE_RE = re.compile(r'\s*\n')
 
 
-class ImportOrderChecker(object):
+class ImportOrderChecker:
     visitor_class = ImportVisitor
     options = None
 
