@@ -26,7 +26,7 @@ def _checker(data):
 
 @pytest.mark.parametrize('import_name', _load_test_cases())
 def test_styles(import_name):
-    data = "import {}\nimport zoneinfo\n".format(import_name)
+    data = f"import {import_name}\nimport zoneinfo\n"
     checker = _checker(data)
     codes = [error.code for error in checker.check_order()]
     assert codes == []

@@ -48,7 +48,7 @@ def get_package_names(name):
     package_names = [last_package_name]
 
     for part in reversed(parts):
-        last_package_name = '%s.%s' % (last_package_name, part)
+        last_package_name = f'{last_package_name}.{part}'
         package_names.append(last_package_name)
 
     return package_names

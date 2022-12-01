@@ -1,5 +1,3 @@
-from __future__ import absolute_import
-
 import optparse
 
 from flake8_import_order import __version__
@@ -14,7 +12,7 @@ class Linter(ImportOrderChecker):
     version = __version__
 
     def __init__(self, tree, filename, lines=None):
-        super(Linter, self).__init__(filename, tree)
+        super().__init__(filename, tree)
         self.lines = lines
 
     @classmethod
@@ -83,13 +81,12 @@ class Linter(ImportOrderChecker):
         return (
             error.lineno,
             0,
-            "{0} {1}".format(error.code, error.message),
+            f"{error.code} {error.message}",
             Linter,
         )
 
     def run(self):
-        for error in self.check_order():
-            yield error
+        yield from self.check_order()
 
 
 def register_opt(parser, *args, **kwargs):

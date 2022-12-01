@@ -12,7 +12,7 @@ def test_parsing():
     package_names = ['local_package']
     argv = [
         "--application-import-names={}".format(','.join(import_names)),
-        "--import-order-style={}".format(style),
+        f"--import-order-style={style}",
         "--application-package-names={}".format(','.join(package_names)),
     ]
 

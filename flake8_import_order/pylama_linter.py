@@ -1,5 +1,3 @@
-from __future__ import absolute_import
-
 from pylama.lint import Linter as BaseLinter
 
 from flake8_import_order import __version__
@@ -14,7 +12,7 @@ class Linter(ImportOrderChecker, BaseLinter):
     version = __version__
 
     def __init__(self):
-        super(Linter, self).__init__(None, None)
+        super().__init__(None, None)
 
     def allow(self, path):
         return path.endswith(".py")
@@ -36,5 +34,4 @@ class Linter(ImportOrderChecker, BaseLinter):
         )
         self.options = meta
 
-        for error in self.check_order():
-            yield error
+        yield from self.check_order()
