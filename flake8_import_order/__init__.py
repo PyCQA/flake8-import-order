@@ -8,8 +8,7 @@ from .__about__ import (
     __uri__, __version__,
 )
 if sys.version_info >= (3, 10):
-    STDLIB_NAMES = sys.stdlib_module_names
-    STDLIB_NAMES.update(("__main__", "test"))
+    STDLIB_NAMES = sys.stdlib_module_names | {"__main__", "test"}
 else:
     from .stdlib_list import STDLIB_NAMES
 
