@@ -1,4 +1,5 @@
 import ast
+import sys
 from collections import namedtuple
 from enum import IntEnum
 
@@ -6,7 +7,10 @@ from .__about__ import (
     __author__, __copyright__, __email__, __license__, __summary__, __title__,
     __uri__, __version__,
 )
-from .stdlib_list import STDLIB_NAMES
+if sys.version_info >= (3, 10):
+    STDLIB_NAMES = sys.stdlib_module_names
+else:
+    from .stdlib_list import STDLIB_NAMES
 
 __all__ = [
     "__title__", "__summary__", "__uri__", "__version__", "__author__",
