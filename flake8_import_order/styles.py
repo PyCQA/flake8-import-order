@@ -39,12 +39,8 @@ class Style:
         yield from self._check_I101(current_import)
         if previous_import is not None:
             yield from self._check_I100(previous_import, current_import)
-            yield from self._check_I201(
-                    previous_import, previous, current_import,
-            )
-            yield from self._check_I202(
-                    previous_import, previous, current_import,
-            )
+            yield from self._check_I201(previous_import, previous, current_import)
+            yield from self._check_I202(previous_import, previous, current_import)
 
     def _check_I666(self, current_import):  # noqa: N802
         if current_import.type == ImportType.MIXED:
@@ -69,19 +65,19 @@ class Style:
         previous_key = self.import_key(previous_import)
         current_key = self.import_key(current_import)
         if previous_key > current_key:
-                message = (
-                    "Import statements are in the wrong order. "
-                    "'{}' should be before '{}'"
-                ).format(
-                    self._explain_import(current_import),
-                    self._explain_import(previous_import),
-                )
-                same_section = self.same_section(
-                    previous_import, current_import,
-                )
-                if not same_section:
-                    message = f"{message} and in a different group."
-                yield Error(current_import.lineno, 'I100', message)
+            message = (
+                "Import statements are in the wrong order. "
+                "'{}' should be before '{}'"
+            ).format(
+                self._explain_import(current_import),
+                self._explain_import(previous_import),
+            )
+            same_section = self.same_section(
+                previous_import, current_import,
+            )
+            if not same_section:
+                message = f"{message} and in a different group."
+            yield Error(current_import.lineno, 'I100', message)
 
     def _check_I201(self, previous_import, previous, current_import):  # noqa: N802,E501
         same_section = self.same_section(previous_import, current_import)
@@ -225,7 +221,9 @@ class PyCharm(Smarkets):
 
     @staticmethod
     def import_key(import_):
-        return (import_.type, import_.is_from, import_.level, import_.modules, import_.names)
+        return (
+            import_.type, import_.is_from, import_.level, import_.modules, import_.names
+        )
 
 
 class ISort(PyCharm):
@@ -270,6 +268,6 @@ class Cryptography(Style):
         )
         same_package = previous.package == current.package
         return (
-            (not app_or_third and same_type or both_relative) or
-            (app_or_third and same_package)
+            (not app_or_third and same_type or both_relative)
+            or (app_or_third and same_package)
         )

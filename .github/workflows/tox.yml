@@ -5,12 +5,12 @@ on:
   push:
     branches: [master]
 jobs:
-  tox-jobs:
+  tox:
     strategy:
       fail-fast: false
       matrix:
         os: [ubuntu-latest]  # [macos-latest, ubuntu-latest, windows-latest]
-        python-version: ['3.7', '3.8', '3.9', '3.10', '3.11']  # ,pypy3.9,pep8,py3pep8,setuppy,manifest]
+        python-version: ['3.7', '3.8', '3.9', '3.10', '3.11', 'pypy3.9']
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v3
@@ -20,3 +20,17 @@ jobs:
       - run: pip install --upgrade pip
       - run: pip install tox
       - run: tox -e py
+  tox-jobs:
+    strategy:
+      fail-fast: false
+      matrix:
+        job: [manifest, pep8, setuppy]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: 3.x
+      - run: pip install --upgrade pip
+      - run: pip install tox
+      - run: tox -e ${{ matrix.job }}
