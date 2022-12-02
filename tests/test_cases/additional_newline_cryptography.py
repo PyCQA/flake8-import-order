@@ -1,7 +1,7 @@
 # cryptography
 import ast
 
-import signal # I202
+import signal  # I202
 
 import X
 
