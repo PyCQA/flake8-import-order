@@ -1,6 +1,5 @@
 # pycharm
 
-import StringIO
 import ast
 import os
 import sys
