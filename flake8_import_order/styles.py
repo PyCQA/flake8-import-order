@@ -1,6 +1,11 @@
 from collections import namedtuple
 
-from pkg_resources import iter_entry_points
+import sys
+
+if sys.version_info >= (3, 8):
+    import importlib.metadata as importlib_metadata
+else:
+    import importlib_metadata
 
 from flake8_import_order import ClassifiedImport, ImportType, NewLine
 
@@ -8,14 +13,21 @@ Error = namedtuple('Error', ['lineno', 'code', 'message'])
 
 
 def list_entry_points():
-    return iter_entry_points('flake8_import_order.styles')
+    entry_points = importlib_metadata.entry_points()
+    if hasattr(entry_points, 'select'):
+        styles_groups = entry_points.select(group='flake8_import_order.styles')
+    else:
+        styles_groups = entry_points.get('flake8_import_order.styles', [])
+
+    return styles_groups
 
 
 def lookup_entry_point(name):
-    try:
-        return next(iter_entry_points('flake8_import_order.styles', name=name))
-    except StopIteration:
-        raise LookupError(f'Unknown style {name}')
+    for style in list_entry_points():
+        if style.name == name:
+            return style
+
+    raise LookupError('Unknown style {}'.format(name))
 
 
 class Style:
