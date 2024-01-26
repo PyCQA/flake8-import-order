@@ -1,6 +1,5 @@
-from collections import namedtuple
-
 import sys
+from collections import namedtuple
 
 if sys.version_info >= (3, 8):
     import importlib.metadata as importlib_metadata
