@@ -73,7 +73,8 @@ Limitations
 -----------
 
 Currently these checks are limited to module scope imports only.
-Conditional imports in module scope will also be ignored.
+Conditional imports in module scope will be ignored except imports
+under ```if TYPE_CHECKING:``` block.
 
 Classification of an imported module is achieved by checking the
 module against a stdlib list and then if there is no match against the

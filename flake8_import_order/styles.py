@@ -37,6 +37,13 @@ class Style:
     def _check(self, previous_import, previous, current_import):
         yield from self._check_I666(current_import)
         yield from self._check_I101(current_import)
+        if (
+            previous_import is not None
+            and not previous_import.type_checking
+            and current_import.type_checking
+        ):
+            yield from self._check_I300(previous_import, current_import)
+            previous_import = None
         if previous_import is not None:
             yield from self._check_I100(previous_import, current_import)
             yield from self._check_I201(previous_import, previous, current_import)
@@ -59,6 +66,14 @@ class Style:
                 'I101',
                 "Imported names are in the wrong order. "
                 "Should be {}".format(corrected),
+            )
+
+    def _check_I300(self, previous_import, current_import):  # noqa: N802
+        if current_import.lineno - previous_import.lineno != 3:
+            yield Error(
+                current_import.lineno,
+                'I300',
+                "TYPE_CHECKING block should have one newline above.",
             )
 
     def _check_I100(self, previous_import, current_import):  # noqa: N802

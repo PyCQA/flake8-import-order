@@ -17,7 +17,8 @@ DEFAULT_IMPORT_ORDER_STYLE = 'cryptography'
 
 ClassifiedImport = namedtuple(
     'ClassifiedImport',
-    ['type', 'is_from', 'modules', 'names', 'lineno', 'level', 'package'],
+    ['type', 'is_from', 'modules', 'names', 'lineno', 'level', 'package',
+     'type_checking'],
 )
 NewLine = namedtuple('NewLine', ['lineno'])
 
@@ -70,8 +71,13 @@ class ImportVisitor(ast.NodeVisitor):
         self.application_import_names = frozenset(application_import_names)
         self.application_package_names = frozenset(application_package_names)
 
+    def generic_visit(self, node):
+        for child in ast.iter_child_nodes(node):
+            child.parent = node
+        return super().generic_visit(node)
+
     def visit_Import(self, node):  # noqa: N802
-        if node.col_offset == 0:
+        if node.col_offset == 0 or self._type_checking_import(node):
             modules = [alias.name for alias in node.names]
             types_ = {self._classify_type(module) for module in modules}
             if len(types_) == 1:
@@ -81,11 +87,12 @@ class ImportVisitor(ast.NodeVisitor):
             classified_import = ClassifiedImport(
                 type_, False, modules, [], node.lineno, 0,
                 root_package_name(modules[0]),
+                self._type_checking_import(node),
             )
             self.imports.append(classified_import)
 
     def visit_ImportFrom(self, node):  # noqa: N802
-        if node.col_offset == 0:
+        if node.col_offset == 0 or self._type_checking_import(node):
             module = node.module or ''
             if node.level > 0:
                 type_ = ImportType.APPLICATION_RELATIVE
@@ -96,8 +103,15 @@ class ImportVisitor(ast.NodeVisitor):
                 type_, True, [module], names,
                 node.lineno, node.level,
                 root_package_name(module),
+                self._type_checking_import(node),
             )
             self.imports.append(classified_import)
+
+    def _type_checking_import(self, node):
+        return (
+            isinstance(node.parent, ast.If)
+            and node.parent.test.id == "TYPE_CHECKING"
+        )
 
     def _classify_type(self, module):
         package_names = get_package_names(module)
