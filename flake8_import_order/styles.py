@@ -1,5 +1,4 @@
 import importlib.metadata
-import sys
 from collections import namedtuple
 
 from flake8_import_order import ClassifiedImport
@@ -11,12 +10,7 @@ Error = namedtuple("Error", ["lineno", "code", "message"])
 
 def list_entry_points():
     entry_points = importlib.metadata.entry_points()
-    if hasattr(entry_points, 'select'):
-        styles_groups = entry_points.select(group='flake8_import_order.styles')
-    else:
-        styles_groups = entry_points.get('flake8_import_order.styles', [])
-
-    return styles_groups
+    return entry_points.select(group="flake8_import_order.styles")
 
 
 def lookup_entry_point(name):
@@ -24,7 +18,7 @@ def lookup_entry_point(name):
         if style.name == name:
             return style
 
-    raise LookupError('Unknown style {}'.format(name))
+    raise LookupError(f"Unknown style {name}")
 
 
 class Style:
@@ -93,9 +87,9 @@ class Style:
                 message = f"{message} and in a different group."
             yield Error(current_import.lineno, "I100", message)
 
-    def _check_I201(
+    def _check_I201(  # noqa: N802
         self, previous_import, previous, current_import
-    ):  # noqa: N802,E501
+    ):
         same_section = self.same_section(previous_import, current_import)
         has_newline = isinstance(previous, NewLine)
         if not same_section and not has_newline:
@@ -110,9 +104,9 @@ class Style:
                 ),
             )
 
-    def _check_I202(
+    def _check_I202(  # noqa: N802
         self, previous_import, previous, current_import
-    ):  # noqa: N802,E501
+    ):
         same_section = self.same_section(previous_import, current_import)
         has_newline = isinstance(previous, NewLine)
         if same_section and has_newline:
@@ -212,9 +206,9 @@ class Smarkets(Style):
 class Edited(Smarkets):
     accepts_application_package_names = True
 
-    def _check_I202(
+    def _check_I202(  # noqa: N802
         self, previous_import, previous, current_import
-    ):  # noqa: N802,E501
+    ):
         same_section = self.same_section(previous_import, current_import)
         has_newline = isinstance(previous, NewLine)
         optional_split = (

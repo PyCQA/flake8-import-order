@@ -1,6 +1,7 @@
 # To enable this pre-commit hook run:
 # `pip install pre-commit` or `brew install pre-commit`
 # Then run `pre-commit install`
+exclude: 'tests\/test_cases'
 
 # Learn more about this config here: https://pre-commit.com/
 repos:
@@ -32,7 +33,7 @@ repos:
     rev: v3.20.0
     hooks:
     - id: pyupgrade
-      args: [--py37-plus]
+      args: [--py39-plus]
 
   - repo: https://github.com/PyCQA/isort
     rev: 6.0.1
@@ -43,7 +44,6 @@ repos:
     rev: 25.1.0
     hooks:
     - id: black
-      exclude: 'tests/test_cases'
 
   # - repo: https://github.com/pre-commit/mirrors-mypy
   #   rev: v1.16.0
