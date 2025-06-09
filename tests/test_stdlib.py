@@ -1,7 +1,11 @@
 import ast
 
+# isort: off
 import pycodestyle
+
 import pytest
+
+# isort: on
 
 from flake8_import_order import STDLIB_NAMES
 from flake8_import_order.checker import ImportOrderChecker
