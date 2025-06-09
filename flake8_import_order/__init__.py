@@ -17,7 +17,6 @@ from .__about__ import __title__
 from .__about__ import __uri__
 from .__about__ import __version__
 
-
 __all__ = [
     "__title__",
     "__summary__",
