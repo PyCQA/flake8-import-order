@@ -1,10 +1,10 @@
 import optparse
 
 from flake8_import_order import __version__
-from flake8_import_order.checker import (
-    DEFAULT_IMPORT_ORDER_STYLE, ImportOrderChecker,
-)
-from flake8_import_order.styles import list_entry_points, lookup_entry_point
+from flake8_import_order.checker import DEFAULT_IMPORT_ORDER_STYLE
+from flake8_import_order.checker import ImportOrderChecker
+from flake8_import_order.styles import list_entry_points
+from flake8_import_order.styles import lookup_entry_point
 
 
 class Linter(ImportOrderChecker):
@@ -34,8 +34,10 @@ class Linter(ImportOrderChecker):
             default="",
             action="store",
             type=str,
-            help=("Package names to consider as company-specific "
-                  "(used only by 'appnexus' style)"),
+            help=(
+                "Package names to consider as company-specific "
+                "(used only by 'appnexus' style)"
+            ),
             parse_from_config=True,
             comma_separated_list=True,
         )
@@ -45,8 +47,10 @@ class Linter(ImportOrderChecker):
             default=DEFAULT_IMPORT_ORDER_STYLE,
             action="store",
             type=str,
-            help=("Style to follow. Available: " +
-                  ", ".join(cls.list_available_styles())),
+            help=(
+                "Style to follow. Available: "
+                ", ".join(cls.list_available_styles())
+            ),
             parse_from_config=True,
         )
 
@@ -95,9 +99,9 @@ def register_opt(parser, *args, **kwargs):
         parser.add_option(*args, **kwargs)
     except (optparse.OptionError, TypeError):
         # Flake8 2.x registration
-        parse_from_config = kwargs.pop('parse_from_config', False)
-        kwargs.pop('comma_separated_list', False)
-        kwargs.pop('normalize_paths', False)
+        parse_from_config = kwargs.pop("parse_from_config", False)
+        kwargs.pop("comma_separated_list", False)
+        kwargs.pop("normalize_paths", False)
         parser.add_option(*args, **kwargs)
         if parse_from_config:
-            parser.config_options.append(args[-1].lstrip('-'))
+            parser.config_options.append(args[-1].lstrip("-"))
