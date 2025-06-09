@@ -5,24 +5,66 @@
 # Learn more about this config here: https://pre-commit.com/
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.4.0
+    rev: v5.0.0
     hooks:
-      - id: check-yaml
-      - id: detect-private-key
-      - id: end-of-file-fixer
-      - id: mixed-line-ending
-      - id: trailing-whitespace
+    - id: check-added-large-files
+    - id: check-toml
+      types: [toml]
+    - id: check-yaml
+      types: [yaml]
+    - id: end-of-file-fixer
+      types: [text]
+      stages: [pre-commit, pre-push, manual]
+    - id: trailing-whitespace
+      types: [text]
+      stages: [pre-commit, pre-push, manual]
+    - id: detect-private-key
+    - id: mixed-line-ending
 
   - repo: https://github.com/codespell-project/codespell
-    rev: v2.2.2
+    rev: v2.4.1
     hooks:
-      - id: codespell
-        additional_dependencies:
-          - tomli
+    - id: codespell
+      additional_dependencies:
+        - tomli
 
   - repo: https://github.com/asottile/pyupgrade
-    rev: v3.2.3
+    rev: v3.20.0
     hooks:
-      - id: pyupgrade
-        args:
-          - --py37-plus
+    - id: pyupgrade
+      args: [--py37-plus]
+
+  - repo: https://github.com/PyCQA/isort
+    rev: 6.0.1
+    hooks:
+    - id: isort
+
+  - repo: https://github.com/psf/black
+    rev: 25.1.0
+    hooks:
+    - id: black
+      exclude: 'tests/test_cases'
+
+  # - repo: https://github.com/pre-commit/mirrors-mypy
+  #   rev: v1.16.0
+  #   hooks:
+  #   - id: mypy
+  #     additional_dependencies:
+  #     - types-python-dateutil
+  #     - types-requests
+  #     exclude: ^(docs/|tests/)
+  # - repo: https://github.com/jorisroovers/gitlint
+  #   rev: v0.19.1
+  #   hooks:
+  #   - id: gitlint
+  #
+  - repo: https://github.com/asottile/setup-cfg-fmt
+    rev: v2.8.0
+    hooks:
+    - id: setup-cfg-fmt
+      args: [--min-py3-version, '3.9']
+
+  - repo: https://github.com/gitleaks/gitleaks
+    rev: v8.27.2
+    hooks:
+    - id: gitleaks
