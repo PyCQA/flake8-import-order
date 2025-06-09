@@ -1,0 +1,40 @@
+[tool.black]
+line-length = 78
+target-version = ['py37']
+exclude = '''
+(
+  /(
+      \.eggs         # exclude a few common directories in the
+    | \.git          # root of the project
+    | \.hg
+    | \.mypy_cache
+    | \.tox
+    | \.venv
+    | _build
+    | build
+    | dist
+    | venv
+    | tests\/test_cases
+  )/
+)
+'''
+force-exclude = '''
+(
+  /(
+    tests\/test_cases
+  )/
+)
+'''
+
+[tool.mypy]
+files = ["."]
+exclude = [
+    "^docs/",
+    "^tests/",
+]
+
+[tool.isort]
+profile = "black"
+line_length = 78
+force_single_line = true
+skip = ["tests/test_cases/*"]

@@ -1,18 +1,16 @@
+import importlib.metadata
 import sys
 from collections import namedtuple
 
-if sys.version_info >= (3, 8):
-    import importlib.metadata as importlib_metadata
-else:
-    import importlib_metadata
+from flake8_import_order import ClassifiedImport
+from flake8_import_order import ImportType
+from flake8_import_order import NewLine
 
-from flake8_import_order import ClassifiedImport, ImportType, NewLine
-
-Error = namedtuple('Error', ['lineno', 'code', 'message'])
+Error = namedtuple("Error", ["lineno", "code", "message"])
 
 
 def list_entry_points():
-    entry_points = importlib_metadata.entry_points()
+    entry_points = importlib.metadata.entry_points()
     if hasattr(entry_points, 'select'):
         styles_groups = entry_points.select(group='flake8_import_order.styles')
     else:
@@ -50,24 +48,28 @@ class Style:
         yield from self._check_I101(current_import)
         if previous_import is not None:
             yield from self._check_I100(previous_import, current_import)
-            yield from self._check_I201(previous_import, previous, current_import)
-            yield from self._check_I202(previous_import, previous, current_import)
+            yield from self._check_I201(
+                previous_import, previous, current_import
+            )
+            yield from self._check_I202(
+                previous_import, previous, current_import
+            )
 
     def _check_I666(self, current_import):  # noqa: N802
         if current_import.type == ImportType.MIXED:
             yield Error(
                 current_import.lineno,
-                'I666',
-                'Import statement mixes groups',
+                "I666",
+                "Import statement mixes groups",
             )
 
     def _check_I101(self, current_import):  # noqa: N802
         correct_names = self.sorted_names(current_import.names)
         if correct_names != current_import.names:
-            corrected = ', '.join(correct_names)
+            corrected = ", ".join(correct_names)
             yield Error(
                 current_import.lineno,
-                'I101',
+                "I101",
                 "Imported names are in the wrong order. "
                 "Should be {}".format(corrected),
             )
@@ -84,36 +86,43 @@ class Style:
                 self._explain_import(previous_import),
             )
             same_section = self.same_section(
-                previous_import, current_import,
+                previous_import,
+                current_import,
             )
             if not same_section:
                 message = f"{message} and in a different group."
-            yield Error(current_import.lineno, 'I100', message)
+            yield Error(current_import.lineno, "I100", message)
 
-    def _check_I201(self, previous_import, previous, current_import):  # noqa: N802,E501
+    def _check_I201(
+        self, previous_import, previous, current_import
+    ):  # noqa: N802,E501
         same_section = self.same_section(previous_import, current_import)
         has_newline = isinstance(previous, NewLine)
         if not same_section and not has_newline:
             yield Error(
                 current_import.lineno,
-                'I201',
+                "I201",
                 "Missing newline between import groups. {}".format(
                     self._explain_grouping(
-                        current_import, previous_import,
+                        current_import,
+                        previous_import,
                     )
                 ),
             )
 
-    def _check_I202(self, previous_import, previous, current_import):  # noqa: N802,E501
+    def _check_I202(
+        self, previous_import, previous, current_import
+    ):  # noqa: N802,E501
         same_section = self.same_section(previous_import, current_import)
         has_newline = isinstance(previous, NewLine)
         if same_section and has_newline:
             yield Error(
                 current_import.lineno,
-                'I202',
+                "I202",
                 "Additional newline in a group of imports. {}".format(
                     self._explain_grouping(
-                        current_import, previous_import,
+                        current_import,
+                        previous_import,
                     )
                 ),
             )
@@ -129,34 +138,32 @@ class Style:
     @staticmethod
     def same_section(previous, current):
         same_type = current.type == previous.type
-        both_first = (
-            {previous.type, current.type} <= {
-                ImportType.APPLICATION, ImportType.APPLICATION_RELATIVE,
-            }
-        )
+        both_first = {previous.type, current.type} <= {
+            ImportType.APPLICATION,
+            ImportType.APPLICATION_RELATIVE,
+        }
         return same_type or both_first
 
     @staticmethod
     def _explain_import(import_):
         if import_.is_from:
             return "from {}{} import {}".format(
-                import_.level * '.',
-                ', '.join(import_.modules),
-                ', '.join(import_.names),
+                import_.level * ".",
+                ", ".join(import_.modules),
+                ", ".join(import_.names),
             )
         else:
-            return "import {}".format(', '.join(import_.modules))
+            return "import {}".format(", ".join(import_.modules))
 
     @staticmethod
     def _explain_grouping(current_import, previous_import):
         return (
-            "'{}' is identified as {} and "
-            "'{}' is identified as {}."
+            "'{}' is identified as {} and " "'{}' is identified as {}."
         ).format(
             Style._explain_import(current_import),
-            current_import.type.name.title().replace('_', ' '),
+            current_import.type.name.title().replace("_", " "),
             Style._explain_import(previous_import),
-            previous_import.type.name.title().replace('_', ' '),
+            previous_import.type.name.title().replace("_", " "),
         )
 
 
@@ -205,17 +212,22 @@ class Smarkets(Style):
 class Edited(Smarkets):
     accepts_application_package_names = True
 
-    def _check_I202(self, previous_import, previous, current_import):  # noqa: N802,E501
+    def _check_I202(
+        self, previous_import, previous, current_import
+    ):  # noqa: N802,E501
         same_section = self.same_section(previous_import, current_import)
         has_newline = isinstance(previous, NewLine)
-        optional_split = current_import.is_from and not previous_import.is_from
+        optional_split = (
+            current_import.is_from and not previous_import.is_from
+        )
         if same_section and has_newline and not optional_split:
             yield Error(
                 current_import.lineno,
-                'I202',
+                "I202",
                 "Additional newline in a group of imports. {}".format(
                     self._explain_grouping(
-                        current_import, previous_import,
+                        current_import,
+                        previous_import,
                     )
                 ),
             )
@@ -233,7 +245,11 @@ class PyCharm(Smarkets):
     @staticmethod
     def import_key(import_):
         return (
-            import_.type, import_.is_from, import_.level, import_.modules, import_.names
+            import_.type,
+            import_.is_from,
+            import_.level,
+            import_.modules,
+            import_.names,
         )
 
 
@@ -259,26 +275,34 @@ class Cryptography(Style):
     def import_key(import_):
         if import_.type in {ImportType.THIRD_PARTY, ImportType.APPLICATION}:
             return (
-                import_.type, import_.package, import_.is_from,
-                import_.level, import_.modules, import_.names,
+                import_.type,
+                import_.package,
+                import_.is_from,
+                import_.level,
+                import_.modules,
+                import_.names,
             )
         else:
             return (
-                import_.type, '', import_.is_from, import_.level,
-                import_.modules, import_.names,
+                import_.type,
+                "",
+                import_.is_from,
+                import_.level,
+                import_.modules,
+                import_.names,
             )
 
     @staticmethod
     def same_section(previous, current):
         app_or_third = current.type in {
-            ImportType.THIRD_PARTY, ImportType.APPLICATION,
+            ImportType.THIRD_PARTY,
+            ImportType.APPLICATION,
         }
         same_type = current.type == previous.type
         both_relative = (
             previous.type == current.type == ImportType.APPLICATION_RELATIVE
         )
         same_package = previous.package == current.package
-        return (
-            (not app_or_third and same_type or both_relative)
-            or (app_or_third and same_package)
+        return (not app_or_third and same_type or both_relative) or (
+            app_or_third and same_package
         )
