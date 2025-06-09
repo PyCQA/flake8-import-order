@@ -40,7 +40,7 @@
   custom styles (that use the nodes directly). This also drops the
   asttokens dependency as it is no longer required.
 * Understand the existence of namespaced packages, thereby allowing
-  different namespaced pacakages to be defined as local or third party.
+  different namespaced packages to be defined as local or third party.
 
 0.15 2017-11-06
 ---------------

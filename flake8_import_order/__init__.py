@@ -2,25 +2,35 @@ import ast
 from collections import namedtuple
 from enum import IntEnum
 
-from .__about__ import (
-    __author__, __copyright__, __email__, __license__, __summary__, __title__,
-    __uri__, __version__,
-)
+from .__about__ import __author__
+from .__about__ import __copyright__
+from .__about__ import __email__
+from .__about__ import __license__
+from .__about__ import __summary__
+from .__about__ import __title__
+from .__about__ import __uri__
+from .__about__ import __version__
 from .stdlib_list import STDLIB_NAMES
 
 __all__ = [
-    "__title__", "__summary__", "__uri__", "__version__", "__author__",
-    "__email__", "__license__", "__copyright__",
+    "__title__",
+    "__summary__",
+    "__uri__",
+    "__version__",
+    "__author__",
+    "__email__",
+    "__license__",
+    "__copyright__",
 ]
 
-DEFAULT_IMPORT_ORDER_STYLE = 'cryptography'
+DEFAULT_IMPORT_ORDER_STYLE = "cryptography"
 
 ClassifiedImport = namedtuple(
     'ClassifiedImport',
     ['type', 'is_from', 'modules', 'names', 'lineno', 'level', 'package',
      'type_checking'],
 )
-NewLine = namedtuple('NewLine', ['lineno'])
+NewLine = namedtuple("NewLine", ["lineno"])
 
 
 class ImportType(IntEnum):
@@ -49,7 +59,7 @@ def get_package_names(name):
     package_names = [last_package_name]
 
     for part in reversed(parts):
-        last_package_name = f'{last_package_name}.{part}'
+        last_package_name = f"{last_package_name}.{part}"
         package_names.append(last_package_name)
 
     return package_names
@@ -85,7 +95,12 @@ class ImportVisitor(ast.NodeVisitor):
             else:
                 type_ = ImportType.MIXED
             classified_import = ClassifiedImport(
-                type_, False, modules, [], node.lineno, 0,
+                type_,
+                False,
+                modules,
+                [],
+                node.lineno,
+                0,
                 root_package_name(modules[0]),
                 self._type_checking_import(node),
             )
@@ -100,8 +115,12 @@ class ImportVisitor(ast.NodeVisitor):
                 type_ = self._classify_type(module)
             names = [alias.name for alias in node.names]
             classified_import = ClassifiedImport(
-                type_, True, [module], names,
-                node.lineno, node.level,
+                type_,
+                True,
+                [module],
+                names,
+                node.lineno,
+                node.level,
                 root_package_name(module),
                 self._type_checking_import(node),
             )
