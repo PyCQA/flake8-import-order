@@ -81,7 +81,7 @@ class Style:
         if current_import.lineno - previous_import.lineno != 3:
             yield Error(
                 current_import.lineno,
-                'I300',
+                "I300",
                 "TYPE_CHECKING block should have one newline above.",
             )
 

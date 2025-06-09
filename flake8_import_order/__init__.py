@@ -26,9 +26,17 @@ __all__ = [
 DEFAULT_IMPORT_ORDER_STYLE = "cryptography"
 
 ClassifiedImport = namedtuple(
-    'ClassifiedImport',
-    ['type', 'is_from', 'modules', 'names', 'lineno', 'level', 'package',
-     'type_checking'],
+    "ClassifiedImport",
+    [
+        "type",
+        "is_from",
+        "modules",
+        "names",
+        "lineno",
+        "level",
+        "package",
+        "type_checking",
+    ],
 )
 NewLine = namedtuple("NewLine", ["lineno"])
 
@@ -108,7 +116,7 @@ class ImportVisitor(ast.NodeVisitor):
 
     def visit_ImportFrom(self, node):  # noqa: N802
         if node.col_offset == 0 or self._type_checking_import(node):
-            module = node.module or ''
+            module = node.module or ""
             if node.level > 0:
                 type_ = ImportType.APPLICATION_RELATIVE
             else:
