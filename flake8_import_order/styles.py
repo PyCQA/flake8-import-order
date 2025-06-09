@@ -10,6 +10,8 @@ Error = namedtuple("Error", ["lineno", "code", "message"])
 
 def list_entry_points():
     entry_points = importlib.metadata.entry_points()
+    if not hasattr(entry_points, "select"):
+        return entry_points.get("flake8_import_order.styles", [])
     return entry_points.select(group="flake8_import_order.styles")
 
 
