@@ -38,7 +38,6 @@ if TYPE_CHECKING:
     from functools import *
     import os
     from os import path
-    import StringIO
     import sys
 
     import X
@@ -66,4 +65,24 @@ if TYPE_CHECKING:
     from .. import A
     from .. import B
     from ..A import A
+    from ..B import B
+
+if t.TYPE_CHECKING:
+    import ast
+
+    import X
+
+    from localpackage import A, b
+
+    import flake8_import_order
+    from ..B import B
+
+if typing.TYPE_CHECKING:
+    import ast
+
+    import X
+
+    from localpackage import A, b
+
+    import flake8_import_order
     from ..B import B

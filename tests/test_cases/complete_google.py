@@ -37,7 +37,6 @@ if TYPE_CHECKING:
     from functools import *
     import os
     from os import path
-    import StringIO
     import sys
 
     import localpackage

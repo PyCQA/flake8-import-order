@@ -33,7 +33,6 @@ from ..A import A
 from ..B import B
 
 if TYPE_CHECKING:
-    import StringIO
     import ast
     import os
     import sys
