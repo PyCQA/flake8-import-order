@@ -1,3 +1,29 @@
+0.19.0 2025-06-12
+-----------------
+
+* Drop deprecated Python versions 3.7 and 3.8
+
+* Drop unsupported pypy3.9
+
+* Use ``sys.stdlib_module_names`` where available to determine whether a
+  module is in the standard library or not.
+
+* Replace usage of ``pkg_resources`` from setuptools with
+  ``importlib.metadata``.
+
+* Move package to PyCQA PyPI organization
+
+* Add support for checking ordering in a ``TYPE_CHECKING`` block. This
+  will support the following variants:
+
+  * ``if TYPE_CHECKING:`` (where there was a prior ``from typing import
+    TYPE_CHECKING``.
+
+  * ``if t.TYPE_CHECKING:`` (where there was a prior ``import typing as
+    t``.
+
+  * ``if typing.TYPE_CHECKING:``
+
 0.18.2 2022-11-26
 -----------------
 
