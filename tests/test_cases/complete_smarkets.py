@@ -35,7 +35,6 @@ from ..B import B
 if TYPE_CHECKING:
     import ast
     import os
-    import StringIO
     import sys
     from functools import *
     from os import path
