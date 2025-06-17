@@ -78,7 +78,7 @@ class Style:
             )
 
     def _check_I300(self, previous_import, current_import):  # noqa: N802
-        if current_import.lineno - previous_import.lineno != 3:
+        if current_import.lineno - previous_import.end_lineno != 3:
             yield Error(
                 current_import.lineno,
                 "I300",
