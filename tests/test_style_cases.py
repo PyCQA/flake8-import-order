@@ -67,8 +67,11 @@ def _checker(filename, tree, style_entry_point):
 )
 def test_styles(filename, tree, style, expected_codes):
     checker = _checker(filename, tree, style)
-    codes = [error.code for error in checker.check_order()]
-    assert codes == expected_codes
+    codes = [
+        (filename, error.lineno, error.code)
+        for error in checker.check_order()
+    ]
+    assert [i[2] for i in codes] == expected_codes, codes
 
 
 def test_unknown_style():

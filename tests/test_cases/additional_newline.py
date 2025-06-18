@@ -22,6 +22,15 @@ import tests  # I202
 from . import A
 
 from . import B  # I202
+from .Z import (
+    A,
+    B,
+    C,
+    D,
+    E,
+    F,
+    G,
+)
 
 if TYPE_CHECKING:
     import ast

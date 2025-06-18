@@ -31,6 +31,16 @@ from .. import A
 from .. import B
 from ..A import A
 from ..B import B
+from ..Z import (
+    A,
+    B,
+    C,
+    D,
+    E,
+    F,
+    G,
+    H,
+)
 
 if TYPE_CHECKING:
     import ast
