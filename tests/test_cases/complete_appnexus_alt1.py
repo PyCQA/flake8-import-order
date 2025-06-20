@@ -1,32 +1,29 @@
-# edited
+# appnexus
 
 import ast
-import os
-import sys
 from functools import *
+import os
 from os import path
+import sys
 
 import X
-import Y
-import Z
 from X import *
 from X import A
 from X import B, b, C, d
+import Y
 from Y import *
 from Y import A
 from Y import B, C, D
 from Y import e
+import Z
 from Z import A
 from Z.A import A
 from Z.A.B import A
-
-import localpackage
 
 from localpackage import A, b
 
 import flake8_import_order
 from flake8_import_order import *
-
 from . import A
 from . import B
 from .A import A
@@ -36,34 +33,31 @@ from .. import B
 from ..A import A
 from ..B import B
 
-if TYPE_CHECKING:
+if t.TYPE_CHECKING:
     import ast
-    import os
-    import sys
     from functools import *
+    import os
     from os import path
+    import sys
 
     import X
-    import Y
-    import Z
     from X import *
     from X import A
     from X import B, b, C, d
+    import Y
     from Y import *
     from Y import A
     from Y import B, C, D
     from Y import e
+    import Z
     from Z import A
     from Z.A import A
     from Z.A.B import A
-
-    import localpackage
 
     from localpackage import A, b
 
     import flake8_import_order
     from flake8_import_order import *
-
     from . import A
     from . import B
     from .A import A

@@ -36,7 +36,7 @@ from .. import B
 from ..A import A
 from ..B import B
 
-if TYPE_CHECKING:
+if t.TYPE_CHECKING:
     import ast
     import os
     import sys

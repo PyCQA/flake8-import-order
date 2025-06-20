@@ -66,23 +66,3 @@ if TYPE_CHECKING:
     from .. import B
     from ..A import A
     from ..B import B
-
-if t.TYPE_CHECKING:
-    import ast
-
-    import X
-
-    from localpackage import A, b
-
-    import flake8_import_order
-    from ..B import B
-
-if typing.TYPE_CHECKING:
-    import ast
-
-    import X
-
-    from localpackage import A, b
-
-    import flake8_import_order
-    from ..B import B

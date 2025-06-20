@@ -143,16 +143,15 @@ class ImportVisitor(ast.NodeVisitor):
             self.imports.append(classified_import)
 
     def _type_checking_import(self, node):
-        return (
-            isinstance(node.parent, ast.If)
-            and isinstance(node.parent.test, ast.Name)
-            and (
-                node.parent.test.id == "TYPE_CHECKING"
-                or (
-                    node.parent.test.value.id in {"t", "typing"}
-                    and getattr(node.parent.test, "attr", "")
-                    == "TYPE_CHECKING"
-                )
+        return isinstance(node.parent, ast.If) and (
+            (
+                isinstance(node.parent.test, ast.Name)
+                and node.parent.test.id == "TYPE_CHECKING"
+            )
+            or (
+                isinstance(node.parent.test, ast.Attribute)
+                and node.parent.test.value.id in {"t", "typing"}
+                and getattr(node.parent.test, "attr", "") == "TYPE_CHECKING"
             )
         )
 
