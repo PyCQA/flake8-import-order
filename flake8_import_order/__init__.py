@@ -150,6 +150,7 @@ class ImportVisitor(ast.NodeVisitor):
             )
             or (
                 isinstance(node.parent.test, ast.Attribute)
+                and isinstance(node.parent.test.value, ast.Name)
                 and node.parent.test.value.id in {"t", "typing"}
                 and getattr(node.parent.test, "attr", "") == "TYPE_CHECKING"
             )

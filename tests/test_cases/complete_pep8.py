@@ -60,3 +60,6 @@ if TYPE_CHECKING:
     from .. import A
     from ..B import B
     from ..A import A
+
+if not TYPE_CHECKING:
+    from ..c import c
