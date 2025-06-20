@@ -1,3 +1,16 @@
+0.19.1 2025-06-20
+-----------------
+
+* Fix bug in code for checking the order of imports in a
+  ``TYPE_CHECKING`` block.
+
+* Fix ``python_requires`` missing from 0.19.0 to allow folks using
+  vulnerable and unmaintained versions of Python to continue running
+  0.18.x with pip selecting the correct version for them.
+
+* Yank 0.19.0 from PyPI to avoid aforementioned users on older versions
+  of Python accidentally receiving 0.19.0
+
 0.19.0 2025-06-12
 -----------------
 
@@ -17,10 +30,10 @@
   will support the following variants:
 
   * ``if TYPE_CHECKING:`` (where there was a prior ``from typing import
-    TYPE_CHECKING``.
+    TYPE_CHECKING``).
 
   * ``if t.TYPE_CHECKING:`` (where there was a prior ``import typing as
-    t``.
+    t``).
 
   * ``if typing.TYPE_CHECKING:``
 
