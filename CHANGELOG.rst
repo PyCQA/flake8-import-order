@@ -1,3 +1,12 @@
+0.19.2 2025-06-24
+-----------------
+
+* Fix ``AttributeError`` in code for checking the order of imports in a
+  ``TYPE_CHECKING`` block.
+
+* Yank 0.19.0 from PyPI to avoid aforementioned users on older versions
+  of Python accidentally receiving 0.19.0
+
 0.19.1 2025-06-20
 -----------------
 
@@ -7,9 +16,6 @@
 * Fix ``python_requires`` missing from 0.19.0 to allow folks using
   vulnerable and unmaintained versions of Python to continue running
   0.18.x with pip selecting the correct version for them.
-
-* Yank 0.19.0 from PyPI to avoid aforementioned users on older versions
-  of Python accidentally receiving 0.19.0
 
 0.19.0 2025-06-12
 -----------------
