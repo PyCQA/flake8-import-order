@@ -65,6 +65,6 @@ repos:
       args: [--min-py3-version, '3.9']
 
   - repo: https://github.com/gitleaks/gitleaks
-    rev: v8.27.2
+    rev: v8.28.0
     hooks:
     - id: gitleaks
