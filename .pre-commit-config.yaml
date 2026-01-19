@@ -41,7 +41,7 @@ repos:
     - id: isort
 
   - repo: https://github.com/psf/black-pre-commit-mirror
-    rev: 25.11.0
+    rev: 26.1.0
     hooks:
     - id: black
 
@@ -59,12 +59,12 @@ repos:
   #   - id: gitlint
   #
   - repo: https://github.com/asottile/setup-cfg-fmt
-    rev: v3.1.0
+    rev: v3.2.0
     hooks:
     - id: setup-cfg-fmt
       args: [--min-py-version, '3.9']
 
   - repo: https://github.com/gitleaks/gitleaks
-    rev: v8.29.1
+    rev: v8.30.0
     hooks:
     - id: gitleaks
