@@ -48,6 +48,7 @@ class Style:
             and current_import.type_checking
         ):
             yield from self._check_I300(previous_import, current_import)
+            yield from self._check_I301(previous_import, current_import)
             previous_import = None
         if previous_import is not None:
             yield from self._check_I100(previous_import, current_import)
@@ -78,11 +79,19 @@ class Style:
             )
 
     def _check_I300(self, previous_import, current_import):  # noqa: N802
-        if current_import.lineno - previous_import.end_lineno != 3:
+        if current_import.lineno - previous_import.end_lineno < 3:
             yield Error(
                 current_import.lineno,
                 "I300",
                 "TYPE_CHECKING block should have one newline above.",
+            )
+
+    def _check_I301(self, previous_import, current_import):  # noqa: N802
+        if current_import.lineno - previous_import.end_lineno > 3:
+            yield Error(
+                current_import.lineno,
+                "I301",
+                "TYPE_CHECKING block should have no more than one newline above.",
             )
 
     def _check_I100(self, previous_import, current_import):  # noqa: N802
