@@ -30,18 +30,18 @@ repos:
         - tomli
 
   - repo: https://github.com/asottile/pyupgrade
-    rev: v3.21.2
+    rev: v3.22.0
     hooks:
     - id: pyupgrade
       args: [--py39-plus]
 
   - repo: https://github.com/PyCQA/isort
-    rev: 9.0.2
+    rev: 10.0.0b1
     hooks:
     - id: isort
 
   - repo: https://github.com/psf/black-pre-commit-mirror
-    rev: 26.10.0
+    rev: 26.10.1
     hooks:
     - id: black
 
@@ -59,7 +59,7 @@ repos:
   #   - id: gitlint
   #
   - repo: https://github.com/asottile/setup-cfg-fmt
-    rev: v3.2.0
+    rev: v3.3.0
     hooks:
     - id: setup-cfg-fmt
       args: [--min-py-version, '3.9']
